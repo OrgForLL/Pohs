@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/main/webapp=UTF-8
+encoding//src/main/webapp/WEB-INF/view/goods/goods/edit.html=UTF-8
+encoding//src/main/webapp/WEB-INF/view/goods/goods/list.html=UTF-8
+encoding//src/main/webapp/WEB-INF/view/goods/goods/priceTag_assign.html=UTF-8
+encoding//src/main/webapp/WEB-INF/view/goods/stores/add.html=UTF-8
+encoding//src/main/webapp/WEB-INF/view/goods/stores/edit.html=UTF-8
+encoding//src/main/webapp/WEB-INF/view/member/member/add.html=UTF-8
+encoding//src/main/webapp/WEB-INF/view/member/member/edit.html=UTF-8
+encoding/<project>=UTF-8

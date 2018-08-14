@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="admin">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <dependent-module archiveName="guns-core-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/guns-core/guns-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="guns-generator-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/guns-generator/guns-generator">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-goods-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-goods/md-goods">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-member-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-member/md-member">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-cart-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-cart/md-cart">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-order-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-order/md-order">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-settlement-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-settlement/md-settlement">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-delivery-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-delivery/md-delivery">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-coupon-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-coupon/md-coupon">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-content-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-content/md-content">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-pay-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-pay/md-pay">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="weixin-popular-2.8.14.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/weixin-popular/weixin-popular">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-notice-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-notice/md-notice">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="md-share-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-share/md-share">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="java-output-path" value="/guns-admin/target/classes"/>
+        <property name="context-root" value="admin"/>
+    </wb-module>
+</project-modules>

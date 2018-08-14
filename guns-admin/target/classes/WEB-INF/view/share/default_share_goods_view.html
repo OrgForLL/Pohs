@@ -1,0 +1,27 @@
+@layout("/common/_container.html"){
+<div class="row">
+    <div class="col-sm-12">
+        <div class="form-horizontal" id="deptInfoForm">
+            <input type="hidden" id="type" value="3">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    	<#input id="title" name="分享标题:" value="${defaultConfigure.title}"/>
+                        <#input id="content" name="分享内容:" value="${defaultConfigure.content}" />
+                        <#input id="profit" name="分润比例（%）:" value="${defaultConfigure.profit}" />
+                        <#avatar id="imgurl" name="分享图片:" avatarImg="${defaultConfigure.imgurl}"/>
+                        
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="ShareGoodsInfoDlg.addSubmitDefault()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="ShareGoodsInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/share/goods/good_info.js"></script>
+@}

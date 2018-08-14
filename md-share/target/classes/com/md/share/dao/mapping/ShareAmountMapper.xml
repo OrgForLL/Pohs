@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.md.share.dao。ShareAmountMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.md.share.model.ShareAmount">
+		<id column="id" property="id" />
+		<result column="boundMemberId" property="boundMemberId" />
+		<result column="shareMemberId" property="shareMemberId" />
+		<result column="goodsId" property="goodsId" />
+		<result column="productId" property="productId" />
+		<result column="amount" property="amount" />
+		<result column="moistenAmount" property="moistenAmount" />
+		<result column="orderItemId" property="orderItemId" />
+		<result column="orderId" property="orderId" />
+		<result column="status" property="status" />
+	</resultMap>
+</mapper>

@@ -1,0 +1,45 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+            <input type="hidden" id="goodsId" value="${goodsPrice.goodsId}">
+            <div class="row">
+                <div class="col-sm-6">
+                	<#input id="minPrice" name="展示价格(最低):" value="${goodsPrice.minPrice}"/>
+                	<#input id="maxPrice" name="展示价格(最高):" value="${goodsPrice.maxPrice}"/>
+                	<div class="form-group">
+				    <label class="col-sm-3 control-label">发表门店:</label>
+				    @if(shopId==null){
+					    <div class="col-sm-9">
+					       <input class="form-control" id="shopName" name="shopName" readonly="readonly"
+	                              onclick="GoodsPriceInfoDlg.selectShop()" type="text" value="${shopName}" >
+	                       <input name="shopIds" id="shopIds" type="hidden" value="${shopIds}" />
+					    </div>
+				    @}
+				    @if(shopId!=null){
+					    <div class="col-sm-9">
+					       <input class="form-control" id="shopName" name="shopName" readonly="readonly" type="text" value="${shopName}">
+	                       <input name="shopId" id="shopId" type="hidden" value="${goodsPrice.shopId}"/>
+	                       <input name="shopIds" id="shopIds" type="hidden"/>
+					    </div>
+				    @}
+				</div>
+                </div>
+            </div>
+            <div class="row btn-group-m-t">
+                <div class="col-sm-12">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="GoodsPriceInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="GoodsPriceInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/goods/goods/goods_price.js"></script>
+<script>
+  
+</script>
+
+
+@}

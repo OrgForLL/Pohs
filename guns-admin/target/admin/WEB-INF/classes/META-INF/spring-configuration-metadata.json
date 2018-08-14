@@ -1,0 +1,108 @@
+{
+  "groups": [
+    {
+      "name": "beetl",
+      "type": "com.stylefeng.guns.config.properties.BeetlProperties",
+      "sourceType": "com.stylefeng.guns.config.properties.BeetlProperties"
+    },
+    {
+      "name": "guns",
+      "type": "com.stylefeng.guns.config.properties.GunsProperties",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties"
+    },
+    {
+      "name": "guns.flowable.datasource",
+      "type": "com.stylefeng.guns.config.properties.GunsFlowableProperties",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsFlowableProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "beetl.delimiter-statement-end",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.BeetlProperties"
+    },
+    {
+      "name": "beetl.delimiter-statement-start",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.BeetlProperties"
+    },
+    {
+      "name": "beetl.properties",
+      "type": "java.util.Properties",
+      "sourceType": "com.stylefeng.guns.config.properties.BeetlProperties"
+    },
+    {
+      "name": "beetl.resource-auto-check",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.BeetlProperties"
+    },
+    {
+      "name": "beetl.resource-tagroot",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.BeetlProperties"
+    },
+    {
+      "name": "beetl.resource-tagsuffix",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.BeetlProperties"
+    },
+    {
+      "name": "guns.file-upload-path",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties"
+    },
+    {
+      "name": "guns.flowable.datasource.password",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsFlowableProperties",
+      "defaultValue": "root"
+    },
+    {
+      "name": "guns.flowable.datasource.url",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsFlowableProperties",
+      "defaultValue": "jdbc:mysql://127.0.0.1:3306/guns_flowable?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull"
+    },
+    {
+      "name": "guns.flowable.datasource.username",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsFlowableProperties",
+      "defaultValue": "root"
+    },
+    {
+      "name": "guns.kaptcha-open",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "guns.project-web-path",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties"
+    },
+    {
+      "name": "guns.session-invalidate-time",
+      "type": "java.lang.Integer",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties"
+    },
+    {
+      "name": "guns.session-validation-interval",
+      "type": "java.lang.Integer",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties"
+    },
+    {
+      "name": "guns.spring-session-open",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "guns.swagger-open",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties",
+      "defaultValue": false
+    }
+  ],
+  "hints": []
+}
