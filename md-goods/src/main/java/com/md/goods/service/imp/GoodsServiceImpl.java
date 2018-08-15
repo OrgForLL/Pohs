@@ -179,4 +179,24 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		return goodsMapper.selectMapsPage(rowBounds, wrapper);
 	}
 
+	@Override
+	public List<Map<String, Object>> getListByConditon(String name,long goodsId, String sn,Integer index) {
+		Wrapper<Goods> wrapper = new EntityWrapper<>();
+		Integer begin = (index - 1) * Page.PAGESIZE.getCode();
+		if(ToolUtil.isNotEmpty(name)) {
+			wrapper.like("name", name);
+		}
+		
+		if(goodsId != 0l) {
+			wrapper.eq("id", goodsId);
+		}
+		wrapper.eq("isDel", 0);
+		if(ToolUtil.isNotEmpty(sn)) {
+			wrapper.like("sn", sn);
+		}
+		wrapper.orderBy("id");
+		RowBounds rowBounds = new RowBounds(begin, Page.PAGESIZE.getCode());
+		return goodsMapper.selectMapsPage(rowBounds, wrapper);
+	}
+
 }

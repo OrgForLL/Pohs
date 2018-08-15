@@ -14,6 +14,11 @@ public class GoodsObject {
 	 * 商品id
 	 */
 	private Long id;
+	
+	/**
+	 * 商品编号
+	 */
+	private String sn;
 
 	/**
 	 * 商品名称
@@ -151,6 +156,14 @@ public class GoodsObject {
 
 	public void setModelName(String modelName) {
 		this.modelName = modelName;
+	}
+
+	public String getSn() {
+		return sn;
+	}
+
+	public void setSn(String sn) {
+		this.sn = sn;
 	}
 
 }

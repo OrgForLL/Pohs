@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -78,5 +77,25 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 		wrapper.eq("type", "分销员");
 		shareUsers = memberMapper.selectMaps(wrapper);
 		return shareUsers;
+	}
+
+	@Override
+	public List<Map<String, Object>> getListByCondition(String name, Long memberId, String openId, String phone) {
+		System.out.println(name+","+memberId+","+openId+","+phone);
+		Wrapper<Member> wrapper = new EntityWrapper<>();
+		if(memberId != 0l) {
+			wrapper.eq("id", memberId);
+		}
+		if(ToolUtil.isNotEmpty(openId)) {
+			wrapper.eq("openId", openId);
+		}
+		if(ToolUtil.isNotEmpty(name)) {
+			wrapper.like("name", name);
+		}
+		if(ToolUtil.isNotEmpty(phone)) {
+			wrapper.like("phoneNum", phone);
+		}
+		
+		return memberMapper.selectMaps(wrapper);
 	}
 }

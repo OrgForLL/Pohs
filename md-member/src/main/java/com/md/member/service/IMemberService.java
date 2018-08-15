@@ -50,4 +50,13 @@ public interface IMemberService extends IService<Member> {
 	 * @return
 	 */
 	List<Map<String, Object>> findShareUser(Integer status);
+
+	/**
+	 * 根据搜索条件获取用户信息列表
+	 * @param name  用户名
+	 * @param memberId  用户主键id
+	 * @param openId 
+	 * @param phone
+	 */
+	List<Map<String, Object>> getListByCondition(String name, Long memberId, String openId, String phone);
 }

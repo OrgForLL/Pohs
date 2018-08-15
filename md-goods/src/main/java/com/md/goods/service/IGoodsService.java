@@ -121,4 +121,14 @@ public interface IGoodsService extends IService<Goods> {
 	 */
 	List<Map<String, Object>> getListByName(String name,Long shopId,Integer index);
 
+	/**
+	 * 通过条件查询商品列表
+	 * @param name 商品名
+	 * @param goodsId 商品id
+	 * @param sn  商品编号
+	 * @param index  当前页
+	 * @return
+	 */
+	List<Map<String, Object>> getListByConditon(String name, long goodsId,String sn, Integer index);
+
 }
