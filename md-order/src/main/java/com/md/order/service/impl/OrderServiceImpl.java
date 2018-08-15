@@ -1,5 +1,6 @@
 package com.md.order.service.impl;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -143,5 +144,33 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 		wrapper.eq("memberId", memberId);
 		wrapper.eq("status", status);
 		return orderMapper.selectCount(wrapper);
+	}
+
+	@Override
+	public List<Order> findListByCondition(Timestamp startTime, Timestamp endTime, Long memberId, Long orderId,
+			Integer status, Integer index) {
+		
+		Wrapper<Order> wrapper = new EntityWrapper<>();
+		if(ToolUtil.isNotEmpty(startTime)) {
+			wrapper.ge("createTime", startTime);
+		}
+		if(ToolUtil.isNotEmpty(endTime)) {
+			wrapper.le("createTime", endTime);
+		}
+		if (ToolUtil.isNotEmpty(memberId)) {
+			wrapper.eq("memberId", memberId);
+		}
+		if(orderId != 0l) {
+			wrapper.eq("id", orderId);
+		}
+		if (ToolUtil.isNotEmpty(status)) {
+			wrapper.eq("status", status);
+		}else {
+			wrapper.ne("status", OrderStatus.DELETE.getCode());
+		}
+		wrapper.orderBy("createTime",false);
+		Integer begin = (index - 1) * Page.PAGESIZE.getCode();
+		RowBounds rowBounds = new RowBounds(begin,Page.PAGESIZE.getCode());
+		return orderMapper.selectPage(rowBounds, wrapper);
 	}
 }

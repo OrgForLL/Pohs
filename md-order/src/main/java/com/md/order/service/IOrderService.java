@@ -1,5 +1,6 @@
 package com.md.order.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -79,5 +80,17 @@ public interface IOrderService extends IService<Order> {
 	 * @param memberId
 	 */
 	Integer selectOrderCount(Long memberId,Integer status);
+	/**
+	 * 获取订单列表
+	 * @param startTime
+	 * @param endTime
+	 * @param memberId
+	 * @param orderId
+	 * @param status
+	 * @param index
+	 * @return
+	 */
+	List<Order> findListByCondition(Timestamp startTime, Timestamp endTime, Long memberId, Long orderId, Integer status,
+			Integer index);
 
 }
