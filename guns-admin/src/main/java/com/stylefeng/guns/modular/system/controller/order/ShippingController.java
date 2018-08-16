@@ -2,6 +2,7 @@ package com.stylefeng.guns.modular.system.controller.order;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,7 @@ import com.md.order.warpper.OrderWarpper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
+import com.stylefeng.guns.core.util.HttpPostUrl;
 import com.stylefeng.guns.core.util.ToolUtil;
 
 /**
@@ -149,8 +151,12 @@ public class ShippingController extends BaseController {
             order.setStatus(OrderStatus.WAIT_GAINS.getCode());
             orderService.updateById(order);
             shopNoticeService.addOnOrderSend("您的订单"+order.getSn()+"已发货。", order.getMemberId());
+            Map<String, String> mapParam = new HashMap<String, String>();
+    		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":"+order.getStatus()+"},\"RequestID\":\"\"}";
+    		mapParam.put("data", data);
+    		HttpPostUrl.sendPost("", mapParam);
         }
-        
+       
         return SUCCESS;
     }
 }

@@ -1,5 +1,6 @@
 package com.stylefeng.guns.rest.modular.member;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,7 @@ import com.md.pay.service.IWeixinService;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.cache.CacheKit;
 import com.stylefeng.guns.core.exception.ApiException;
+import com.stylefeng.guns.core.util.HttpPostUrl;
 import com.stylefeng.guns.core.util.SmsUtil;
 import com.stylefeng.guns.core.util.ToolUtil;
 import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
@@ -205,11 +207,16 @@ public class ApiMemberController extends BaseController {
 		member.setCaptcha(user.getHeadimgurl());
 		
 		Wrapper<Member> wrapper = new EntityWrapper<>();
-		wrapper.eq("password", member.getPassword());
 		wrapper.eq("phoneNum", member.getPhoneNum());
 		List<Map<String, Object>> memberList = memberServiceImpl.selectMaps(wrapper);
 		if(ToolUtil.isEmpty(memberList)){
 			return ResponseEntity.ok(new ApiException(BizExceptionEnum.USER_NOT_EXISTED));
+		}else {
+			wrapper.eq("password", member.getPassword());
+			List<Map<String, Object>> memberList2 = memberServiceImpl.selectMaps(wrapper);
+			if(ToolUtil.isEmpty(memberList2)) {
+				return ResponseEntity.ok(new ApiException(BizExceptionEnum.AUTH_REQUEST_ERROR));
+			}
 		}
 		member.setId(Long.valueOf(memberList.get(0).get("id").toString()));
 		memberServiceImpl.updateById(member);
@@ -339,6 +346,12 @@ public class ApiMemberController extends BaseController {
     	//分配收藏夹
     	favoriteService.init(member);
     	memberServiceImpl.update(member);
+    	
+    	Map<String, String> mapParam = new HashMap<String, String>();
+		String data = "{\"MsgTypeID\":3101,\"CreateID\":3100,\"MsgJson\":{\"id\":"+member.getId()+"},\"RequestID\":\"\"}";
+		mapParam.put("data", data);
+		HttpPostUrl.sendPost("", mapParam);
+    	
         return ResponseEntity.ok("SUCCESS");
     }
 	/**

@@ -1,6 +1,7 @@
 package com.stylefeng.guns.adminapi;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,16 +13,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.HtmlUtils;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.md.goods.model.Shop;
 import com.md.goods.service.IShopService;
+import com.md.order.constant.InventoryType;
+import com.md.order.constant.OrderStatus;
+import com.md.order.factory.InventoryFactory;
+import com.md.order.model.Inventory;
 import com.md.order.model.Order;
+import com.md.order.model.Shipping;
+import com.md.order.model.ShippingItem;
 import com.md.order.service.IOrderItemService;
 import com.md.order.service.IOrderService;
+import com.md.order.service.IShippingService;
 import com.md.order.warpper.OrderItemWarpper;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.shiro.ShiroKit;
+import com.stylefeng.guns.core.util.DateUtil;
 
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -42,6 +55,9 @@ public class AdminApiOrderController extends BaseController {
 	
 	@Resource
 	IShopService shopService;
+	
+	@Resource
+	IShippingService shippingService;
 	
 	@ApiOperation(value = "根据订单ID获取订单详情", notes = "根据订单ID获取订单详情    \r\n"
 			+ "actualPay:实际支付金额;  \r\n"
@@ -133,12 +149,20 @@ public class AdminApiOrderController extends BaseController {
 	@ApiOperation(value = "修改订单状态", notes = "修改订单状态")
 	@RequestMapping(value = "/changeOrderStatus", method = RequestMethod.POST)
 	@ResponseBody
+	@ApiImplicitParam(name = "shipping", value = "发货单", required = false, dataType = "Shipping", paramType = "body")
 	public JSONObject changeOrderStatus(
+			@RequestBody Shipping shipping,
 			@ApiParam("订单id") @RequestParam(value = "orderId", required = true) @RequestBody Long orderId,
 			@ApiParam("状态") @RequestParam(value = "status", required = true) @RequestBody Integer status) {
 		JSONObject jb = new JSONObject();
 		Order order = orderService.getById(orderId);
-		//订单状态判断  需要新增
+		//订单状态判断  发货
+		if(status == OrderStatus.WAIT_GAINS.getCode()) {
+			shipping.setCreateTime(DateUtil.getTime());
+	    	shipping.setType(0);
+	    	shipping.setOrderId(orderId);
+	        shippingService.add(shipping);
+		}
 		order.setStatus(status);
 		orderService.update(order);
 		jb.put("data", "SUCCESS");

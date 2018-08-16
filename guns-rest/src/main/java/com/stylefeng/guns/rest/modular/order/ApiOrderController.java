@@ -1,8 +1,8 @@
 package com.stylefeng.guns.rest.modular.order;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +20,6 @@ import com.md.cart.model.Cart;
 import com.md.cart.model.CartItem;
 import com.md.cart.service.ICartItemService;
 import com.md.cart.service.ICartService;
-import com.md.goods.model.Goods;
 import com.md.goods.model.PriceTag;
 import com.md.goods.model.Product;
 import com.md.goods.model.Shop;
@@ -29,7 +28,6 @@ import com.md.goods.service.IPriceTagService;
 import com.md.goods.service.IProductService;
 import com.md.goods.service.IShopService;
 import com.md.goods.service.IUploadFileService;
-import com.md.member.model.Member;
 import com.md.member.service.IMemberService;
 import com.md.order.constant.OrderStatus;
 import com.md.order.model.Evaluation;
@@ -43,19 +41,12 @@ import com.md.order.service.IOrderService;
 import com.md.order.service.IRefundApplyService;
 import com.md.order.service.IShippingService;
 import com.md.order.warpper.OrderItemWarpper;
-import com.openAPI.openAPI;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.util.DateUtil;
+import com.stylefeng.guns.core.util.HttpPostUrl;
 import com.stylefeng.guns.core.util.ToolUtil;
-import com.stylefeng.guns.rest.modular.order.dto.Customer;
 import com.stylefeng.guns.rest.modular.order.dto.EvaluationRequest;
-import com.stylefeng.guns.rest.modular.order.dto.Inventory;
 import com.stylefeng.guns.rest.modular.order.dto.OrderRequest;
-import com.stylefeng.guns.rest.modular.order.dto.Param;
-import com.stylefeng.guns.rest.modular.order.dto.SaleObject;
-import com.stylefeng.guns.rest.modular.order.dto.SaleOrder;
-import com.stylefeng.guns.rest.modular.order.dto.SaleOrderDetails;
-import com.stylefeng.guns.rest.modular.order.dto.Unit;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -134,7 +125,12 @@ public class ApiOrderController extends BaseController{
 			evaluationService.insert(evaluation);
 			order.setStatus(OrderStatus.TRADE_SUCCESS.getCode());
 			orderService.updateById(order);
+			Map<String, String> mapParam = new HashMap<String, String>();
+	  		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":4},\"RequestID\":\"\"}";
+	  		mapParam.put("data", data);
+	  		HttpPostUrl.sendPost("", mapParam);
 		}
+		
 		return ResponseEntity.ok("success");
 	}
 	
@@ -212,6 +208,10 @@ public class ApiOrderController extends BaseController{
 				priceTagService.addInventory(item.getProductId(), order.getShopId(), item.getQuantity());
 			}
 		}
+		Map<String, String> mapParam = new HashMap<String, String>();
+  		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":"+orderRequest.getStatus()+"},\"RequestID\":\"\"}";
+  		mapParam.put("data", data);
+  		HttpPostUrl.sendPost("", mapParam);
 		jb.put("data", "success");
 		return ResponseEntity.ok(jb);
 	}
@@ -269,9 +269,6 @@ public class ApiOrderController extends BaseController{
 	@RequestMapping(value = "/submitOrder", method = RequestMethod.POST)
 	public ResponseEntity<?> submitOrder(@RequestBody OrderRequest orderRequest) throws Exception {
 		List<Long> idList = new ArrayList<>();
-		SaleObject object = new SaleObject(); 
-		Param param = new Param();
-		List<SaleOrder> dtos = new ArrayList<>();
 		String sn =new Date().getTime()+ String.valueOf((int)((Math.random()* 9 + 1) * 100000));	
 		for(Order order : orderRequest.getOrderList()) {
 			Cart cart = cartService.findById(order.getMemberId());
@@ -293,46 +290,12 @@ public class ApiOrderController extends BaseController{
 					cartItemService.deleteById(cartItem.getId());
 				}
 			}
-			//同步订单
-			SaleOrder saleD = new SaleOrder();
-			Member member = memberService.findById(order.getMemberId());
-			saleD.setAddress(order.getAddress());
-			saleD.setContactPhone(order.getPhoneNum());
-			Customer customer = new Customer();
-			customer.setCode(member.getCustomer());
-			saleD.setCustomer(customer);
-			saleD.setExternalCode(order.getId().toString());
-			saleD.setLinkMan(order.getConsigneeName());
-			saleD.setMemo(order.getRemark());
-			saleD.setVoucherDate(DateUtil.format(new Date(), "yyyy-MM-dd"));
-			List<SaleOrderDetails> saleOrderDetails = new ArrayList<>();
-			for(OrderItem item : orderItemService.findByOrderId(order.getId())) {
-				SaleOrderDetails saleDetial = new SaleOrderDetails();
-				saleDetial.setOrigPrice(item.getUnitPrice());
-				saleDetial.setQuantity(new BigDecimal(item.getQuantity()));
-				Unit unit = new Unit();
-				Goods good = goodsService.findById(item.getGoodsId());
-				unit.setName(good.getUnit());
-				saleDetial.setUnit(unit);
-				Inventory inventory = new Inventory();
-				inventory.setCode(good.getSn());
-				saleDetial.setInventory(inventory);
-				saleOrderDetails.add(saleDetial);
-			}
-			saleD.setSaleOrderDetails(saleOrderDetails);
-			dtos.add(saleD);
+			Map<String, String> mapParam = new HashMap<String, String>();
+	  		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":0},\"RequestID\":\"\"}";
+	  		mapParam.put("data", data);
+	  		HttpPostUrl.sendPost("", mapParam);
 		}
-		object.setParam(param);
-		object.setDtos(dtos);
-		String jsonStr = "";
-		String json = JSONObject.toJSONString(object);
-		System.out.println(json);
-		openAPI api = new openAPI("http://222.77.181.10:8001/tplus/api/v1/", appKey, appSecret);
-		jsonStr = api.get("Authorization/Logout"); //登出方法
-		jsonStr = api.Login(user, pwd, account);
-		jsonStr = api.getData("saleOrder/CreateBatch", json);
-		System.out.println(jsonStr);
-		api.get("Authorization/Logout"); //登出方法
+		
 		return ResponseEntity.ok(idList);
 	}
 	

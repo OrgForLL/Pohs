@@ -26,6 +26,6 @@ public class PasswordFactory {
 	}
 	
 	public String resetPassword(){
-		return "88888888";
+		return MD5Util.encrypt("88888888");
 	}
 }

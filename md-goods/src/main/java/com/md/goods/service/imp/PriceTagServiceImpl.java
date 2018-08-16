@@ -1,5 +1,6 @@
 package com.md.goods.service.imp;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.md.goods.constant.Marketable;
 import com.md.goods.dao.PriceTagMapper;
 import com.md.goods.model.PriceTag;
 import com.md.goods.service.IPriceTagService;
+import com.stylefeng.guns.core.util.HttpPostUrl;
 import com.stylefeng.guns.core.util.ToolUtil;
 
 @Service
@@ -116,6 +118,12 @@ public class PriceTagServiceImpl extends ServiceImpl<PriceTagMapper, PriceTag> i
 		PriceTag tag = findOne(priceTag);
 		tag.setInventory(tag.getInventory() - amount);
 		edit(tag);
+		if(tag.getInventory() <= tag.getThreshold()) {
+			Map<String, String> mapParam = new HashMap<String, String>();
+			String data = "{\"MsgTypeID\":3102,\"CreateID\":3100,\"MsgJson\":{\"productId\":"+tag.getProductId()+",\"shopId\":"+tag.getShopId()+"},\"RequestID\":\"\"}";
+			mapParam.put("data", data);
+			HttpPostUrl.sendPost("", mapParam);
+		}
 	}
 
 	@Override

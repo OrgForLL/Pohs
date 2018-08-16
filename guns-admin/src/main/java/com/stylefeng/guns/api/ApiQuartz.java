@@ -3,7 +3,9 @@ package com.stylefeng.guns.api;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -41,6 +43,7 @@ import com.md.share.service.IDefaultConfigureService;
 import com.md.share.service.IShareAmountService;
 import com.md.share.service.IShareBindService;
 import com.stylefeng.guns.core.util.DateUtil;
+import com.stylefeng.guns.core.util.HttpPostUrl;
 import com.stylefeng.guns.core.util.ToolUtil;
 
 
@@ -101,6 +104,10 @@ public class ApiQuartz {
 				priceTagService.addInventory(item.getProductId(), order.getShopId(), item.getQuantity());
 			}
     		orderService.updateById(order);
+    		Map<String, String> mapParam = new HashMap<String, String>();
+      		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":5},\"RequestID\":\"\"}";
+      		mapParam.put("data", data);
+      		HttpPostUrl.sendPost("", mapParam);
     	}
     }
     /**
@@ -116,6 +123,10 @@ public class ApiQuartz {
     		orderService.updateById(order);
     		shipping.setType(1);
     		shippingServiceImpl.updateById(shipping);
+    		Map<String, String> mapParam = new HashMap<String, String>();
+      		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":6},\"RequestID\":\"\"}";
+      		mapParam.put("data", data);
+      		HttpPostUrl.sendPost("", mapParam);
     	}
     }
     /**
@@ -140,6 +151,10 @@ public class ApiQuartz {
     			evaluationService.insert(evaluation);
     		}
     		orderService.updateById(order);
+    		Map<String, String> mapParam = new HashMap<String, String>();
+      		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":4},\"RequestID\":\"\"}";
+      		mapParam.put("data", data);
+      		HttpPostUrl.sendPost("", mapParam);
     	}
     }
     /**
