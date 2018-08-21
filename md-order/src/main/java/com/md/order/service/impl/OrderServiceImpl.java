@@ -147,30 +147,36 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 	}
 
 	@Override
-	public List<Order> findListByCondition(Timestamp startTime, Timestamp endTime, Long memberId, Long orderId,
-			Integer status, Integer index) {
+	public List<Order> findListByCondition(Timestamp startTime, Timestamp endTime, String memberId, String orderId,
+			Integer status, Integer index,Integer pageSize) {
 		
 		Wrapper<Order> wrapper = new EntityWrapper<>();
-		if(ToolUtil.isNotEmpty(startTime)) {
-			wrapper.ge("createTime", startTime);
-		}
-		if(ToolUtil.isNotEmpty(endTime)) {
-			wrapper.le("createTime", endTime);
-		}
-		if (ToolUtil.isNotEmpty(memberId)) {
-			wrapper.eq("memberId", memberId);
-		}
-		if(orderId != 0l) {
+		if(ToolUtil.isNotEmpty(orderId)) {
 			wrapper.eq("id", orderId);
-		}
-		if (ToolUtil.isNotEmpty(status)) {
-			wrapper.eq("status", status);
 		}else {
-			wrapper.ne("status", OrderStatus.DELETE.getCode());
+			if(ToolUtil.isNotEmpty(startTime)) {
+				wrapper.ge("createTime", startTime);
+			}
+			if(ToolUtil.isNotEmpty(endTime)) {
+				wrapper.le("createTime", endTime);
+			}
+			if (ToolUtil.isNotEmpty(memberId)) {
+				wrapper.eq("memberId", memberId);
+			}
+			if (ToolUtil.isNotEmpty(status)) {
+				wrapper.eq("status", status);
+			}else {
+				wrapper.ne("status", OrderStatus.DELETE.getCode());
+			}
 		}
+		
 		wrapper.orderBy("createTime",false);
-		Integer begin = (index - 1) * Page.PAGESIZE.getCode();
-		RowBounds rowBounds = new RowBounds(begin,Page.PAGESIZE.getCode());
+		Integer size = Page.PAGESIZE.getCode();
+		if(ToolUtil.isNotEmpty(pageSize)) {
+			size = pageSize;
+		}
+		Integer begin = (index - 1) * size;
+		RowBounds rowBounds = new RowBounds(begin,size);
 		return orderMapper.selectPage(rowBounds, wrapper);
 	}
 }

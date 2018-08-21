@@ -80,22 +80,21 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 	}
 
 	@Override
-	public List<Map<String, Object>> getListByCondition(String name, Long memberId, String openId, String phone) {
-		System.out.println(name+","+memberId+","+openId+","+phone);
+	public List<Map<String, Object>> getListByCondition(String name, String memberId, String openId, String phone) {
 		Wrapper<Member> wrapper = new EntityWrapper<>();
-		if(memberId != 0l) {
+		if(ToolUtil.isNotEmpty(memberId)) {
 			wrapper.eq("id", memberId);
+		}else {
+			if(ToolUtil.isNotEmpty(openId)) {
+				wrapper.eq("openId", openId);
+			}
+			if(ToolUtil.isNotEmpty(name)) {
+				wrapper.like("name", name);
+			}
+			if(ToolUtil.isNotEmpty(phone)) {
+				wrapper.like("phoneNum", phone);
+			}
 		}
-		if(ToolUtil.isNotEmpty(openId)) {
-			wrapper.eq("openId", openId);
-		}
-		if(ToolUtil.isNotEmpty(name)) {
-			wrapper.like("name", name);
-		}
-		if(ToolUtil.isNotEmpty(phone)) {
-			wrapper.like("phoneNum", phone);
-		}
-		
 		return memberMapper.selectMaps(wrapper);
 	}
 }

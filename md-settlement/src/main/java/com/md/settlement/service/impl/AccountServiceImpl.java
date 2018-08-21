@@ -93,7 +93,8 @@ public class AccountServiceImpl implements IAccountService {
 		Order order = new Order(orderItems);
 		order.setShop(shopService.findById(shopId));
 		order.setShopId(shopId);
-		
+		order.setKey(shopItems.get(0).getKey());
+		order.setCaption(shopItems.get(0).getCaption());
 		// 获取购买清单的促销分组信息
 		Map<Long, List<Long>> promotions = this.findPromotions(priceTags);
 		// 促销结算

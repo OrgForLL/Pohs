@@ -58,5 +58,5 @@ public interface IMemberService extends IService<Member> {
 	 * @param openId 
 	 * @param phone
 	 */
-	List<Map<String, Object>> getListByCondition(String name, Long memberId, String openId, String phone);
+	List<Map<String, Object>> getListByCondition(String name, String memberId, String openId, String phone);
 }

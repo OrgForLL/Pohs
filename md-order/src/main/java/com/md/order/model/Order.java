@@ -70,6 +70,10 @@ public class Order {
 	private String remark;
 	// 状态（待付款、待审核、待发货、待收货、完成、关闭）
 	private Integer status;
+	// 销售员的id
+	private String key;
+	// 销售员的姓名
+	private String caption;
 	// 所属门店
 	@TableField(exist = false)
 	private Shop shop;
@@ -357,6 +361,22 @@ public class Order {
 
 	public void setGainsTime(Timestamp gainsTime) {
 		this.gainsTime = gainsTime;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
 	}
 
 

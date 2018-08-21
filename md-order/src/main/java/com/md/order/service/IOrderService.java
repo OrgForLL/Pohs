@@ -90,7 +90,7 @@ public interface IOrderService extends IService<Order> {
 	 * @param index
 	 * @return
 	 */
-	List<Order> findListByCondition(Timestamp startTime, Timestamp endTime, Long memberId, Long orderId, Integer status,
-			Integer index);
+	List<Order> findListByCondition(Timestamp startTime, Timestamp endTime, String memberId, String orderId, Integer status,
+			Integer index,Integer pageSize);
 
 }

@@ -180,22 +180,27 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 	}
 
 	@Override
-	public List<Map<String, Object>> getListByConditon(String name,long goodsId, String sn,Integer index) {
+	public List<Map<String, Object>> getListByConditon(String name,String goodsId, String sn,Integer index,Integer pageSize) {
 		Wrapper<Goods> wrapper = new EntityWrapper<>();
-		Integer begin = (index - 1) * Page.PAGESIZE.getCode();
-		if(ToolUtil.isNotEmpty(name)) {
-			wrapper.like("name", name);
-		}
 		
-		if(goodsId != 0l) {
+		if(ToolUtil.isNotEmpty(goodsId)) {
 			wrapper.eq("id", goodsId);
+		}else {
+			if(ToolUtil.isNotEmpty(name)) {
+				wrapper.like("name", name);
+			}
+			if(ToolUtil.isNotEmpty(sn)) {
+				wrapper.like("sn", sn);
+			}
 		}
 		wrapper.eq("isDel", 0);
-		if(ToolUtil.isNotEmpty(sn)) {
-			wrapper.like("sn", sn);
-		}
 		wrapper.orderBy("id");
-		RowBounds rowBounds = new RowBounds(begin, Page.PAGESIZE.getCode());
+		Integer size = Page.PAGESIZE.getCode();
+		if(ToolUtil.isNotEmpty(pageSize)) {
+			size = pageSize;
+		}
+		Integer begin = (index - 1) * size;
+		RowBounds rowBounds = new RowBounds(begin,size);
 		return goodsMapper.selectMapsPage(rowBounds, wrapper);
 	}
 

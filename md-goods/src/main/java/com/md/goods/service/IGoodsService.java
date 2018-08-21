@@ -129,6 +129,6 @@ public interface IGoodsService extends IService<Goods> {
 	 * @param index  当前页
 	 * @return
 	 */
-	List<Map<String, Object>> getListByConditon(String name, long goodsId,String sn, Integer index);
+	List<Map<String, Object>> getListByConditon(String name, String goodsId,String sn, Integer index, Integer pageSize);
 
 }

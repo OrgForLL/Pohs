@@ -209,16 +209,17 @@ public class ApiMemberController extends BaseController {
 		Wrapper<Member> wrapper = new EntityWrapper<>();
 		wrapper.eq("phoneNum", member.getPhoneNum());
 		List<Map<String, Object>> memberList = memberServiceImpl.selectMaps(wrapper);
+		List<Map<String, Object>> memberList2;
 		if(ToolUtil.isEmpty(memberList)){
 			return ResponseEntity.ok(new ApiException(BizExceptionEnum.USER_NOT_EXISTED));
 		}else {
 			wrapper.eq("password", member.getPassword());
-			List<Map<String, Object>> memberList2 = memberServiceImpl.selectMaps(wrapper);
+			memberList2 = memberServiceImpl.selectMaps(wrapper);
 			if(ToolUtil.isEmpty(memberList2)) {
 				return ResponseEntity.ok(new ApiException(BizExceptionEnum.AUTH_REQUEST_ERROR));
 			}
 		}
-		member.setId(Long.valueOf(memberList.get(0).get("id").toString()));
+		member.setId(Long.valueOf(memberList2.get(0).get("id").toString()));
 		memberServiceImpl.updateById(member);
 		jb.put("code", "200");
 		jb.put("data", new MemberWarpper(memberList));
