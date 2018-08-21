@@ -1,7 +1,6 @@
 package com.stylefeng.guns.adminapi;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,26 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.HtmlUtils;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.md.goods.model.Shop;
 import com.md.goods.service.IShopService;
-import com.md.order.constant.InventoryType;
 import com.md.order.constant.OrderStatus;
-import com.md.order.factory.InventoryFactory;
-import com.md.order.model.Inventory;
 import com.md.order.model.Order;
 import com.md.order.model.Shipping;
-import com.md.order.model.ShippingItem;
 import com.md.order.service.IOrderItemService;
 import com.md.order.service.IOrderService;
 import com.md.order.service.IShippingService;
 import com.md.order.warpper.OrderItemWarpper;
 import com.stylefeng.guns.core.base.controller.BaseController;
-import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
+import com.stylefeng.guns.core.util.ToolUtil;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -87,9 +80,14 @@ public class AdminApiOrderController extends BaseController {
 	@RequestMapping(value = "/getOrderDetail", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getOrderDetail (
-			@ApiParam("订单Id") @RequestParam(value = "orderId", required = true) @RequestBody Long orderId){
+			@ApiParam("订单Id") @RequestParam(value = "orderId", required = true) @RequestBody String orderId){
 		JSONObject jb = new JSONObject();
-		Order order = orderService.getById(orderId);
+		Order order = orderService.getById(Long.valueOf(orderId));
+		if(ToolUtil.isEmpty(order)) {
+			jb.put("data", "error");
+			jb.put("msg", "不存在该订单");
+			return jb;
+		}
 		Shop shop = shopService.findById(order.getShopId());
 		order.setShop(shop);
 		List<Map<String, Object>> itemResult = orderItemService.getListByOrderId(order.getId());
@@ -128,12 +126,13 @@ public class AdminApiOrderController extends BaseController {
 	public JSONObject getOrderListByCondition(
 			@ApiParam("开始时间") @RequestParam(value = "startTime", required = false) @RequestBody Timestamp startTime,
 			@ApiParam("结束时间") @RequestParam(value = "endTime", required = false) @RequestBody Timestamp endTime,
-			@ApiParam("用户id") @RequestParam(value = "memberId", required = true) @RequestBody Long memberId,
-			@ApiParam("订单id") @RequestParam(value = "orderId", required = true) @RequestBody Long orderId,
+			@ApiParam("用户id") @RequestParam(value = "memberId", required = false) @RequestBody String memberId,
+			@ApiParam("订单id") @RequestParam(value = "orderId", required = false) @RequestBody String orderId,
 			@ApiParam("订单状态") @RequestParam(value = "status", required = false) @RequestBody Integer status,
-			@ApiParam("当前页") @RequestParam(value = "index", required = true) @RequestBody Integer index) {
+			@ApiParam("当前页") @RequestParam(value = "index", required = true) @RequestBody Integer index,
+			@ApiParam("每页显示数量") @RequestParam(value = "pageSize", required = false) @RequestBody Integer pageSize) {
 		JSONObject jb = new JSONObject();
-		List<Order> orderResult = orderService.findListByCondition(startTime,endTime,memberId,orderId,status,index);
+		List<Order> orderResult = orderService.findListByCondition(startTime,endTime,memberId,orderId,status,index,pageSize);
 		if(orderResult.size()>0) {
 			for(Order order : orderResult) {
 				Shop shop = shopService.findById(order.getShopId());
@@ -152,15 +151,20 @@ public class AdminApiOrderController extends BaseController {
 	@ApiImplicitParam(name = "shipping", value = "发货单", required = false, dataType = "Shipping", paramType = "body")
 	public JSONObject changeOrderStatus(
 			@RequestBody Shipping shipping,
-			@ApiParam("订单id") @RequestParam(value = "orderId", required = true) @RequestBody Long orderId,
+			@ApiParam("订单id") @RequestParam(value = "orderId", required = true) @RequestBody String orderId,
 			@ApiParam("状态") @RequestParam(value = "status", required = true) @RequestBody Integer status) {
 		JSONObject jb = new JSONObject();
-		Order order = orderService.getById(orderId);
+		Order order = orderService.getById(Long.valueOf(orderId));
+		if(ToolUtil.isEmpty(order)) {
+			jb.put("data", "error");
+			jb.put("msg", "不存在该订单");
+			return jb;
+		}
 		//订单状态判断  发货
 		if(status == OrderStatus.WAIT_GAINS.getCode()) {
 			shipping.setCreateTime(DateUtil.getTime());
 	    	shipping.setType(0);
-	    	shipping.setOrderId(orderId);
+	    	shipping.setOrderId(Long.valueOf(orderId));
 	        shippingService.add(shipping);
 		}
 		order.setStatus(status);

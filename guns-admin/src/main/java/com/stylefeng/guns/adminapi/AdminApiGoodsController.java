@@ -43,7 +43,6 @@ import com.md.goods.service.IProductService;
 import com.md.goods.service.ITagRelationService;
 import com.md.goods.service.IUploadFileService;
 import com.md.goods.warpper.GoodsWarpper;
-import com.md.member.model.Member;
 import com.stylefeng.guns.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
@@ -117,14 +116,54 @@ public class AdminApiGoodsController extends BaseController {
 	@ResponseBody
 	public JSONObject getGoodsListByConditon(
 			@ApiParam("商品名称") @RequestParam(value = "name", required = false) @RequestBody String name,
-			@ApiParam("商品id") @RequestParam(value = "goodsId", required = false) @RequestBody long goodsId,
+			@ApiParam("商品id") @RequestParam(value = "goodsId", required = false) @RequestBody String goodsId,
 			@ApiParam("商品编码") @RequestParam(value = "sn", required = false) @RequestBody String sn,
-			@ApiParam("当前页") @RequestParam(value = "index", required = true) @RequestBody Integer index) {
+			@ApiParam("当前页") @RequestParam(value = "index", required = true) @RequestBody Integer index,
+			@ApiParam("分页数量") @RequestParam(value = "pageSize", required = false) @RequestBody Integer pageSize) {
 		JSONObject jb = new JSONObject();
-		List<Map<String, Object>> result = goodsService.getListByConditon(name,goodsId,sn, index);
+		List<Map<String, Object>> result = goodsService.getListByConditon(name,goodsId,sn, index,pageSize);
 		jb.put("data", super.warpObject(new GoodsWarpper(result)));
 		return jb;
 	}
+	
+	@ApiOperation(value = "获取商品详情", notes = "获取商品详情")
+	@RequestMapping(value = "/getGoodDetail", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject getGoodDetail(
+			@ApiParam("商品id") @RequestParam(value = "goodsId", required = true) @RequestBody long goodsId) {
+		JSONObject jb = new JSONObject();
+		GoodsObject goodsOb = new GoodsObject();
+		Goods goods = goodsService.findById(goodsId);
+		if(ToolUtil.isEmpty(goods)) {
+			jb.put("data", "error");
+			jb.put("msg", "不存在该商品");
+			return jb;
+		}
+		String imageUrl = "";
+		if (goods.getImages() != null && !goods.getImages().equals("")) {
+			String[] arr = goods.getImages().split(",");
+			for (int i = 0; i < arr.length; i++) {
+				UploadFile uploadFile = uploadFileService.getById(Long.valueOf(arr[i]));
+				if(uploadFile != null) {
+					imageUrl += uploadFile.getUrl() + ",";
+				}
+			}
+			if(ToolUtil.isNotEmpty(imageUrl)) {
+				imageUrl = imageUrl.substring(0,imageUrl.length() - 1);
+			}
+			goodsOb.setImages(imageUrl);
+		}
+		goodsOb.setGoodName(goods.getName());
+		goodsOb.setBrandName(brandService.findById(goods.getBrandId()).getName());
+		goodsOb.setId(goods.getId());
+		goodsOb.setMarketPrice(goods.getMarketPrice());
+		goodsOb.setPrice(goods.getPrice());
+		goodsOb.setUnit(goods.getUnit());
+		jb.put("data", goodsOb);
+
+		return jb;
+	}
+
 	
 	@ApiOperation(value = "创建、编辑商品信息", notes = "创建、编辑商品信息  ")
 	@RequestMapping(value = "/saveGoodsInfo", method = RequestMethod.POST)
@@ -285,7 +324,7 @@ public class AdminApiGoodsController extends BaseController {
 	/**
 	 * 上传图片(上传到项目的webapp/static/img)
 	 */
-	@ApiOperation(value = "创建、编辑商品信息", notes = "创建、编辑商品信息  ")
+	@ApiOperation(value = "上传图片", notes = "上传图片  ")
 	@RequestMapping(method = RequestMethod.POST, value = "/upload")
 	@ResponseBody
 	public JSONObject upload(@RequestPart("file") MultipartFile picture) {

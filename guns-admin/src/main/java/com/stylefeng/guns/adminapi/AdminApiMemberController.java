@@ -44,7 +44,7 @@ public class AdminApiMemberController extends BaseController {
 	@RequestMapping(value = "/getMemberListByCondition", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getMemberListByCondition (@ApiParam("用户名") @RequestParam(value = "name", required = false) @RequestBody String name,
-			@ApiParam("用户Id") @RequestParam(value = "memberId", required = true) @RequestBody Long memberId,
+			@ApiParam("用户Id") @RequestParam(value = "memberId", required = false) @RequestBody String memberId,
 			@ApiParam("用户openId") @RequestParam(value = "openId", required = false) @RequestBody String openId,
 			@ApiParam("手机号") @RequestParam(value = "phone", required = false) @RequestBody String phone){
 		JSONObject jb = new JSONObject();
@@ -64,9 +64,9 @@ public class AdminApiMemberController extends BaseController {
 	@RequestMapping(value = "/getMemberInfo", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getMemberInfo (
-			@ApiParam("用户Id") @RequestParam(value = "memberId", required = true) @RequestBody Long memberId){
+			@ApiParam("用户Id") @RequestParam(value = "memberId", required = true) @RequestBody String memberId){
 		JSONObject jb = new JSONObject();
-		Member member = memberService.findById(memberId);
+		Member member = memberService.findById(Long.valueOf(memberId));
 		jb.put("data", member);
 		return jb;
 	}

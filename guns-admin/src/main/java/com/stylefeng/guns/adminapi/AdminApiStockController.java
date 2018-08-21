@@ -37,15 +37,15 @@ public class AdminApiStockController extends BaseController {
 	@RequestMapping(value = "/getStockByCondition", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getStockByCondition(
-			@ApiParam("商品id") @RequestParam(value = "goodsId", required = true) @RequestBody Long goodsId,
-			@ApiParam("门店id") @RequestParam(value = "shopId", required = true) @RequestBody Long shopId,
-			@ApiParam("产品id") @RequestParam(value = "productId", required = true) @RequestBody Long productId) {
+			@ApiParam("商品id") @RequestParam(value = "goodsId", required = false) @RequestBody String goodsId,
+			@ApiParam("门店id") @RequestParam(value = "shopId", required = true) @RequestBody String shopId,
+			@ApiParam("产品id") @RequestParam(value = "productId", required = false) @RequestBody String productId) {
 		JSONObject jb = new JSONObject();
 		Long stock = 0l;
-		if(goodsId != 0l) {
-			stock = priceTagService.getSumByStock(goodsId, shopId);
-		}else if(productId != 0l) {
-			PriceTag tag = priceTagService.findByShopAndProduct(productId,shopId);
+		if(ToolUtil.isNotEmpty(goodsId)) {
+			stock = priceTagService.getSumByStock(Long.valueOf(goodsId), Long.valueOf(shopId));
+		}else if(ToolUtil.isNotEmpty(goodsId)) {
+			PriceTag tag = priceTagService.findByShopAndProduct(Long.valueOf(productId), Long.valueOf(shopId));
 			if(ToolUtil.isNotEmpty(tag)) {
 				stock = tag.getInventory().longValue();
 			}
