@@ -85,7 +85,8 @@ public class AdminApiOrderController extends BaseController {
 		Order order = orderService.getById(Long.valueOf(orderId));
 		if(ToolUtil.isEmpty(order)) {
 			jb.put("data", "error");
-			jb.put("msg", "不存在该订单");
+			jb.put("errmsg", "不存在该订单");
+			jb.put("errcode", -1);
 			return jb;
 		}
 		Shop shop = shopService.findById(order.getShopId());
@@ -93,6 +94,8 @@ public class AdminApiOrderController extends BaseController {
 		List<Map<String, Object>> itemResult = orderItemService.getListByOrderId(order.getId());
 		order.setItemObject(super.warpObject(new OrderItemWarpper(itemResult)));
 		jb.put("data", order);
+		jb.put("errmsg", "");
+		jb.put("errcode", 0);
 		return jb;
 	}
 	
@@ -142,6 +145,8 @@ public class AdminApiOrderController extends BaseController {
 			}
 		}
 		jb.put("data", orderResult);
+		jb.put("errmsg", "");
+		jb.put("errcode", 0);
 		return jb;
 	}
 	
@@ -157,7 +162,8 @@ public class AdminApiOrderController extends BaseController {
 		Order order = orderService.getById(Long.valueOf(orderId));
 		if(ToolUtil.isEmpty(order)) {
 			jb.put("data", "error");
-			jb.put("msg", "不存在该订单");
+			jb.put("errmsg", "不存在该订单");
+			jb.put("errcode", -1);
 			return jb;
 		}
 		//订单状态判断  发货
@@ -170,6 +176,8 @@ public class AdminApiOrderController extends BaseController {
 		order.setStatus(status);
 		orderService.update(order);
 		jb.put("data", "SUCCESS");
+		jb.put("errmsg", "");
+		jb.put("errcode", 0);
 		return jb;
 	}
 }

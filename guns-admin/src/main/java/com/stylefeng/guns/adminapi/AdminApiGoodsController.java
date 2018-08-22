@@ -123,6 +123,8 @@ public class AdminApiGoodsController extends BaseController {
 		JSONObject jb = new JSONObject();
 		List<Map<String, Object>> result = goodsService.getListByConditon(name,goodsId,sn, index,pageSize);
 		jb.put("data", super.warpObject(new GoodsWarpper(result)));
+		jb.put("errcode", 0);
+		jb.put("errmsg", "");
 		return jb;
 	}
 	
@@ -136,7 +138,8 @@ public class AdminApiGoodsController extends BaseController {
 		Goods goods = goodsService.findById(goodsId);
 		if(ToolUtil.isEmpty(goods)) {
 			jb.put("data", "error");
-			jb.put("msg", "不存在该商品");
+			jb.put("errcode", -1);
+			jb.put("errmsg", "不存在该商品");
 			return jb;
 		}
 		String imageUrl = "";
@@ -160,7 +163,8 @@ public class AdminApiGoodsController extends BaseController {
 		goodsOb.setPrice(goods.getPrice());
 		goodsOb.setUnit(goods.getUnit());
 		jb.put("data", goodsOb);
-
+		jb.put("errcode", 0);
+		jb.put("errmsg", "0");
 		return jb;
 	}
 
@@ -318,6 +322,8 @@ public class AdminApiGoodsController extends BaseController {
 			}
 		}
 		jb.put("data", "SUCCESS");
+		jb.put("errcode", 0);
+		jb.put("errmsg", "");
 		return jb;
 	}
 	
@@ -356,6 +362,8 @@ public class AdminApiGoodsController extends BaseController {
 		String pictureId = uploadFileService.add(uploadFile).toString();
 		// 返回图片在uploadfile数据表里的id
 		jb.put("data", pictureId);
+		jb.put("errcode", 0);
+		jb.put("errmsg", "");
 		return jb;
 	}
 

@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.md.goods.model.Goods;
 import com.md.goods.model.PriceTag;
 import com.md.goods.service.IPriceTagService;
-import com.md.order.model.Order;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.util.ToolUtil;
 
@@ -51,6 +49,8 @@ public class AdminApiStockController extends BaseController {
 			}
 		}
 		jb.put("data", stock);
+		jb.put("errcode", 0);
+		jb.put("errmsg", "");
 		return jb;
 	}
 	
@@ -82,8 +82,12 @@ public class AdminApiStockController extends BaseController {
 			}
 			priceTagService.updateById(tag);
 			jb.put("data", "SUCCESS");
+			jb.put("errcode", 0);
+			jb.put("errmsg", "");
 		}else {
 			jb.put("data", "ERROR");
+			jb.put("errcode", -1);
+			jb.put("errmsg", "该产品不存在");
 		}
 		return jb;
 	}

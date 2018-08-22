@@ -50,6 +50,8 @@ public class AdminApiMemberController extends BaseController {
 		JSONObject jb = new JSONObject();
 		List<Map<String, Object>> list = memberService.getListByCondition(name,memberId,openId,phone);
 		jb.put("data", list);
+		jb.put("errcode", 0);
+		jb.put("errmsg", "");
 		return jb;
 	}
 	
@@ -68,6 +70,8 @@ public class AdminApiMemberController extends BaseController {
 		JSONObject jb = new JSONObject();
 		Member member = memberService.findById(Long.valueOf(memberId));
 		jb.put("data", member);
+		jb.put("errcode", 0);
+		jb.put("errmsg", "");
 		return jb;
 	}
 	
