@@ -260,7 +260,6 @@ public class Order {
 
 	public void setMember(Member member) {
 		this.member = member;
-		this.memberId = member.getId();
 	}
 
 	public Long getShopId() {
