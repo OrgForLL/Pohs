@@ -92,7 +92,8 @@ public class Order {
 	private RefundApply refundApply;
 	@TableField(exist = false)
 	private ShopCoupon shopCoupon;
-	
+	@TableField(exist = false)
+	private Shipping shipping;
 	public RefundApply getRefundApply() {
 		return refundApply;
 	}
@@ -376,6 +377,14 @@ public class Order {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
+	}
+
+	public Shipping getShipping() {
+		return shipping;
+	}
+
+	public void setShipping(Shipping shipping) {
+		this.shipping = shipping;
 	}
 
 

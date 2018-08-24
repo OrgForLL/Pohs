@@ -93,6 +93,10 @@ public class AdminApiOrderController extends BaseController {
 		order.setShop(shop);
 		List<Map<String, Object>> itemResult = orderItemService.getListByOrderId(order.getId());
 		order.setItemObject(super.warpObject(new OrderItemWarpper(itemResult)));
+		List<Shipping> shipping = shippingService.findByOrderId(Long.valueOf(orderId));
+		if(shipping.size() > 0) {
+			order.setShipping(shipping.get(0));
+		}
 		jb.put("data", order);
 		jb.put("errmsg", "");
 		jb.put("errcode", 0);
