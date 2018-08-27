@@ -150,6 +150,9 @@ public class ApiGoodsController extends BaseController {
 		goodsOb.setStock(stock);
 		goodsOb.setUnit(goods.getUnit());
 		goodsOb.setDetail(goods.getDetail());
+		goodsOb.setParamItems(goods.getParamItems());
+		goodsOb.setSpecItems(goods.getSpecItems());
+		goodsOb.setSn(goods.getSn());
 		String modelName = "";
 		List<Promotion> result = promotionService.getListByGoodsId(goodsRequest.getGoodsId());
 		for(Promotion promotion:result) {

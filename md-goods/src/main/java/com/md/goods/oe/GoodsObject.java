@@ -69,6 +69,11 @@ public class GoodsObject {
 	 * 优惠名称
 	 */
 	private String modelName;
+	
+	// 商品参数
+	private String paramItems;
+	// 商品规格
+	private String specItems;
 
 	public Long getId() {
 		return id;
@@ -164,6 +169,22 @@ public class GoodsObject {
 
 	public void setSn(String sn) {
 		this.sn = sn;
+	}
+
+	public String getParamItems() {
+		return paramItems;
+	}
+
+	public void setParamItems(String paramItems) {
+		this.paramItems = paramItems;
+	}
+
+	public String getSpecItems() {
+		return specItems;
+	}
+
+	public void setSpecItems(String specItems) {
+		this.specItems = specItems;
 	}
 
 }

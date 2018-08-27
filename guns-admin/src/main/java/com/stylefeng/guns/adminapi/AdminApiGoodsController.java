@@ -162,6 +162,9 @@ public class AdminApiGoodsController extends BaseController {
 		goodsOb.setMarketPrice(goods.getMarketPrice());
 		goodsOb.setPrice(goods.getPrice());
 		goodsOb.setUnit(goods.getUnit());
+		goodsOb.setParamItems(goods.getParamItems());
+		goodsOb.setSpecItems(goods.getSpecItems());
+		goodsOb.setSn(goods.getSn());
 		jb.put("data", goodsOb);
 		jb.put("errcode", 0);
 		jb.put("errmsg", "0");
