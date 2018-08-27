@@ -74,6 +74,60 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		List<Map<String, Object>> goodsList = goodsMapper.selectMaps(wrapper);
 		return goodsList;
 	}
+	
+	@Override
+	public List<Map<String, Object>> findPage(Goods goods, String barcode, Integer pagenum, Integer pagesize) {
+		Wrapper<Goods> wrapper = new EntityWrapper<>();
+		if (ToolUtil.isNotEmpty(barcode)) {
+			// 根据条码查找规格商品
+			Wrapper<Product> w = new EntityWrapper<>();
+			w.like("barcode", barcode);
+			List<Product> productList = this.productMapper.selectList(w);
+			// 获取商品的编号集合
+			List<Long> goodsIds = new ArrayList<>();
+			goodsIds.add(0L);
+			if (ToolUtil.isNotEmpty(productList)) {
+				for (Product product : productList) {
+					goodsIds.add(product.getGoodsId());
+				}
+			}
+			wrapper.in("id", goodsIds);
+		}
+		// 根据条码或名称查找商品
+		if (ToolUtil.isNotEmpty(goods.getName())) {
+			wrapper.like("name", goods.getName());
+		}
+		wrapper.eq("isDel", 0);
+		wrapper.orderBy("createTime", false);
+		wrapper.last(" limit "+pagenum+","+pagesize);
+		List<Map<String, Object>> goodsList = goodsMapper.selectMaps(wrapper);
+		return goodsList;
+	}
+	@Override
+	public Integer countGoods(Goods goods, String barcode) {
+		Wrapper<Goods> wrapper = new EntityWrapper<>();
+		if (ToolUtil.isNotEmpty(barcode)) {
+			// 根据条码查找规格商品
+			Wrapper<Product> w = new EntityWrapper<>();
+			w.like("barcode", barcode);
+			List<Product> productList = this.productMapper.selectList(w);
+			// 获取商品的编号集合
+			List<Long> goodsIds = new ArrayList<>();
+			goodsIds.add(0L);
+			if (ToolUtil.isNotEmpty(productList)) {
+				for (Product product : productList) {
+					goodsIds.add(product.getGoodsId());
+				}
+			}
+			wrapper.in("id", goodsIds);
+		}
+		// 根据条码或名称查找商品
+		if (ToolUtil.isNotEmpty(goods.getName())) {
+			wrapper.like("name", goods.getName());
+		}
+		wrapper.eq("isDel", 0);
+		return goodsMapper.selectCount(wrapper);
+	}
 
 	@Override
 	public Goods findById(Long id) {

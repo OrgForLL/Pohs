@@ -13,7 +13,7 @@ var Goods = {
  */
 Goods.initColumn = function () {
     return [
-        {field: 'selectItem', radio: true},
+        {field: 'rows', radio: true},
         {title: '流水号', field: 'sn', align: 'center', valign: 'middle', sortable: true},
         {title: '名称', field: 'name', align: 'center', valign: 'middle', sortable: true},
         {title: '品牌', field: 'brandName', align: 'center', valign: 'middle', sortable: true},
@@ -99,11 +99,19 @@ Goods.delete = function () {
  * 查询品牌列表
  */
 Goods.search = function () {
+	Goods.table.refresh({query: Goods.formParams()});
+};
+
+/**
+ * 查询表单提交参数对象
+ * @returns {{}}
+ */
+Goods.formParams = function() {
     var queryData = {};
     queryData['condition'] = $("#condition").val();
     queryData['barcode']=$("#barcode").val();
-    Goods.table.refresh({query: queryData});
-};
+    return queryData;
+}
 /**
  * 商品价格配置
  */
@@ -141,7 +149,8 @@ Goods.setShowPrice = function () {
 $(function () {
     var defaultColunms = Goods.initColumn();
     var table = new BSTable(Goods.id, "/goods/list", defaultColunms);
-    table.setPaginationType("client");
+    table.setPaginationType("server");
+    table.setQueryParams(Goods.formParams());
     table.init();
     Goods.table = table;
 });

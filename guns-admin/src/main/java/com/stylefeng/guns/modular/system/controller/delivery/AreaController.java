@@ -34,7 +34,7 @@ public class AreaController extends BaseController {
 		List<Area> province = areaService.getProvince();
 		return province;
 	}
-	
+		
 	/**
 	 * 获取省下面所有市
 	 */

@@ -131,4 +131,21 @@ public interface IGoodsService extends IService<Goods> {
 	 */
 	List<Map<String, Object>> getListByConditon(String name, String goodsId,String sn, Integer index, Integer pageSize);
 
+	/**
+	 * 获取商品分页
+	 * @param goods
+	 * @param barcode
+	 * @param pagenum
+	 * @param pagesize
+	 * @return
+	 */
+	List<Map<String, Object>> findPage(Goods goods, String barcode, Integer pagenum, Integer pagesize);
+	/**
+	 * 计算查询总数
+	 * @param goods
+	 * @param barcode
+	 * @return
+	 */
+	Integer countGoods(Goods goods, String barcode);
+
 }

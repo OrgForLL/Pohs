@@ -27,6 +27,7 @@ import org.springframework.web.util.HtmlUtils;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.md.goods.constant.IsUse;
 import com.md.goods.factory.CategoryFactory;
 import com.md.goods.factory.GoodsFactory;
@@ -375,11 +376,14 @@ public class GoodsController extends BaseController {
 	 */
 	@RequestMapping(value = "/list")
 	@ResponseBody
-	public Object list(String condition, String barcode) {
+	public Object list(String condition, String barcode,Integer offset,Integer limit) {
 		Goods goods = new Goods();
 		goods.setName(condition);
-		List<Map<String, Object>> goodsList = this.goodsService.find(goods, barcode);
-		return super.warpObject(new GoodsWarpper(goodsList));
+		List<Map<String, Object>> goodsList = this.goodsService.findPage(goods, barcode,offset,limit);
+    	JSONObject result = new JSONObject();
+    	result.put("rows", goodsList);
+    	result.put("total", goodsService.countGoods(goods, barcode));
+		return result;
 	}
 
 	/**
