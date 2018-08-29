@@ -9,8 +9,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -20,9 +20,7 @@ import com.md.coupon.service.IPromotionService;
 import com.md.goods.model.Product;
 import com.md.goods.service.IPriceTagService;
 import com.md.goods.service.IProductService;
-import com.md.member.model.Member;
 import com.md.member.service.IMemberService;
-import com.md.member.service.imp.MemberServiceImpl;
 import com.md.notice.service.IShopNoticeService;
 import com.md.order.constant.OrderStatus;
 import com.md.order.model.Evaluation;
@@ -33,7 +31,6 @@ import com.md.order.service.IEvaluationService;
 import com.md.order.service.IOrderItemService;
 import com.md.order.service.IOrderService;
 import com.md.order.service.IShippingService;
-import com.md.order.service.impl.ShippingServiceImpl;
 import com.md.share.model.Configure;
 import com.md.share.model.DefaultConfigure;
 import com.md.share.model.ShareAmount;
@@ -42,6 +39,7 @@ import com.md.share.service.IConfigureService;
 import com.md.share.service.IDefaultConfigureService;
 import com.md.share.service.IShareAmountService;
 import com.md.share.service.IShareBindService;
+import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.core.util.HttpPostUrl;
 import com.stylefeng.guns.core.util.ToolUtil;
@@ -88,6 +86,9 @@ public class ApiQuartz {
 	IDefaultConfigureService defaultConfigureService;
 	@Resource
 	IShareAmountService shareAmountService;
+	
+	@Autowired
+	GunsProperties gunsProperties;
 
     /**
      * 24小时后未支付则取消订单
@@ -107,7 +108,7 @@ public class ApiQuartz {
     		Map<String, String> mapParam = new HashMap<String, String>();
       		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":5},\"RequestID\":\"\"}";
       		mapParam.put("data", data);
-      		HttpPostUrl.sendPost("", mapParam);
+      		HttpPostUrl.sendPost(gunsProperties.getMessagePath(), mapParam);
     	}
     }
     /**
@@ -126,7 +127,7 @@ public class ApiQuartz {
     		Map<String, String> mapParam = new HashMap<String, String>();
       		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":6},\"RequestID\":\"\"}";
       		mapParam.put("data", data);
-      		HttpPostUrl.sendPost("", mapParam);
+      		HttpPostUrl.sendPost(gunsProperties.getMessagePath(), mapParam);
     	}
     }
     /**
@@ -154,7 +155,7 @@ public class ApiQuartz {
     		Map<String, String> mapParam = new HashMap<String, String>();
       		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":4},\"RequestID\":\"\"}";
       		mapParam.put("data", data);
-      		HttpPostUrl.sendPost("", mapParam);
+      		HttpPostUrl.sendPost(gunsProperties.getMessagePath(), mapParam);
     	}
     }
     /**

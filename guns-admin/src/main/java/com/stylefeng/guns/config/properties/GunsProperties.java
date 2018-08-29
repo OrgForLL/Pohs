@@ -25,6 +25,8 @@ public class GunsProperties {
     private Boolean swaggerOpen = false;
 
     private String fileUploadPath;
+    
+    private String messagePath;  //外部消息接口
 
     private Boolean haveCreatePath = false;
 
@@ -106,4 +108,12 @@ public class GunsProperties {
     public void setSessionValidationInterval(Integer sessionValidationInterval) {
         this.sessionValidationInterval = sessionValidationInterval;
     }
+
+	public String getMessagePath() {
+		return messagePath;
+	}
+
+	public void setMessagePath(String messagePath) {
+		this.messagePath = messagePath;
+	}
 }

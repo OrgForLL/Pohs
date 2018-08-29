@@ -1,6 +1,8 @@
 package com.stylefeng.guns.adminapi;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
@@ -29,6 +31,8 @@ import com.md.goods.factory.PriceTagFactory;
 import com.md.goods.model.CategoryRelation;
 import com.md.goods.model.Goods;
 import com.md.goods.model.Product;
+import com.md.goods.model.Specification;
+import com.md.goods.model.SpecificationItem;
 import com.md.goods.model.TagRelation;
 import com.md.goods.model.UploadFile;
 import com.md.goods.oe.GoodsObject;
@@ -40,9 +44,12 @@ import com.md.goods.service.IParamItemsService;
 import com.md.goods.service.IParamService;
 import com.md.goods.service.IPriceTagService;
 import com.md.goods.service.IProductService;
+import com.md.goods.service.ISpecificationItemService;
+import com.md.goods.service.ISpecificationService;
 import com.md.goods.service.ITagRelationService;
 import com.md.goods.service.IUploadFileService;
 import com.md.goods.warpper.GoodsWarpper;
+import com.md.goods.warpper.ProductWarpper;
 import com.stylefeng.guns.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
@@ -96,6 +103,12 @@ public class AdminApiGoodsController extends BaseController {
 
 	@Resource
 	IPriceTagService priceTagService;
+	
+	@Resource
+	ISpecificationService specificationService;
+	
+	@Resource
+	ISpecificationItemService specificationItemService;
 
 	@ApiOperation(value = "通过商品名称获取商品列表", notes = "通过商品名称获取商品列表  \r\n"
 			+ "marketPrice:活动价;  \r\n"
@@ -180,12 +193,21 @@ public class AdminApiGoodsController extends BaseController {
 			@RequestBody Goods goods,
 			@ApiParam("规格配置") @RequestParam(value = "specs", required = false) @RequestBody String specs,
 			@ApiParam("分类id") @RequestParam(value = "categoryIds", required = false) @RequestBody String categoryIds,
-			@ApiParam("关联标签") @RequestParam(value = "tagIds", required = false) @RequestBody String tagIds) {
+			@ApiParam("关联标签") @RequestParam(value = "tagIds", required = false) @RequestBody String tagIds) throws UnsupportedEncodingException {
 		JSONObject jb = new JSONObject();
 		
 		if(ToolUtil.isEmpty(goods.getId())) {
-			if (goodsService.existGoods(goods.getName(), null)) {
-				throw new GunsException(BizExceptionEnum.NAME_SAME);
+//			if (goodsService.existGoods(goods.getName(), null)) {
+//				throw new GunsException(BizExceptionEnum.NAME_SAME);
+//			}
+			if (ToolUtil.isNotEmpty(goods.getImages())) {
+				Long[] ids = Convert.toLongArray(true, Convert.toStrArray(",", goods.getImages()));
+				for (Long id : ids) {
+					UploadFile selectById = uploadFileService.getById(id);
+					if(ToolUtil.isEmpty(selectById)) {
+						throw new GunsException(BizExceptionEnum.IMAGE_NOTEXIST);
+					}
+				}
 			}
 			// 添加商品
 			goods.setParamItems(HtmlUtils.htmlUnescape(goods.getParamItems()));
@@ -196,10 +218,12 @@ public class AdminApiGoodsController extends BaseController {
 
 			// 添加规格商品
 			if(ToolUtil.isNotEmpty(specs)) {
-				//String htmlUnescape = HtmlUtils.htmlUnescape(specs);
-				List<Product> productList = JSONArray.parseArray(specs, Product.class);
+				String htmlUnescape = HtmlUtils.htmlUnescape(specs);
+				List<Product> productList = JSONArray.parseArray(URLDecoder.decode(URLDecoder.decode(htmlUnescape, "GBK"), "UTF-8"), Product.class);
 				Set<Long> imgs = new HashSet<>();
 				for (Product product : productList) {
+					System.out.println("product=="+product.getSpecItems());
+					System.out.println("product===="+URLDecoder.decode(URLDecoder.decode(product.getSpecItems(), "GBK"), "UTF-8"));
 					product.setGoodsId(goodsId);
 					if (product.getImage() != null) {
 						imgs.add(product.getImage());
@@ -239,9 +263,9 @@ public class AdminApiGoodsController extends BaseController {
 				tagRelationService.add(tagRelationSet);
 			}
 		}else {
-			if (goodsService.existGoods(goods.getName(), goods.getId())) {
-				throw new GunsException(BizExceptionEnum.NAME_SAME);
-			}
+//			if (goodsService.existGoods(goods.getName(), goods.getId())) {
+//				throw new GunsException(BizExceptionEnum.NAME_SAME);
+//			}
 			// 将原先的规格商品的图片状态设为未使用
 			Product queryObj = new Product();
 			queryObj.setGoodsId(goods.getId());
@@ -270,8 +294,8 @@ public class AdminApiGoodsController extends BaseController {
 			}
 			if(ToolUtil.isNotEmpty(specs)) {
 				// 修改规格商品
-				//String htmlUnescape = HtmlUtils.htmlUnescape(specs);
-				List<Product> productList = JSONArray.parseArray(specs, Product.class);
+				String htmlUnescape = HtmlUtils.htmlUnescape(specs);
+				List<Product> productList = JSONArray.parseArray(htmlUnescape, Product.class);
 				Set<Long> imgs = new HashSet<>();
 				Set<Long> ids = new HashSet<>();
 				for (Product product : productList) {
@@ -324,7 +348,7 @@ public class AdminApiGoodsController extends BaseController {
 				tagRelationService.edit(goods.getId(), tagRelationSet);
 			}
 		}
-		jb.put("data", "SUCCESS");
+		jb.put("data", goods.getId());
 		jb.put("errcode", 0);
 		jb.put("errmsg", "");
 		return jb;
@@ -370,5 +394,36 @@ public class AdminApiGoodsController extends BaseController {
 		return jb;
 	}
 
+	@ApiOperation(value = "通过分类获取规格列表", notes = "通过分类获取规格列表")
+	@RequestMapping(value = "/getSpecList", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject getSpecList(
+			@ApiParam("分类id") @RequestParam(value = "cateId", required = true) @RequestBody String cateId) {
+		JSONObject jb = new JSONObject();
+		List<Specification> list = specificationService.findByCid(Long.valueOf(cateId));
+		if(list.size() > 0) {
+			for(Specification item : list) {
+				List<SpecificationItem> itemResult =  specificationItemService.getByPid(item.getId());
+				item.setItemObject(itemResult);
+			}
+		}
+		jb.put("data", list);
+		jb.put("errcode", 0);
+		jb.put("errmsg", "0");
+		return jb;
+	}
+
+	@ApiOperation(value = "通过商品id获取产品列表", notes = "通过商品id获取产品列表")
+	@RequestMapping(value = "/getProductList", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject getProductList(
+			@ApiParam("商品id") @RequestParam(value = "goodsId", required = true) @RequestBody String goodsId) {
+		JSONObject jb = new JSONObject();
+		List<Map<String, Object>> list = productService.findByGoodsId(Long.valueOf(goodsId));
+		jb.put("data",super.warpObject(new ProductWarpper(list)));
+		jb.put("errcode", 0);
+		jb.put("errmsg", "0");
+		return jb;
+	}
 
 }

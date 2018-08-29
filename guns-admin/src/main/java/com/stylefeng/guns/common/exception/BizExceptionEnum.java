@@ -58,6 +58,7 @@ public enum BizExceptionEnum implements ServiceExceptionEnum{
 	REQUEST_NULL(400, "请求有错误"),
 	SESSION_TIMEOUT(400, "会话超时"),
 	NAME_SAME(501,"名称已存在"),
+	IMAGE_NOTEXIST(501,"图片不存在"),
 	SERVER_ERROR(500, "服务器异常"),
 	
 	/**

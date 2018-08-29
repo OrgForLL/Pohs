@@ -9,6 +9,7 @@ guns:
   session-open: false #是否开启session超时验证（受影响的类SessionTimeoutInterceptor） (true/false)
   #file-upload-path: D:\tmp  #文件上传目录(不配置的话为java.io.tmpdir目录)
   file-upload-path: /home/file/shop/upload
+  message-path: http://webt.lilang.com/base-msgservice/Create
   project-web-path: http://localhost:8080
   muti-datasource-open: false #是否开启多数据源(true/false)
   spring-session-open: false #是否开启spring session,如果是多机环境需要开启(true/false)

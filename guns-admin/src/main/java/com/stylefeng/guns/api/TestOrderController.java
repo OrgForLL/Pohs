@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +23,7 @@ import com.md.goods.service.IGoodsService;
 import com.md.member.service.IMemberService;
 import com.md.order.service.IOrderItemService;
 import com.md.order.service.IOrderService;
+import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.util.HttpPostUrl;
 
@@ -43,6 +45,9 @@ public class TestOrderController extends BaseController{
 	@Resource
 	IGoodsService goodsService;
 	
+	@Autowired
+	GunsProperties gunsProperties;
+	
 	public static final String user = "1851588926@qq.com";
 	public static final String pwd="463111";
 	public static final String account= "900003";
@@ -58,7 +63,7 @@ public class TestOrderController extends BaseController{
 		Map<String, String> mapParam = new HashMap<String, String>();
 		String data = "{\"MsgTypeID\":3101,\"CreateID\":3100,\"MsgJson\":{\"id\":201801},\"RequestID\":\"\"}";
 		mapParam.put("data", data);
-		String result = HttpPostUrl.sendPost("", mapParam);
+		String result = HttpPostUrl.sendPost(gunsProperties.getMessagePath(), mapParam);
 		System.out.println(result);
 		jb.put("data", result);
 		return jb;

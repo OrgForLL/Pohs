@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ import com.md.order.service.IOrderService;
 import com.md.order.service.IShippingItemService;
 import com.md.order.service.IShippingService;
 import com.md.order.warpper.OrderWarpper;
+import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.DateUtil;
@@ -69,6 +71,8 @@ public class ShippingController extends BaseController {
 	@Resource
 	IShopNoticeService shopNoticeService;
 
+	@Autowired
+	GunsProperties gunsProperties;
     private String PREFIX = "/order/shipping/";
 
     @RequestMapping("")
@@ -154,7 +158,7 @@ public class ShippingController extends BaseController {
             Map<String, String> mapParam = new HashMap<String, String>();
     		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":"+order.getStatus()+"},\"RequestID\":\"\"}";
     		mapParam.put("data", data);
-    		HttpPostUrl.sendPost("", mapParam);
+    		HttpPostUrl.sendPost(gunsProperties.getMessagePath(), mapParam);
         }
        
         return SUCCESS;
