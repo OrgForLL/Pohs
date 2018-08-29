@@ -18,7 +18,11 @@ public class RestProperties {
     private boolean authOpen = true;
 
     private boolean signOpen = true;
-
+    
+    private String messagePath;  //外部消息接口
+    
+    private String message2Path;  //外部短信接口
+    
     public boolean isAuthOpen() {
         return authOpen;
     }
@@ -34,4 +38,21 @@ public class RestProperties {
     public void setSignOpen(boolean signOpen) {
         this.signOpen = signOpen;
     }
+
+	public String getMessagePath() {
+		return messagePath;
+	}
+
+	public void setMessagePath(String messagePath) {
+		this.messagePath = messagePath;
+	}
+
+
+	public String getMessage2Path() {
+		return message2Path;
+	}
+
+	public void setMessage2Path(String message2Path) {
+		this.message2Path = message2Path;
+	}
 }

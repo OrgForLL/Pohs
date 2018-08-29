@@ -1,5 +1,6 @@
 package com.stylefeng.guns.rest.modular.member;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,9 +41,9 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.cache.CacheKit;
 import com.stylefeng.guns.core.exception.ApiException;
 import com.stylefeng.guns.core.util.HttpPostUrl;
-import com.stylefeng.guns.core.util.SmsUtil;
 import com.stylefeng.guns.core.util.ToolUtil;
 import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
+import com.stylefeng.guns.rest.config.properties.RestProperties;
 import com.stylefeng.guns.rest.modular.member.dto.FavoriteRequest;
 import com.stylefeng.guns.rest.modular.member.dto.MemberRequest;
 
@@ -77,6 +79,8 @@ public class ApiMemberController extends BaseController {
 	IFavoriteItemService favoriteItemService;
 	@Resource
 	IWeixinService weixinService;
+	@Autowired
+	RestProperties restProperties;
 	/**
 	 * 获取用户个人信息详情
 	 * 
@@ -253,7 +257,8 @@ public class ApiMemberController extends BaseController {
 	@RequestMapping(value = "/sendRegisterVerificationCode", method = { RequestMethod.POST })
 	public ResponseEntity<?> sendRegisterVerificationCode(@RequestBody MemberRequest memberRequest) throws ClientException{
 		String code = String.valueOf((int)((Math.random()* 9 + 1) * 100000));	
-		SmsUtil.sendSms(memberRequest.getPhone(), code);
+		//SmsUtil.sendSms(memberRequest.getPhone(), code);
+		HttpPostUrl.sendPost(MessageFormat.format(restProperties.getMessage2Path() ,memberRequest.getPhone(), "您的验证码为："+code), null);
 		System.out.println(code);
 		CacheKit.put("VerificationCode", memberRequest.getPhone(), code);
 		return ResponseEntity.ok(SUCCESS_TIP);
@@ -267,8 +272,8 @@ public class ApiMemberController extends BaseController {
 	@RequestMapping(value = "/sendForgetThePasswordVerificationCode", method = { RequestMethod.POST })
 	public ResponseEntity<?> sendForgetThePasswordVerificationCode(@RequestBody MemberRequest memberRequest) throws ClientException{
 		String code = String.valueOf((int)((Math.random()* 9 + 1) * 100000));	
-		SmsUtil.sendSmsReset(memberRequest.getPhone(), code);
-		System.out.println(code);
+		//SmsUtil.sendSmsReset(memberRequest.getPhone(), code);
+		HttpPostUrl.sendPost(MessageFormat.format(restProperties.getMessage2Path() ,memberRequest.getPhone(), "您的验证码为："+code), null);
 		CacheKit.put("VerificationCode", memberRequest.getPhone(), code);
 		return ResponseEntity.ok(SUCCESS_TIP);
 	}
@@ -302,8 +307,8 @@ public class ApiMemberController extends BaseController {
 	@RequestMapping(value = "/sendUpdatePwdVerificationCode", method = { RequestMethod.POST })
 	public ResponseEntity<?> sendUpdatePwdVerificationCode(@RequestBody MemberRequest memberRequest) throws ClientException{
 		String code = String.valueOf((int)((Math.random()* 9 + 1) * 100000));	
-		SmsUtil.sendSmsReset(memberRequest.getPhone(), code);
-		System.out.println(code);
+//		SmsUtil.sendSmsReset(memberRequest.getPhone(), code);
+		HttpPostUrl.sendPost(MessageFormat.format(restProperties.getMessage2Path() ,memberRequest.getPhone(), "您的验证码为："+code), null);
 		CacheKit.put("VerificationCode", memberRequest.getPhone(), code);
 		return ResponseEntity.ok(SUCCESS_TIP);
 	}
@@ -351,7 +356,7 @@ public class ApiMemberController extends BaseController {
     	Map<String, String> mapParam = new HashMap<String, String>();
 		String data = "{\"MsgTypeID\":3101,\"CreateID\":3100,\"MsgJson\":{\"id\":"+member.getId()+"},\"RequestID\":\"\"}";
 		mapParam.put("data", data);
-		HttpPostUrl.sendPost("", mapParam);
+		HttpPostUrl.sendPost(restProperties.getMessagePath(), mapParam);
     	
         return ResponseEntity.ok("SUCCESS");
     }

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +46,7 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.core.util.HttpPostUrl;
 import com.stylefeng.guns.core.util.ToolUtil;
+import com.stylefeng.guns.rest.config.properties.RestProperties;
 import com.stylefeng.guns.rest.modular.order.dto.EvaluationRequest;
 import com.stylefeng.guns.rest.modular.order.dto.OrderRequest;
 
@@ -105,6 +107,9 @@ public class ApiOrderController extends BaseController{
 	@Resource
 	IShippingService shippingService;
 	
+	@Autowired
+	RestProperties restProperties;
+	
 	@ApiOperation(value = "添加评价", notes = "添加评价")
 	@RequestMapping(value = "/addEvaluation", method = RequestMethod.POST)
 	@ResponseBody
@@ -128,7 +133,7 @@ public class ApiOrderController extends BaseController{
 			Map<String, String> mapParam = new HashMap<String, String>();
 	  		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":4},\"RequestID\":\"\"}";
 	  		mapParam.put("data", data);
-	  		HttpPostUrl.sendPost("", mapParam);
+	  		HttpPostUrl.sendPost(restProperties.getMessagePath(), mapParam);
 		}
 		
 		return ResponseEntity.ok("success");
@@ -211,7 +216,7 @@ public class ApiOrderController extends BaseController{
 		Map<String, String> mapParam = new HashMap<String, String>();
   		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":"+orderRequest.getStatus()+"},\"RequestID\":\"\"}";
   		mapParam.put("data", data);
-  		HttpPostUrl.sendPost("", mapParam);
+  		HttpPostUrl.sendPost(restProperties.getMessagePath(), mapParam);
 		jb.put("data", "success");
 		return ResponseEntity.ok(jb);
 	}
@@ -293,7 +298,7 @@ public class ApiOrderController extends BaseController{
 			Map<String, String> mapParam = new HashMap<String, String>();
 	  		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":0},\"RequestID\":\"\"}";
 	  		mapParam.put("data", data);
-	  		HttpPostUrl.sendPost("", mapParam);
+	  		HttpPostUrl.sendPost(restProperties.getMessagePath(), mapParam);
 		}
 		
 		return ResponseEntity.ok(idList);
