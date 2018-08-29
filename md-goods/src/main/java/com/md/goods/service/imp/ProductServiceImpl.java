@@ -53,4 +53,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 		wrapper.like("barcode", barcode);
 		return productMapper.selectMaps(wrapper);
 	}
+
+	@Override
+	public List<Map<String, Object>> findByGoodsId(Long goodsId) {
+		// TODO Auto-generated method stub
+		Wrapper<Product> wrapper = new EntityWrapper<>();
+		wrapper.eq("goodsId", goodsId);
+		return productMapper.selectMaps(wrapper);
+	}
 }

@@ -1,5 +1,6 @@
 package com.md.goods.model;
 
+import java.util.List;
 import java.util.Set;
 
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -17,7 +18,15 @@ public class Specification {
 	private Long categoryId;
 	@TableField(exist=false)
 	private Set<SpecificationItem> items;
+	@TableField(exist = false)
+	private List<SpecificationItem> itemObject;
 	
+	public List<SpecificationItem> getItemObject() {
+		return itemObject;
+	}
+	public void setItemObject(List<SpecificationItem> itemObject) {
+		this.itemObject = itemObject;
+	}
 	public Long getId() {
 		return id;
 	}

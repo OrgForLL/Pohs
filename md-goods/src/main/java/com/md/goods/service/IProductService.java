@@ -58,4 +58,12 @@ public interface IProductService extends IService<Product> {
 	 * @return
 	 */
 	List<Map<String, Object>> findByBarcode(String barcode);
+	
+	/**
+	 * 根据goodsId获取规格商品集合
+	 * 
+	 * @param barcode
+	 * @return
+	 */
+	List<Map<String, Object>> findByGoodsId(Long goodsId);
 }
