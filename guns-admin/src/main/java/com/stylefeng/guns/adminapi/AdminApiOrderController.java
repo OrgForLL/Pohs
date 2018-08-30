@@ -1,11 +1,17 @@
 package com.stylefeng.guns.adminapi;
 
 import java.sql.Timestamp;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,17 +20,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.md.cart.model.Cart;
+import com.md.cart.model.CartItem;
+import com.md.goods.model.PriceTag;
 import com.md.goods.model.Shop;
+import com.md.goods.service.IGoodsService;
+import com.md.goods.service.IPriceTagService;
+import com.md.goods.service.IProductService;
 import com.md.goods.service.IShopService;
+import com.md.goods.service.imp.GoodsServiceImpl;
+import com.md.member.model.Member;
+import com.md.member.service.IMemberService;
 import com.md.order.constant.OrderStatus;
 import com.md.order.model.Order;
+import com.md.order.model.OrderItem;
 import com.md.order.model.Shipping;
 import com.md.order.service.IOrderItemService;
 import com.md.order.service.IOrderService;
 import com.md.order.service.IShippingService;
 import com.md.order.warpper.OrderItemWarpper;
+import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.util.DateUtil;
+import com.stylefeng.guns.core.util.HttpPostUrl;
 import com.stylefeng.guns.core.util.ToolUtil;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -51,6 +69,21 @@ public class AdminApiOrderController extends BaseController {
 	
 	@Resource
 	IShippingService shippingService;
+	
+	@Resource
+	IPriceTagService priceTagService;
+	
+	@Resource
+	IGoodsService goodsService;
+	
+	@Resource
+	IProductService productService;
+	
+	@Resource
+	IMemberService memberService;
+	
+	@Autowired
+	GunsProperties gunsProperties;
 	
 	@ApiOperation(value = "根据订单ID获取订单详情", notes = "根据订单ID获取订单详情    \r\n"
 			+ "actualPay:实际支付金额;  \r\n"
@@ -170,16 +203,51 @@ public class AdminApiOrderController extends BaseController {
 			jb.put("errcode", -1);
 			return jb;
 		}
+		Member member = memberService.findById(order.getMemberId());
 		//订单状态判断  发货
 		if(status == OrderStatus.WAIT_GAINS.getCode()) {
 			shipping.setCreateTime(DateUtil.getTime());
 	    	shipping.setType(0);
 	    	shipping.setOrderId(Long.valueOf(orderId));
 	        shippingService.add(shipping);
+	        HttpPostUrl.sendPost(MessageFormat.format(gunsProperties.getMessage2Path() ,member.getPhoneNum(), "尊贵的利郎商城"+member.getName()+"，您的订单"+order.getSn()+"已经开始派送，物流单号："+shipping.getLogisticsNum()+"。"), null);
 		}
 		order.setStatus(status);
 		orderService.update(order);
 		jb.put("data", "SUCCESS");
+		jb.put("errmsg", "");
+		jb.put("errcode", 0);
+		return jb;
+	}
+	
+	@ApiOperation(value = "批量提交订单", notes = "批量提交订单")
+	@RequestMapping(value = "/submitOrder", method = RequestMethod.POST)
+	@ApiImplicitParam(name = "orderList", value = "订单列表", required = true, dataType = "List<Order>", paramType = "body")
+	public JSONObject submitOrder(@RequestBody List<Order> orderList){
+		JSONObject jb = new JSONObject();
+		List<Long> idList = new ArrayList<>();
+		String sn =new Date().getTime()+ String.valueOf((int)((Math.random()* 9 + 1) * 100000));	
+		for(Order order : orderList) {
+			order.setSn(sn);
+			orderService.add(order);
+			idList.add(order.getId());
+			for(OrderItem item:order.getOrderItems()) {
+				PriceTag tag = priceTagService.reduceInventory(item.getProductId(), order.getShopId(), item.getQuantity());
+				if(tag.getInventory() <= tag.getThreshold()) {
+					
+					Map<String, String> mapParam = new HashMap<String, String>();
+					String data = "{\"MsgTypeID\":3102,\"CreateID\":3100,\"MsgJson\":{\"productId\":"+tag.getProductId()+
+							",\"shopId\":"+tag.getShopId()+tag.getProductId()+",\"goodsId\":"+tag.getGoodsId()+",\"sn\":"+
+							goodsService.findById(item.getGoodsId()).getSn()+",\"productName\":"+productService.findById(tag.getProductId()).getName()+
+							",\"inventory\":"+tag.getInventory()+",\"threshold\":"+tag.getThreshold()+"},\"RequestID\":\"\"}";
+					mapParam.put("data", data);
+					HttpPostUrl.sendPost(gunsProperties.getMessagePath(), mapParam);
+				}
+				item.setOrderId(order.getId());
+				orderItemService.insert(item);
+			}
+		}
+		jb.put("data", idList);
 		jb.put("errmsg", "");
 		jb.put("errcode", 0);
 		return jb;

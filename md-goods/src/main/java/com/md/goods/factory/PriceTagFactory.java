@@ -107,7 +107,11 @@ public class PriceTagFactory {
 	 * @return
 	 */
 	public String getProductName(Long id){
-		return productMapper.selectById(id).getName();
+		Product product = productMapper.selectById(id);
+		if(ToolUtil.isNotEmpty(product)) {
+			return product.getName();
+		}
+		return "";
 	}
 	
 	/**

@@ -132,8 +132,10 @@ public class ApiCarController extends BaseController {
 						for (CartItem item : itemResult) {
 							GoodObject goodItems = new GoodObject();
 							PriceTag tag = priceTagService.findByShopAndProduct(item.getProductId(), item.getShopId());
+							if(ToolUtil.isNotEmpty(tag.getPrice())) {
+								goodItems.setPrice(tag.getPrice());
+							}
 							goodItems.setCartItemId(item.getId());
-							goodItems.setPrice(tag.getPrice());
 							goodItems.setGoodsId(tag.getGoodsId());
 							Goods goods = goodsService.findById(tag.getGoodsId());
 							if(goods != null) {

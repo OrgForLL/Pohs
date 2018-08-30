@@ -286,10 +286,20 @@ public class ApiOrderController extends BaseController{
 			orderService.add(order);
 			idList.add(order.getId());
 			for(OrderItem item:order.getOrderItems()) {
-				priceTagService.reduceInventory(item.getProductId(), order.getShopId(), item.getQuantity());
+				PriceTag tag = priceTagService.reduceInventory(item.getProductId(), order.getShopId(), item.getQuantity());
+				if(tag.getInventory() <= tag.getThreshold()) {
+					Product product = productService.findById(tag.getProductId());
+					Map<String, String> mapParam = new HashMap<String, String>();
+					String data = "{\"MsgTypeID\":3102,\"CreateID\":3100,\"MsgJson\":{\"productId\":"+tag.getProductId()+
+							",\"shopId\":"+tag.getShopId()+tag.getProductId()+",\"goodsId\":"+tag.getGoodsId()+",\"sn\":"+
+							goodsService.findById(item.getGoodsId()).getSn()+",\"productName\":"+product.getName()+
+							",\"inventory\":"+tag.getInventory()+",\"threshold\":"+tag.getThreshold()+
+							",\"specItems\":"+product.getSpecItems()+"},\"RequestID\":\"\"}";
+					mapParam.put("data", data);
+					HttpPostUrl.sendPost(restProperties.getMessagePath(), mapParam);
+				}
 				item.setOrderId(order.getId());
 				orderItemService.insert(item);
-				PriceTag tag = priceTagService.findByShopAndProduct(item.getProductId(), order.getShopId());
 				CartItem cartItem = cartItemService.findByTagId(tag.getId(), cart.getId());
 				if(ToolUtil.isNotEmpty(cartItem)) {
 					cartItemService.deleteById(cartItem.getId());

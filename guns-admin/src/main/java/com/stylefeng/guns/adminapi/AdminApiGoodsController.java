@@ -219,11 +219,9 @@ public class AdminApiGoodsController extends BaseController {
 			// 添加规格商品
 			if(ToolUtil.isNotEmpty(specs)) {
 				String htmlUnescape = HtmlUtils.htmlUnescape(specs);
-				List<Product> productList = JSONArray.parseArray(URLDecoder.decode(URLDecoder.decode(htmlUnescape, "GBK"), "UTF-8"), Product.class);
+				List<Product> productList = JSONArray.parseArray(htmlUnescape, Product.class);
 				Set<Long> imgs = new HashSet<>();
 				for (Product product : productList) {
-					System.out.println("product=="+product.getSpecItems());
-					System.out.println("product===="+URLDecoder.decode(URLDecoder.decode(product.getSpecItems(), "GBK"), "UTF-8"));
 					product.setGoodsId(goodsId);
 					if (product.getImage() != null) {
 						imgs.add(product.getImage());

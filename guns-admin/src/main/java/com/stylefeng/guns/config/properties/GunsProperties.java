@@ -27,6 +27,8 @@ public class GunsProperties {
     private String fileUploadPath;
     
     private String messagePath;  //外部消息接口
+    
+    private String message2Path;  //外部短息接口
 
     private Boolean haveCreatePath = false;
 
@@ -115,5 +117,13 @@ public class GunsProperties {
 
 	public void setMessagePath(String messagePath) {
 		this.messagePath = messagePath;
+	}
+
+	public String getMessage2Path() {
+		return message2Path;
+	}
+
+	public void setMessage2Path(String message2Path) {
+		this.message2Path = message2Path;
 	}
 }
