@@ -5,6 +5,7 @@
 		<id column="id" property="id" />
 		<result column="deliveryArea" property="deliveryArea" />
 		<result column="areaId" property="areaId" />
+		<result column="shopId" property="shopId" />
 		<result column="modeId" property="modeId" />
 		<result column="isdelivery" property="isdelivery" />
 		<result column="ykg" property="ykg" />
@@ -16,20 +17,24 @@
 	</resultMap>
 
 	<select id="findList" resultType="map">
-		SELECT *,
-		(SELECT full_name  from shop_area WHERE shop_area.id = shop_delivery_cost.deliveryArea) AS deliveryAreaName,
-		(SELECT full_name  from shop_area WHERE shop_area.id = shop_delivery_cost.areaId) AS areaName
+		SELECT * 
 		FROM shop_delivery_cost
 		WHERE
 		modeId=#{modeId}
+		<if test="shopId != null and shopId != ''">
+			AND shopId=#{shopId}
+		</if>
+		<if test="shopId == null">
+			AND shopId is null
+		</if>
 		<if test="isdelivery != null and isdelivery != ''">
 			AND isdelivery=#{isdelivery}
 		</if>
-		<if test="areaIds.size > 0">
+		<if test="areaIds.size > 0 and areaIds != null">
 			AND areaId in
 			<foreach  item="item" collection="areaIds" index="index"  open="(" separator="," close=")">#{item}</foreach>
 		</if>
-		<if test="deliveryArea.size > 0">
+		<if test="deliveryArea.size > 0 and deliveryArea != null">
 			AND deliveryArea in
 			<foreach  item="item" collection="deliveryArea" index="index"  open="(" separator="," close=")">#{item}</foreach>
 		</if>

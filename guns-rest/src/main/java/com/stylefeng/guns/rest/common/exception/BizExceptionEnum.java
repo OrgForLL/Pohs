@@ -54,10 +54,13 @@ public enum BizExceptionEnum implements ServiceExceptionEnum {
 	 */
 	ORDER_NULL(901,"订单不存在"),
 	
+	SQL_DATA_ANO(410, "数据库数据异常"),
 	/**
 	 * 库存问题
 	 */
 	INVENTORY_NOENOUGH(406,"库存不足");
+	
+
 
     BizExceptionEnum(int code, String message) {
         this.code = code;

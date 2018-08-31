@@ -116,9 +116,14 @@ public class RoleController extends BaseController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Object list(@RequestParam(required = false) String roleName) {
-    	Integer nowadminid = ShiroKit.getUser().getRoleList().get(0);
-        List<Map<String, Object>> roles = this.roleDao.selectRoles(super.getPara("roleName"),nowadminid);
-        return super.warpObject(new RoleWarpper(roles));
+    	if(ShiroKit.isAdmin()){
+    		List<Map<String, Object>> roles = this.roleService.getRolesByAdmin();
+		    return super.warpObject(new RoleWarpper(roles));
+    	}else{
+			Integer nowadminid = ShiroKit.getUser().getRoleList().get(0);
+		    List<Map<String, Object>> roles = this.roleDao.selectRoles(super.getPara("roleName"),nowadminid);
+		    return super.warpObject(new RoleWarpper(roles));
+    	}
     }
 
     /**
@@ -132,10 +137,16 @@ public class RoleController extends BaseController {
         if (result.hasErrors()) {
             throw new GunsException(BizExceptionEnum.REQUEST_NULL);
         }
-        Role roleFather = roleMapper.selectById(role.getPid());
-        role.setPids(roleFather.getPids()+"["+roleFather.getId()+"],");
-        role.setId(null);
-        this.roleMapper.insert(role);
+        if(role.getPid() == 0){
+        	 role.setPids("[0],");
+             role.setId(null);
+             this.roleMapper.insert(role);
+        }else{
+		    Role roleFather = roleMapper.selectById(role.getPid());
+		    role.setPids(roleFather.getPids()+"["+roleFather.getId()+"],");
+		    role.setId(null);
+		    this.roleMapper.insert(role);
+        }
         return SUCCESS_TIP;
     }
 

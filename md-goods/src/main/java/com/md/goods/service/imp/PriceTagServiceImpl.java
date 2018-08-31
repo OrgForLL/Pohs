@@ -111,19 +111,14 @@ public class PriceTagServiceImpl extends ServiceImpl<PriceTagMapper, PriceTag> i
 	}
 
 	@Override
-	public void reduceInventory(Long productId, Long shopId, Integer amount) {
+	public PriceTag reduceInventory(Long productId, Long shopId, Integer amount) {
 		PriceTag priceTag = new PriceTag();
 		priceTag.setProductId(productId);
 		priceTag.setShopId(shopId);
 		PriceTag tag = findOne(priceTag);
 		tag.setInventory(tag.getInventory() - amount);
 		edit(tag);
-		if(tag.getInventory() <= tag.getThreshold()) {
-			Map<String, String> mapParam = new HashMap<String, String>();
-			String data = "{\"MsgTypeID\":3102,\"CreateID\":3100,\"MsgJson\":{\"productId\":"+tag.getProductId()+",\"shopId\":"+tag.getShopId()+"},\"RequestID\":\"\"}";
-			mapParam.put("data", data);
-			HttpPostUrl.sendPost("", mapParam);
-		}
+		return tag;
 	}
 
 	@Override

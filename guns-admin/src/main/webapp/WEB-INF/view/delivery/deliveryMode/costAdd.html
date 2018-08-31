@@ -1,0 +1,108 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		<div class="form-horizontal">
+			<div class="row">
+				<input type="hidden" id="areaId" value="">
+				<input type="hidden" id="deliveryArea" value="">
+				<input type="hidden" id="modeId" value="${modeId}">
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">派货地区</label>
+					<div class="col-sm-10">
+						<select class="form-control m-b" id="deliveryPro"
+							onchange="DeliveryCost.provinceChange()">
+							<option value="">请选择省</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">派货地区</label>
+					<div class="col-sm-10">
+						<select class="form-control m-b" id="deliveryCity"
+							onchange="DeliveryCost.deliveryCityChange()">
+							<option value="">请选择市</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">派货地区</label>
+					<div class="col-sm-10">
+						<select class="form-control m-b" id="deliveryCou">
+							<option value="">请选择区/县</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">配送地区</label>
+					<div class="col-sm-10">
+						<select class="form-control m-b" id="province"
+							onchange="DeliveryCost.provinceChange()">
+							<option value="">请选择省</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">配送地区</label>
+					<div class="col-sm-10">
+						<select class="form-control m-b" id="city"
+							onchange="DeliveryCost.cityChange()">
+							<option value="">请选择市</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">配送地区</label>
+					<div class="col-sm-10">
+						<select class="form-control m-b" id="county">
+							<option value="">请选择区/县</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">首重</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="number" name="ykg" id="ykg"
+							value="" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">首价</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="number" name="startPrice"
+							id="startPrice" value="" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">续重</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="number" name="addedWeight"
+							id="addedWeight" value="" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">续价</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="number" name="addedPrice"
+							id="addedPrice" value="" />
+					</div>
+				</div>
+			</div>
+			<div class="row btn-group-m-t">
+				<div class="col-sm-12">
+					<#button btnCss="info" name="提交" id="ensure" icon="fa-check"
+						clickFun="DeliveryCostInfoDlg.addSubmit()" />
+					<#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser"
+						clickFun="DeliveryCostInfoDlg.close()" />
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<script
+	src="${ctxPath}/static/modular/delivery/deliveryMode/deliveryCost_info.js"></script>
+	<script src="${ctxPath}/static/modular/delivery/deliveryMode/deliveryCost.js"></script>
+@}

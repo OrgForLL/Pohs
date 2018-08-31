@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.md.goods.model.Product;
 import com.md.goods.service.IGoodsService;
+import com.md.goods.service.IProductService;
 import com.md.member.service.IMemberService;
 import com.md.order.service.IOrderItemService;
 import com.md.order.service.IOrderService;
@@ -48,6 +50,9 @@ public class TestOrderController extends BaseController{
 	@Autowired
 	GunsProperties gunsProperties;
 	
+	@Resource
+	IProductService productService;
+	
 	public static final String user = "1851588926@qq.com";
 	public static final String pwd="463111";
 	public static final String account= "900003";
@@ -61,7 +66,11 @@ public class TestOrderController extends BaseController{
 	public JSONObject saleDelivery(){
 		JSONObject jb = new JSONObject();
 		Map<String, String> mapParam = new HashMap<String, String>();
-		String data = "{\"MsgTypeID\":3101,\"CreateID\":3100,\"MsgJson\":{\"id\":201801},\"RequestID\":\"\"}";
+		Product product = productService.findById(312l);
+		String data = "{\"MsgTypeID\":3102,\"CreateID\":3100,\"MsgJson\":{\"productId\":"+333+
+				",\"shopId\":"+2+",\"goodsId\":"+222+",\"sn\":"+"\"sn123\""+",\"productbarcode\":"+"\""+product.getBarcode()+"\""+
+				",\"productname\":"+"\""+product.getName()+"\""+
+				",\"inventory\":"+12+",\"threshold\":"+12+"},\"RequestID\":\"\"}";
 		mapParam.put("data", data);
 		String result = HttpPostUrl.sendPost(gunsProperties.getMessagePath(), mapParam);
 		System.out.println(result);

@@ -39,8 +39,13 @@ import com.md.delivery.model.DeliveryMode;
 import com.md.delivery.service.IAreaService;
 import com.md.delivery.service.IDeliveryCostService;
 import com.md.delivery.service.IDeliveryModeService;
+import com.md.delivery.warpper.DeliveryCostWarpper;
+import com.md.goods.model.Shop;
+import com.md.goods.service.IShopService;
+import com.md.member.warpper.MemberWarpper;
 import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.ExcelUtil;
 
 /**
@@ -61,6 +66,8 @@ public class DeliveryModeController extends BaseController {
 	IDeliveryCostService deliveryCostService;
 	@Resource
 	private GunsProperties gunsProperties;
+	@Resource
+	private IShopService shopService;
 
 	private String PREFIX = "/delivery/deliveryMode/";
 
@@ -97,7 +104,7 @@ public class DeliveryModeController extends BaseController {
 	public Object add(DeliveryMode deliveryMode) {
 		deliveryMode.setCreateTime(new Timestamp(new Date().getTime()));
 		deliveryModeService.add(deliveryMode);
-		// 初始化‘北京东城区’到各个地区配送费用
+/*		// 初始化‘北京东城区’到各个地区配送费用
 		List<Area> areas = areaService.countyList();
 		// 初始化配送费对象
 		List<DeliveryCost> deliveryCosts = new ArrayList<>();
@@ -115,7 +122,7 @@ public class DeliveryModeController extends BaseController {
 			deliveryCost.setAreaId(area.getId());
 			deliveryCosts.add(deliveryCost);
 		}
-		deliveryCostService.insertBatch(deliveryCosts);
+		deliveryCostService.insertBatch(deliveryCosts);*/
 		return SUCCESS_TIP;
 	}
 
@@ -142,13 +149,22 @@ public class DeliveryModeController extends BaseController {
 	}
 
 	/**
-	 * 删除
+	 * 删除配送方式
 	 */
 	@RequestMapping(value = "/delete")
 	@ResponseBody
 	public Object delete(Long deliveryModeId) {
 		deliveryModeService.deleteById(deliveryModeId);
 		deliveryCostService.deleteByMode(deliveryModeId);
+		return SUCCESS_TIP;
+	}
+	/**
+	 * 删除配送费配置
+	 */
+	@RequestMapping(value = "/deleteCost")
+	@ResponseBody
+	public Object deleteCost(Long deliveryCostId) {
+		deliveryCostService.deleteById(deliveryCostId);
 		return SUCCESS_TIP;
 	}
 
@@ -159,23 +175,35 @@ public class DeliveryModeController extends BaseController {
 	 */
 	@RequestMapping("toCost/{deliveryModeId}")
 	public String toCost(@PathVariable Long deliveryModeId, Model model) {
+		if(ShiroKit.isAdmin()){
+			DeliveryMode deliveryMode = deliveryModeService.getById(deliveryModeId);
+			model.addAttribute("deliveryMode", deliveryMode);
+			return PREFIX + "deliveryCost.html";
+		}
 		DeliveryMode deliveryMode = deliveryModeService.getById(deliveryModeId);
 		model.addAttribute("deliveryMode", deliveryMode);
-		return PREFIX + "deliveryCost.html";
+		
+		return PREFIX + "deliveryCost_shop.html";
+		
 	}
 
 	/**
 	 * 获取地区下的配送列表
 	 */
-	@RequestMapping(value = "/costs")
+	@RequestMapping(value = "/costs/{modeId}")
 	@ResponseBody
-	public Object costs(Long province, Long city, Long county, Long modeId, Long deliveryPro, Long deliveryCity,
+	public Object costs(Long province, Long city, Long county,@PathVariable Long modeId, Long deliveryPro, Long deliveryCity,
 			Long deliveryCou, Boolean isdelivery) {
-		// 获取所有的查询地区的Ids
 		List<Long> areaIds = areaService.findCountyIds(province, city, county);
 		List<Long> deliveryArea = areaService.findCountyIds(deliveryPro, deliveryCity, deliveryCou);
-		List<Map<String, Object>> costs = deliveryCostService.findCosts(modeId, areaIds, deliveryArea, isdelivery);
-		return costs;
+		if(ShiroKit.isAdmin()){
+			// 获取所有的查询地区的Ids
+			List<Map<String, Object>> costs = deliveryCostService.findCosts(modeId, areaIds, deliveryArea, isdelivery,null);
+			return super.warpObject(new DeliveryCostWarpper(costs));
+		}
+		Long shopId = shopService.getShopIdByDeptId(ShiroKit.getUser().getDeptId());
+		List<Map<String, Object>> costs = deliveryCostService.findCosts(modeId, areaIds, deliveryArea, isdelivery,shopId);
+		return super.warpObject(new DeliveryCostWarpper(costs));
 	}
 
 	/**
@@ -189,9 +217,49 @@ public class DeliveryModeController extends BaseController {
 		deliveryCost.setModifyTime(new Timestamp(new Date().getTime()));
 		model.addAttribute("deliveryCost", deliveryCost);
 		model.addAttribute("areaName", DeliveryCostFactory.me().getAreaName(deliveryCost.getAreaId()));
+		if(ShiroKit.isAdmin()){
+			model.addAttribute("deliveryAreaName", DeliveryCostFactory.me().getAreaName(deliveryCost.getDeliveryArea()));
+		}
 		return PREFIX + "costEdit.html";
 	}
-
+	/**
+	 * 跳转到添加配送费配置页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("addCostView/{deliveryModeId}")
+	public String addCostView(@PathVariable Long deliveryModeId,Model model) {
+		model.addAttribute("modeId", deliveryModeId);
+		if(ShiroKit.isAdmin()){
+			return PREFIX + "costAdd.html";
+		}else{
+			Long shopId = shopService.getShopIdByDeptId(ShiroKit.getUser().getDeptId());
+			Shop shop = shopService.selectById(shopId);
+			model.addAttribute("areaName", DeliveryCostFactory.me().getAreaName(shop.getCountyId()));
+		}
+		return PREFIX + "costAdd_shop.html";
+	}
+	
+	/**
+	 * 添加配送费配置
+	 */
+	@RequestMapping(value = "/addCost")
+	@ResponseBody
+	public Object addCost(DeliveryCost deliveryCost) {
+		if(ShiroKit.isAdmin()){
+			deliveryCost.setIsdelivery(true);
+			deliveryCostService.insert(deliveryCost);
+		}else{
+			Long shopId = shopService.getShopIdByDeptId(ShiroKit.getUser().getDeptId());
+			Shop shop = shopService.selectById(shopId);
+			deliveryCost.setShopId(shopId);
+			deliveryCost.setDeliveryArea(shop.getCountyId());
+			deliveryCost.setIsdelivery(true);
+			deliveryCostService.insert(deliveryCost);
+		}	
+		return SUCCESS_TIP;
+	}
+	
 	/**
 	 * 修改配送费
 	 */
@@ -214,7 +282,7 @@ public class DeliveryModeController extends BaseController {
 		// 获取所有的查询地区的Ids
 		List<Long> areaIds = areaService.findCountyIds(province, city, county);
 		List<Long> deliveryArea = areaService.findCountyIds(deliveryPro, deliveryCity, deliveryCou);
-		List<Map<String, Object>> costs = deliveryCostService.findCosts(modeId, areaIds, deliveryArea, isdelivery);
+		List<Map<String, Object>> costs = deliveryCostService.findCosts(modeId, areaIds, deliveryArea, isdelivery,null);
 		List<Map<String, Object>> projectsaList = new ArrayList<>();
 		projectsaList.add(map);
 		projectsaList.addAll(costs);

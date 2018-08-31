@@ -38,8 +38,8 @@ public class DeliveryCostServiceImpl extends ServiceImpl<DeliveryCostMapper, Del
 
 	@Override
 	public List<Map<String, Object>> findCosts(Long modeId, List<Long> areaIds, List<Long> deliveryArea,
-			Boolean isdelivery) {
-		return deliveryCostMapper.findList(modeId, areaIds, deliveryArea, isdelivery);
+			Boolean isdelivery , Long shopId) {
+		return deliveryCostMapper.findList(modeId, areaIds, deliveryArea, isdelivery,shopId);
 	}
 
 	@Override
@@ -79,6 +79,14 @@ public class DeliveryCostServiceImpl extends ServiceImpl<DeliveryCostMapper, Del
 			deliveryCost.setId(cost.getId());
 			this.update(deliveryCost);
 		}
+	}
+
+	@Override
+	public List<Map<String, Object>> findCostsByShopId(Long shopId) {
+		Wrapper<DeliveryCost> wrapper = new EntityWrapper<>();
+		wrapper.eq("shopId", shopId);
+		List<Map<String, Object>> selectList = deliveryCostMapper.selectMaps(wrapper);
+		return selectList;
 	}
 
 }

@@ -31,7 +31,7 @@ public interface IDeliveryCostService extends IService<DeliveryCost> {
 	 * @param isdelivery 
 	 * @return
 	 */
-	List<Map<String, Object>> findCosts(Long modeId, List<Long> areaIds, List<Long> deliveryArea, Boolean isdelivery);
+	List<Map<String, Object>> findCosts(Long modeId, List<Long> areaIds, List<Long> deliveryArea, Boolean isdelivery,Long shopId);
 
 	/**
 	 * 修改配送费
@@ -63,5 +63,12 @@ public interface IDeliveryCostService extends IService<DeliveryCost> {
 	 * @param deliveryCost
 	 */
 	void updateByModeArea(DeliveryCost deliveryCost);
+
+	/**
+	 * 获取某门店下的配送费配置
+	 * @param shopId
+	 * @return
+	 */
+	List<Map<String, Object>> findCostsByShopId(Long shopId);
 
 }

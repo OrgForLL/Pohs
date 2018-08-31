@@ -75,7 +75,7 @@ public class WxPayServiceImpl implements IwxPayService {
 
 	
 	@Override
-	public UnifiedorderResult wxPayUnifiedorder(BigDecimal amount,String orderSn,String ip ,String openid,String tradeType) {
+	public UnifiedorderResult wxPayUnifiedorder(BigDecimal amount,String orderSn,String ip ,String openid, String notifyUrl,String tradeType) {
 		// TODO 自动生成的方法存根
 		WeiXin weiXin = weiXinMapper.selectList(null).get(0);
 		Unifiedorder unifiedorder = new Unifiedorder();
@@ -91,7 +91,7 @@ public class WxPayServiceImpl implements IwxPayService {
 		unifiedorder.setOut_trade_no(orderSn);
 		unifiedorder.setTotal_fee(String.valueOf(amount.multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_HALF_UP)));
 		unifiedorder.setSpbill_create_ip(ip);
-		unifiedorder.setNotify_url(NOTIFYURL);
+		unifiedorder.setNotify_url(notifyUrl);
 		unifiedorder.setTrade_type(tradeType);
 		unifiedorder.setOpenid(openid);
 		if(tradeType.equals("MWEB")){

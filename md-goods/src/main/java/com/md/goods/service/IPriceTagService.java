@@ -106,7 +106,7 @@ public interface IPriceTagService extends IService<PriceTag> {
 	 * @param shopId
 	 * @param amount
 	 */
-	void reduceInventory(Long productId, Long shopId, Integer amount);
+	PriceTag reduceInventory(Long productId, Long shopId, Integer amount);
 
 	/**
 	 * 根据shopId和productId查找指定价格签

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.md.goods.dao.UploadFileMapper;
 import com.md.goods.model.UploadFile;
 import com.stylefeng.guns.core.util.SpringContextHolder;
+import com.stylefeng.guns.core.util.ToolUtil;
 
 /**
  * 品牌创建工厂
@@ -29,7 +30,9 @@ public class UploadFactory {
 	public String getUploadFileUrl(Long id) {
 		if(id!=null){
 			UploadFile selectById = uploadFileMapper.selectById(id);
-			return selectById.getUrl();
+			if(ToolUtil.isNotEmpty(selectById)) {
+				return selectById.getUrl();
+			}
 		}
 		return "/kaptcha/girl.gif";
 	}

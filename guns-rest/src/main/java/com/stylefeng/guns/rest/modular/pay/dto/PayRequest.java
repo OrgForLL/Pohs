@@ -5,6 +5,7 @@ import java.util.List;
 public class PayRequest {
 	private Long memberId;
 	private List<Long> orderIdList;
+	private String tradeType;
 	
 	private String href;
 
@@ -14,6 +15,14 @@ public class PayRequest {
 
 	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
+	}
+
+	public String getTradeType() {
+		return tradeType;
+	}
+
+	public void setTradeType(String tradeType) {
+		this.tradeType = tradeType;
 	}
 
 	public List<Long> getOrderIdList() {

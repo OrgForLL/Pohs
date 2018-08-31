@@ -3,8 +3,7 @@ rest:
   sign-open: true #签名机制是否开启(true或false)
   message-path: http://webt.lilang.com/base-msgservice/Create  # 消息接口地址
   message2-path: http://webt.lilang.com:9001/tl_zmd/MSGSendBase.ashx?msgtype=gd&sysid=0&userssid=1&userid=0&username=LilanzEShopReg&phone={0}&msg={1}  #短信接口地址
-  news-path: http://webt.lilang.com:9001/tl_zmd/MSGSendBase.ashx?msgtype=gd&sysid=0&userssid=1&userid=0&username=LilanzEShopReg&phone={0}&msg={1}  #短信接口地址
-
+  notify-url: http://mf.ecommu.cn:8082/admin/api/pay/webwxPayNotify  # 微信异步回调接口
 jwt:
   header: Authorization   #http请求头所需要的字段
   secret: mySecret        #jwt秘钥

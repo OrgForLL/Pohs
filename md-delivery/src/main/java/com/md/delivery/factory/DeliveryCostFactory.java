@@ -26,4 +26,6 @@ public class DeliveryCostFactory {
     	Area area = areaMapper.selectById(areaId);
     	return area.getFull_name();
     }
+    
+    
 }

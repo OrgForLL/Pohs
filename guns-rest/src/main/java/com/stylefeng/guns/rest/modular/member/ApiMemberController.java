@@ -391,6 +391,9 @@ public class ApiMemberController extends BaseController {
 			return ResponseEntity.ok(new ApiException(BizExceptionEnum.USER_NOT_EXISTED));
 		}
 		Favorite favorite = favoriteService.selectByMemberId(memberRequest.getMemberId());
+		if(ToolUtil.isEmpty(favorite)) {
+			return ResponseEntity.ok(new ApiException(BizExceptionEnum.SQL_DATA_ANO));
+		}
 		List<Map<String, Object>> favoriteItems =  favoriteItemService.selectFavoriteItemByfavoriteId(favorite.getId());
 		return ResponseEntity.ok(super.warpObject(new FavoriteItemWarpper(favoriteItems)));
 	}

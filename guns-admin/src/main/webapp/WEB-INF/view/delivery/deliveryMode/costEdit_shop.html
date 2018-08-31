@@ -6,40 +6,6 @@
             <div class="row">
                 <input type="hidden" id="areaId">
                 <input type="hidden" id="deliveryArea">
-                <div class="form-group">
-					<label class="col-sm-2 control-label">派发地区</label>
-					<div class="col-sm-10">
-						<input class="form-control" type="text" name="deliveryAreaName"
-							readonly="readonly" value="${deliveryAreaName}" />
-					</div>
-				</div>
-                <div class="form-group">
-					<label class="col-sm-2 control-label">派货地区</label>
-					<div class="col-sm-10">
-						<select class="form-control m-b" id="deliveryPro"
-							onchange="DeliveryCost.provinceChange()">
-							<option value="">请选择省</option>
-						</select>
-					</div>
-				</div>
-
-				<div class="form-group">
-					<label class="col-sm-2 control-label">派货地区</label>
-					<div class="col-sm-10">
-						<select class="form-control m-b" id="deliveryCity"
-							onchange="DeliveryCost.deliveryCityChange()">
-							<option value="">请选择市</option>
-						</select>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">派货地区</label>
-					<div class="col-sm-10">
-						<select class="form-control m-b" id="deliveryCou">
-							<option value="">请选择区/县</option>
-						</select>
-					</div>
-				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">已配地区</label>
 					<div class="col-sm-10">
@@ -101,7 +67,7 @@
             </div>
             <div class="row btn-group-m-t">
                 <div class="col-sm-12">
-                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="DeliveryCostInfoDlg.editSubmit()"/>
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="DeliveryCostInfoDlg.editSubmitShop()"/>
                     <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="DeliveryCostInfoDlg.close()"/>
                 </div>
             </div>

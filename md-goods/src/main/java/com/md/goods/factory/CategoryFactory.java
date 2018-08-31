@@ -84,7 +84,10 @@ public class CategoryFactory {
 		}
 		StringBuilder names = new StringBuilder();
 		for(Long id:categoryIds){
-			names.append(categoryMapper.selectById(id).getName()).append(",");
+			Category cate = categoryMapper.selectById(id);
+			if(ToolUtil.isNotEmpty(cate)) {
+				names.append(cate.getName()).append(",");
+			}
 		}
 		return StrKit.removeSuffix(names.toString(), ",");
 	}

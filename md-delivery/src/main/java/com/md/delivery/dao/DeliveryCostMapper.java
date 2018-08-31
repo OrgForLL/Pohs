@@ -11,10 +11,11 @@ import com.md.delivery.model.DeliveryCost;
 public interface DeliveryCostMapper extends BaseMapper<DeliveryCost> {
 	/**
 	 * 获取配送费用列表
+	 * @param shopId 
 	 * 
 	 * @param ids
 	 * @return
 	 */
 	List<Map<String, Object>> findList(@Param("modeId") Long modeId, @Param("areaIds") List<Long> areaIds,
-			@Param("deliveryArea") List<Long> deliveryArea, @Param("isdelivery") Boolean isdelivery);
+			@Param("deliveryArea") List<Long> deliveryArea, @Param("isdelivery") Boolean isdelivery,@Param("shopId") Long shopId);
 }

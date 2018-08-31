@@ -18,6 +18,8 @@ public class DeliveryCost {
 	private Long deliveryArea;
 	//收货地区
 	private Long areaId;
+	//所属门店id
+	private Long shopId;
 	//所属配送方式
 	private Long modeId;
 	//所属配送方式
@@ -34,6 +36,13 @@ public class DeliveryCost {
 	private Timestamp createTime;
 	//修改时间
 	private Timestamp modifyTime;
+	
+	public Long getShopId() {
+		return shopId;
+	}
+	public void setShopId(Long shopId) {
+		this.shopId = shopId;
+	}
 	public Long getId() {
 		return id;
 	}

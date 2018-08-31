@@ -72,12 +72,14 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
 				wrapper.eq("parent", city);
 				wrapper.orderBy("orders", true);
 				List<Area> areas = areaMapper.selectList(wrapper);
+				ids.add(city);
 				for (Area area : areas) {
 					ids.add(area.getId());
 				}
 			} else {
 				// 是否有选择省
 				if (ToolUtil.isNotEmpty(province)) {
+					ids.add(province);
 					List<Long> cityIds = new ArrayList<>();
 					Wrapper<Area> wrapper = new EntityWrapper<>();
 					wrapper.eq("parent", province);
@@ -85,6 +87,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
 					List<Area> areas = areaMapper.selectList(wrapper);
 					for (Area area : areas) {
 						cityIds.add(area.getId());
+						ids.add(area.getId());
 					}
 					Wrapper<Area> wrapper1 = new EntityWrapper<>();
 					wrapper1.in("parent", cityIds);

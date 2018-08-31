@@ -108,14 +108,14 @@
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
         </dependency>
-        <dependency>
+      <!--   <dependency>
             <groupId>JDiy</groupId>
             <artifactId>JDiy</artifactId>
         </dependency>
         <dependency>
             <groupId>openApi</groupId>
             <artifactId>openApi</artifactId>
-        </dependency>
+        </dependency> -->
         <!--  -->
 	</dependencies>
 

@@ -23,7 +23,7 @@ public class Shop {
 	private Long provinceId;
 	//所属市id
 	private Long cityId;
-	//所属市id
+	//所属区县id
 	private Long countyId;
 	//所属部门
 	private Integer deptId;

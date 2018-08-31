@@ -227,10 +227,12 @@ public class ApiOrderController extends BaseController{
 	public ResponseEntity<?> getOrderDetail(@RequestBody OrderRequest orderRequest) {
 		JSONObject jb = new JSONObject();
 		Order order = orderService.getById(orderRequest.getOrderId());
-		Shop shop = shopService.findById(order.getShopId());
-		order.setShop(shop);
-		List<Map<String, Object>> itemResult = orderItemService.getListByOrderId(order.getId());
-		order.setItemObject(super.warpObject(new OrderItemWarpper(itemResult)));
+		if(ToolUtil.isNotEmpty(order)) {
+			Shop shop = shopService.findById(order.getShopId());
+			order.setShop(shop);
+			List<Map<String, Object>> itemResult = orderItemService.getListByOrderId(order.getId());
+			order.setItemObject(super.warpObject(new OrderItemWarpper(itemResult)));
+		}
 		List<Shipping> shipping = shippingService.findByOrderId(orderRequest.getOrderId());
 		if(ToolUtil.isNotEmpty(shipping)) {
 			jb.put("shipping", shipping.get(0));
@@ -286,10 +288,21 @@ public class ApiOrderController extends BaseController{
 			orderService.add(order);
 			idList.add(order.getId());
 			for(OrderItem item:order.getOrderItems()) {
-				priceTagService.reduceInventory(item.getProductId(), order.getShopId(), item.getQuantity());
+				PriceTag tag = priceTagService.reduceInventory(item.getProductId(), order.getShopId(), item.getQuantity());
+				if(tag.getInventory() <= tag.getThreshold()) {
+					Product product = productService.findById(tag.getProductId());
+					Map<String, String> mapParam = new HashMap<String, String>();
+					String data = "{\"MsgTypeID\":3102,\"CreateID\":3100,\"MsgJson\":{\"productId\":"+tag.getProductId()+
+							",\"shopId\":"+tag.getShopId()+",\"goodsId\":"+tag.getGoodsId()+",\"sn\":"+"\""+
+							goodsService.findById(item.getGoodsId()).getSn()+"\""+",\"productbarcode\":"+"\""+product.getBarcode()+"\""+
+									",\"productname\":"+"\""+product.getName()+"\""+
+							",\"inventory\":"+tag.getInventory()+",\"threshold\":"+tag.getThreshold()+
+							",\"specItems\":"+product.getSpecItems()+"},\"RequestID\":\"\"}";
+					mapParam.put("data", data);
+					HttpPostUrl.sendPost(restProperties.getMessagePath(), mapParam);
+				}
 				item.setOrderId(order.getId());
 				orderItemService.insert(item);
-				PriceTag tag = priceTagService.findByShopAndProduct(item.getProductId(), order.getShopId());
 				CartItem cartItem = cartItemService.findByTagId(tag.getId(), cart.getId());
 				if(ToolUtil.isNotEmpty(cartItem)) {
 					cartItemService.deleteById(cartItem.getId());

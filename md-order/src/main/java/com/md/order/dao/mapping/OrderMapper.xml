@@ -26,5 +26,7 @@
 		<result column="diliveryId" property="diliveryId" />
 		<result column="couponId" property="couponId" />
 		<result column="gainsTime" property="gainsTime" />
+		<result column="key" property="key" />
+		<result column="caption" property="caption" />
 	</resultMap>
 </mapper>

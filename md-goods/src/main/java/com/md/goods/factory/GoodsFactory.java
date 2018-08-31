@@ -16,6 +16,7 @@ import com.md.goods.model.CategoryRelation;
 import com.md.goods.model.Goods;
 import com.md.goods.model.TagRelation;
 import com.stylefeng.guns.core.util.SpringContextHolder;
+import com.stylefeng.guns.core.util.ToolUtil;
 
 /**
  * 商品创建工厂
@@ -59,7 +60,10 @@ public class GoodsFactory {
 	
 	public String getNameById(Long id){
 		Goods goods = goodsMapper.selectById(id);
-		return goods.getName();
+		if(ToolUtil.isNotEmpty(goods)) {
+			return goods.getName();
+		}
+		return "";
 	}
 	
 	public List<Map<String,Object>> goodsList(String shopIds, Long categoryId, Long brandId,String goodsName){

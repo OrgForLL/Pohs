@@ -1,6 +1,9 @@
 rest:
   auth-open: true #jwt鉴权机制是否开启(true或者false)
   sign-open: true #签名机制是否开启(true或false)
+  message-path: http://webt.lilang.com/base-msgservice/Create  # 消息接口地址
+  message2-path: http://webt.lilang.com:9001/tl_zmd/MSGSendBase.ashx?msgtype=gd&sysid=0&userssid=1&userid=0&username=LilanzEShopReg&phone={0}&msg={1}  #短信接口地址
+  news-path: http://webt.lilang.com:9001/tl_zmd/MSGSendBase.ashx?msgtype=gd&sysid=0&userssid=1&userid=0&username=LilanzEShopReg&phone={0}&msg={1}  #短信接口地址
 
 jwt:
   header: Authorization   #http请求头所需要的字段
@@ -28,9 +31,9 @@ mybatis-plus:
 
 spring:
   datasource:
-      url: jdbc:mysql://47.100.7.57:3306/wmshop?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+      url: jdbc:mysql://120.78.213.77:3306/testshop?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
       username: root
-      password: wm123456.
+      password: md123456.
       filters: log4j,wall,mergeStat
 
 logging:
