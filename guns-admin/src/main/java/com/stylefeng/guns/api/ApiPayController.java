@@ -32,6 +32,7 @@ import com.md.pay.service.IwxPayService;
 import com.stylefeng.guns.api.dto.PayRequest;
 import com.stylefeng.guns.api.dto.RefundApplyRequest;
 import com.stylefeng.guns.common.exception.BizExceptionEnum;
+import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.exception.ApiException;
 import com.stylefeng.guns.core.util.DateUtil;
@@ -66,6 +67,9 @@ public class ApiPayController extends BaseController {
 	IRefundApplyService refundApplyService;
 	@Resource
 	IWeixinService weixinService;
+	@Resource
+	private GunsProperties gunsProperties;
+	
 	
 	/**
 	 * 微信支付
@@ -89,7 +93,7 @@ public class ApiPayController extends BaseController {
 		Member member = MemberServiceImpl.selectById(payRequest.getMemberId());
 		String memberIp = request.getRemoteAddr();
 		UnifiedorderResult unifiedorderResult = wxPayServiceImpl.wxPayUnifiedorder(amount, orderSn, memberIp,
-				member.getOpenId());
+				member.getOpenId(),gunsProperties.getNorifyUrl());
 		if(("SUCCESS").equals(unifiedorderResult.getReturn_code())){
 			jb.put("code", unifiedorderResult.getReturn_code());
 			jb.put("msg", unifiedorderResult.getReturn_msg());
@@ -105,6 +109,7 @@ public class ApiPayController extends BaseController {
 	 * 微信支付成功通知接口(微信端)
 	 * 
 	 */
+	@ApiOperation(value = "微信支付成功通知接口(微信端)", notes = "")
 	@RequestMapping(value = "/webwxPayNotify", produces = "text/html;charset=UTF-8")
 	public void webwxPayNotify(HttpServletRequest request,HttpServletResponse response) {
 		System.out.println("微信支付回调成功");

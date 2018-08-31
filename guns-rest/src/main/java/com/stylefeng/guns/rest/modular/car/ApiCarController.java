@@ -132,24 +132,26 @@ public class ApiCarController extends BaseController {
 						for (CartItem item : itemResult) {
 							GoodObject goodItems = new GoodObject();
 							PriceTag tag = priceTagService.findByShopAndProduct(item.getProductId(), item.getShopId());
-							if(ToolUtil.isNotEmpty(tag.getPrice())) {
-								goodItems.setPrice(tag.getPrice());
+							if(ToolUtil.isNotEmpty(tag)) {
+								if(ToolUtil.isNotEmpty(tag.getPrice())) {
+									goodItems.setPrice(tag.getPrice());
+								}
+								goodItems.setGoodsId(tag.getGoodsId());
 							}
 							goodItems.setCartItemId(item.getId());
-							goodItems.setGoodsId(tag.getGoodsId());
 							Goods goods = goodsService.findById(tag.getGoodsId());
-							if(goods != null) {
+							if(ToolUtil.isNotEmpty(goods)) {
 								goodItems.setGoodsName(goods.getName());
 							}
 							Product product = productService.findById(item.getProductId());
-							if(product != null) {
+							if(ToolUtil.isNotEmpty(product)) {
 								goodItems.setSkuName(product.getName());
 							}
 							goodItems.setProductId(item.getProductId());
 							goodItems.setQuantity(item.getQuantity());
 							goodItems.setStatus(item.getStatus());
 							UploadFile upload =  uploadFileService.getById(product.getImage());
-							if(upload != null) {
+							if(ToolUtil.isNotEmpty(upload)) {
 								goodItems.setImageUrl(upload.getUrl());
 							}
 							goodList.add(goodItems);

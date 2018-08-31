@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,7 @@ import com.stylefeng.guns.core.exception.ApiException;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.core.util.ToolUtil;
 import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
+import com.stylefeng.guns.rest.config.properties.RestProperties;
 import com.stylefeng.guns.rest.modular.pay.dto.PayRequest;
 import com.stylefeng.guns.rest.modular.pay.dto.RefundApplyRequest;
 
@@ -83,6 +85,9 @@ public class ApiPayController extends BaseController {
 	IALiPayService aLiPayService;
     @Resource 
     IOrderItemService orderItemService;
+    @Autowired
+	RestProperties restProperties;
+    
 
 	/**
 	 * 微信支付
@@ -106,7 +111,7 @@ public class ApiPayController extends BaseController {
 		Member member = MemberServiceImpl.selectById(payRequest.getMemberId());
 		String memberIp = request.getRemoteAddr();
 		UnifiedorderResult unifiedorderResult = wxPayServiceImpl.wxPayUnifiedorder(amount, orderSn, memberIp,
-				member.getOpenId());
+				member.getOpenId(),restProperties.getNotifyUrl());
 		if (("SUCCESS").equals(unifiedorderResult.getReturn_code())) {
 			jb.put("code", unifiedorderResult.getReturn_code());
 			jb.put("msg", unifiedorderResult.getReturn_msg());

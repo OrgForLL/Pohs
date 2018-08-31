@@ -56,6 +56,7 @@ import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.util.CompressUtil;
 import com.stylefeng.guns.core.util.Convert;
+import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.core.util.ToolUtil;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -201,13 +202,17 @@ public class AdminApiGoodsController extends BaseController {
 //				throw new GunsException(BizExceptionEnum.NAME_SAME);
 //			}
 			if (ToolUtil.isNotEmpty(goods.getImages())) {
-				Long[] ids = Convert.toLongArray(true, Convert.toStrArray(",", goods.getImages()));
-				for (Long id : ids) {
-					UploadFile selectById = uploadFileService.getById(id);
-					if(ToolUtil.isEmpty(selectById)) {
-						throw new GunsException(BizExceptionEnum.IMAGE_NOTEXIST);
-					}
+				String[] urls = Convert.toStrArray(",", goods.getImages());
+				String images = "";
+				for(String url : urls) {
+					UploadFile uploadFile = new UploadFile();
+					uploadFile.setCreateTime(DateUtil.format(new Date()));
+					uploadFile.setIsUse(1);
+					uploadFile.setUrl(url);
+					Long id = uploadFileService.add(uploadFile);
+					images = images + id + ",";
 				}
+				goods.setImages(images);
 			}
 			// 添加商品
 			goods.setParamItems(HtmlUtils.htmlUnescape(goods.getParamItems()));
@@ -220,20 +225,19 @@ public class AdminApiGoodsController extends BaseController {
 			if(ToolUtil.isNotEmpty(specs)) {
 				String htmlUnescape = HtmlUtils.htmlUnescape(specs);
 				List<Product> productList = JSONArray.parseArray(htmlUnescape, Product.class);
-				Set<Long> imgs = new HashSet<>();
 				for (Product product : productList) {
 					product.setGoodsId(goodsId);
-					if (product.getImage() != null) {
-						imgs.add(product.getImage());
+					if (product.getImageUrl() != null) {
+						UploadFile uploadFile = new UploadFile();
+						uploadFile.setCreateTime(DateUtil.format(new Date()));
+						uploadFile.setIsUse(1);
+						uploadFile.setUrl(product.getImageUrl());
+						Long id = uploadFileService.add(uploadFile);
+						product.setImage(id);
 					}
 					productService.add(product);
 					PriceTagFactory.me().createPriceTag(product);
 				}
-				// 修改上传图片的状态
-				if (ToolUtil.isNotEmpty(goods.getImages())) {
-					uploadFileService.allUse(Convert.toLongArray(true, Convert.toStrArray(",", goods.getImages())));
-				}
-				uploadFileService.allUse(imgs);
 			}
 			
 			if(ToolUtil.isNotEmpty(categoryIds)) {

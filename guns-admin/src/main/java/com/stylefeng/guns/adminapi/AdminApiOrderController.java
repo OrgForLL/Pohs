@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.md.cart.model.Cart;
 import com.md.cart.model.CartItem;
 import com.md.goods.model.PriceTag;
+import com.md.goods.model.Product;
 import com.md.goods.model.Shop;
 import com.md.goods.service.IGoodsService;
 import com.md.goods.service.IPriceTagService;
@@ -234,12 +235,14 @@ public class AdminApiOrderController extends BaseController {
 			for(OrderItem item:order.getOrderItems()) {
 				PriceTag tag = priceTagService.reduceInventory(item.getProductId(), order.getShopId(), item.getQuantity());
 				if(tag.getInventory() <= tag.getThreshold()) {
-					
+					Product product = productService.findById(tag.getProductId());
 					Map<String, String> mapParam = new HashMap<String, String>();
 					String data = "{\"MsgTypeID\":3102,\"CreateID\":3100,\"MsgJson\":{\"productId\":"+tag.getProductId()+
-							",\"shopId\":"+tag.getShopId()+tag.getProductId()+",\"goodsId\":"+tag.getGoodsId()+",\"sn\":"+
-							goodsService.findById(item.getGoodsId()).getSn()+",\"productName\":"+productService.findById(tag.getProductId()).getName()+
-							",\"inventory\":"+tag.getInventory()+",\"threshold\":"+tag.getThreshold()+"},\"RequestID\":\"\"}";
+							",\"shopId\":"+tag.getShopId()+",\"goodsId\":"+tag.getGoodsId()+",\"sn\":"+"\""+
+							goodsService.findById(item.getGoodsId()).getSn()+"\""+",\"productbarcode\":"+"\""+product.getBarcode()+"\""+
+									",\"productname\":"+"\""+product.getName()+"\""+
+							",\"inventory\":"+tag.getInventory()+",\"threshold\":"+tag.getThreshold()+
+							",\"specItems\":"+product.getSpecItems()+"},\"RequestID\":\"\"}";
 					mapParam.put("data", data);
 					HttpPostUrl.sendPost(gunsProperties.getMessagePath(), mapParam);
 				}

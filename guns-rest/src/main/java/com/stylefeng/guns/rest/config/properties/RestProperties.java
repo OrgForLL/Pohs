@@ -23,6 +23,8 @@ public class RestProperties {
     
     private String message2Path;  //外部短信接口
     
+    private String notifyUrl;  //微信支付异步回调地址接口
+    
     public boolean isAuthOpen() {
         return authOpen;
     }
@@ -54,5 +56,13 @@ public class RestProperties {
 
 	public void setMessage2Path(String message2Path) {
 		this.message2Path = message2Path;
+	}
+
+	public String getNotifyUrl() {
+		return notifyUrl;
+	}
+
+	public void setNotifyUrl(String notifyUrl) {
+		this.notifyUrl = notifyUrl;
 	}
 }

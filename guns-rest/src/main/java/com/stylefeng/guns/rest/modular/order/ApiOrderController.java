@@ -227,10 +227,12 @@ public class ApiOrderController extends BaseController{
 	public ResponseEntity<?> getOrderDetail(@RequestBody OrderRequest orderRequest) {
 		JSONObject jb = new JSONObject();
 		Order order = orderService.getById(orderRequest.getOrderId());
-		Shop shop = shopService.findById(order.getShopId());
-		order.setShop(shop);
-		List<Map<String, Object>> itemResult = orderItemService.getListByOrderId(order.getId());
-		order.setItemObject(super.warpObject(new OrderItemWarpper(itemResult)));
+		if(ToolUtil.isNotEmpty(order)) {
+			Shop shop = shopService.findById(order.getShopId());
+			order.setShop(shop);
+			List<Map<String, Object>> itemResult = orderItemService.getListByOrderId(order.getId());
+			order.setItemObject(super.warpObject(new OrderItemWarpper(itemResult)));
+		}
 		List<Shipping> shipping = shippingService.findByOrderId(orderRequest.getOrderId());
 		if(ToolUtil.isNotEmpty(shipping)) {
 			jb.put("shipping", shipping.get(0));
@@ -291,8 +293,9 @@ public class ApiOrderController extends BaseController{
 					Product product = productService.findById(tag.getProductId());
 					Map<String, String> mapParam = new HashMap<String, String>();
 					String data = "{\"MsgTypeID\":3102,\"CreateID\":3100,\"MsgJson\":{\"productId\":"+tag.getProductId()+
-							",\"shopId\":"+tag.getShopId()+tag.getProductId()+",\"goodsId\":"+tag.getGoodsId()+",\"sn\":"+
-							goodsService.findById(item.getGoodsId()).getSn()+",\"productName\":"+product.getName()+
+							",\"shopId\":"+tag.getShopId()+",\"goodsId\":"+tag.getGoodsId()+",\"sn\":"+"\""+
+							goodsService.findById(item.getGoodsId()).getSn()+"\""+",\"productbarcode\":"+"\""+product.getBarcode()+"\""+
+									",\"productname\":"+"\""+product.getName()+"\""+
 							",\"inventory\":"+tag.getInventory()+",\"threshold\":"+tag.getThreshold()+
 							",\"specItems\":"+product.getSpecItems()+"},\"RequestID\":\"\"}";
 					mapParam.put("data", data);
