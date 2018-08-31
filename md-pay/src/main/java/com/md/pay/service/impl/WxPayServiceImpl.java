@@ -26,10 +26,12 @@ import com.stylefeng.guns.core.util.ToolUtil;
 import weixin.popular.api.PayMchAPI;
 import weixin.popular.bean.paymch.MchPayNotify;
 import weixin.popular.bean.paymch.MchPayRefundNotify;
+import weixin.popular.bean.paymch.SceneInfo;
 import weixin.popular.bean.paymch.SecapiPayRefund;
 import weixin.popular.bean.paymch.SecapiPayRefundResult;
 import weixin.popular.bean.paymch.Unifiedorder;
 import weixin.popular.bean.paymch.UnifiedorderResult;
+import weixin.popular.bean.paymch.SceneInfo.H5Info;
 import weixin.popular.client.LocalHttpClient;
 import weixin.popular.util.SignatureUtil;
 
@@ -54,8 +56,6 @@ public class WxPayServiceImpl implements IwxPayService {
 	private static final String NOTIFYURL = "http://app.wmggcl.com/admin/api/pay/webwxPayNotify";
 	// 微信退款回调地址
 	private static final String REFUNDNOTIFYURL = "http://app.wmggcl.com/admin/api/pay/webwxRefundNotify";
-	// 微信交易类型
-	private static final String TRADETYPE = "JSAPI";
 	// 微信APIKEY
 	private static final String APIKEY = "qianyouhangkongwuliupingtai20188";
 
@@ -70,14 +70,19 @@ public class WxPayServiceImpl implements IwxPayService {
 	private static final String REDIRECT_URI2 = "http://www.qy-hk.com/api/weixin/redirecturl2";
 
 	private static final String STATE = "123";
+	
+	private static final String APPNAME = "为美商城";
 
 	
 	@Override
-	public UnifiedorderResult wxPayUnifiedorder(BigDecimal amount,String orderSn,String ip ,String openid) {
+	public UnifiedorderResult wxPayUnifiedorder(BigDecimal amount,String orderSn,String ip ,String openid,String tradeType) {
 		// TODO 自动生成的方法存根
 		WeiXin weiXin = weiXinMapper.selectList(null).get(0);
-		
 		Unifiedorder unifiedorder = new Unifiedorder();
+		SceneInfo sceneInfo = new SceneInfo();
+		H5Info h5Info = sceneInfo.getH5_info();
+		h5Info.setApp_name(APPNAME);
+		h5Info.setType("Wap");
 		
 		unifiedorder.setAppid(weiXin.getAppid());
 		unifiedorder.setMch_id(weiXin.getMchid());
@@ -87,9 +92,11 @@ public class WxPayServiceImpl implements IwxPayService {
 		unifiedorder.setTotal_fee(String.valueOf(amount.multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_HALF_UP)));
 		unifiedorder.setSpbill_create_ip(ip);
 		unifiedorder.setNotify_url(NOTIFYURL);
-		unifiedorder.setTrade_type(TRADETYPE);
+		unifiedorder.setTrade_type(tradeType);
 		unifiedorder.setOpenid(openid);
-		
+		if(tradeType.equals("MWEB")){
+			unifiedorder.setScene_info(sceneInfo);
+		}
 		return PayMchAPI.payUnifiedorder(unifiedorder, weiXin.getApikey());
 	}
 

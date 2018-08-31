@@ -20,7 +20,7 @@ public interface IwxPayService {
 	 * @param order
 	 * @return
 	 */
-	UnifiedorderResult wxPayUnifiedorder (BigDecimal amount,String orderSn,String ip,String openid);
+	UnifiedorderResult wxPayUnifiedorder (BigDecimal amount,String orderSn,String ip,String openid,String tradeType);
 
 	String webwxPayNotify(Map<String, String> mapData, MchPayNotify payNotify, List<Order> orderList);
 	
