@@ -281,7 +281,18 @@ public class AdminApiGoodsController extends BaseController {
 			// 将原先的商品的图片组设置为未使用
 			Goods findById = goodsService.findById(goods.getId());
 			if (ToolUtil.isNotEmpty(findById.getImages())) {
-				uploadFileService.allUnUse(Convert.toLongArray(true, Convert.toStrArray(",", findById.getImages())));
+				//uploadFileService.allUnUse(Convert.toLongArray(true, Convert.toStrArray(",", findById.getImages())));
+				String[] urls = Convert.toStrArray(",", goods.getImages());
+				String images = "";
+				for(String url : urls) {
+					UploadFile uploadFile = new UploadFile();
+					uploadFile.setCreateTime(DateUtil.format(new Date()));
+					uploadFile.setIsUse(1);
+					uploadFile.setUrl(url);
+					Long id = uploadFileService.add(uploadFile);
+					images = images + id + ",";
+				}
+				goods.setImages(images);
 			}
 
 			// 修改商品
@@ -291,9 +302,10 @@ public class AdminApiGoodsController extends BaseController {
 			goods.setCreateTime(new Timestamp(new Date().getTime()));
 			goodsService.edit(goods);
 			// 修改商品图片的状态为使用
-			if (ToolUtil.isNotEmpty(goods.getImages())) {
+			/*if (ToolUtil.isNotEmpty(goods.getImages())) {
+				
 				uploadFileService.allUse(Convert.toLongArray(true, Convert.toStrArray(",", goods.getImages())));
-			}
+			}*/
 			if(ToolUtil.isNotEmpty(specs)) {
 				// 修改规格商品
 				String htmlUnescape = HtmlUtils.htmlUnescape(specs);
@@ -302,6 +314,17 @@ public class AdminApiGoodsController extends BaseController {
 				Set<Long> ids = new HashSet<>();
 				for (Product product : productList) {
 					product.setGoodsId(goods.getId());
+					if (product.getImage() != null) {
+						imgs.add(product.getImage());
+					}
+					if (product.getImageUrl() != null) {
+						UploadFile uploadFile = new UploadFile();
+						uploadFile.setCreateTime(DateUtil.format(new Date()));
+						uploadFile.setIsUse(1);
+						uploadFile.setUrl(product.getImageUrl());
+						Long id = uploadFileService.add(uploadFile);
+						product.setImage(id);
+					}
 					if (product.getId() == null) {
 						productService.add(product);
 						// 生成价格标签
@@ -309,9 +332,7 @@ public class AdminApiGoodsController extends BaseController {
 					} else {
 						productService.edit(product);
 					}
-					if (product.getImage() != null) {
-						imgs.add(product.getImage());
-					}
+					
 					ids.add(product.getId());
 				}
 				// 删除product数据、及其关联的价格标签
@@ -320,6 +341,7 @@ public class AdminApiGoodsController extends BaseController {
 							productService.deleteById((Long) (map.get("id")));
 							priceTagService.deleteByProductId((Long) map.get("id"));
 						});
+				
 				// 修改当前规格的图片状态为使用
 				if (ToolUtil.isNotEmpty(imgs)) {
 					uploadFileService.allUse(imgs);
