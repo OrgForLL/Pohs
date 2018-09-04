@@ -225,14 +225,56 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public DeliveryCost getDeliveryCost(DeliveryMode deliveryMode, Address address, Long shopId) {
-		Shop shop = shopService.findById(shopId);
-		DeliveryCost cost = deliveryCostService.getCost(deliveryMode.getId(), address.getCounty(), shop.getCountyId());
-		/*if (cost == null) {
-			throw new GunsException(SettlementExceptionEnum.NO_DELIVERYCOST);
-		} else {
-			return cost;
-		}*/
-		return cost;
+		Shop shop = shopService.selectById(shopId);
+		DeliveryCost shopCountyCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCounty(), shopId,null);
+		if(ToolUtil.isNotEmpty(shopCountyCost)){
+			return shopCountyCost;
+		}
+		DeliveryCost shopCityCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCity(), shopId,null);
+		if(ToolUtil.isNotEmpty(shopCityCost)){
+			return shopCityCost;
+		}
+		DeliveryCost shopProvinceCost = deliveryCostService.getCost(deliveryMode.getId(), address.getProvince(), shopId,null);
+		if(ToolUtil.isNotEmpty(shopProvinceCost)){
+			return shopProvinceCost;
+		}
+		DeliveryCost adminCountyToCountyCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCounty(), null, shop.getCountyId());
+		if(ToolUtil.isNotEmpty(adminCountyToCountyCost)){
+			return adminCountyToCountyCost;
+		}
+		DeliveryCost adminCityToCountyCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCounty(), null, shop.getCityId());
+		if(ToolUtil.isNotEmpty(adminCityToCountyCost)){
+			return adminCityToCountyCost;
+		}
+		DeliveryCost adminProvinceToCountyCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCounty(), null, shop.getProvinceId());
+		if(ToolUtil.isNotEmpty(adminProvinceToCountyCost)){
+			return adminProvinceToCountyCost;
+		}
+		DeliveryCost adminCountyToCityCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCity(), null, shop.getCountyId());
+		if(ToolUtil.isNotEmpty(adminCountyToCityCost)){
+			return adminCountyToCityCost;
+		}
+		DeliveryCost adminCityToCityCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCity(), null, shop.getCityId());
+		if(ToolUtil.isNotEmpty(adminCityToCityCost)){
+			return adminCityToCityCost;
+		}
+		DeliveryCost adminProvinceToCityCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCity(), null, shop.getProvinceId());
+		if(ToolUtil.isNotEmpty(adminProvinceToCityCost)){
+			return adminProvinceToCityCost;
+		}
+		DeliveryCost adminCountyToProvinceCost = deliveryCostService.getCost(deliveryMode.getId(), address.getProvince(), null, shop.getCountyId());
+		if(ToolUtil.isNotEmpty(adminCountyToProvinceCost)){
+			return adminCountyToProvinceCost;
+		}
+		DeliveryCost adminCityToProvinceCost = deliveryCostService.getCost(deliveryMode.getId(), address.getProvince(), null, shop.getCityId());
+		if(ToolUtil.isNotEmpty(adminCityToProvinceCost)){
+			return adminCityToProvinceCost;
+		}
+		DeliveryCost adminProvinceToProvinceCost = deliveryCostService.getCost(deliveryMode.getId(), address.getProvince(), null, shop.getProvinceId());
+		if(ToolUtil.isNotEmpty(adminProvinceToProvinceCost)){
+			return adminProvinceToProvinceCost;
+		}
+		return null;
 	}
 
 	public Order deliverySattlement(Order order, DeliveryMode deliveryMode, Address address, Long shopId) {
@@ -259,6 +301,9 @@ public class AccountServiceImpl implements IAccountService {
 					order.setDiliveryPay(deliveryCost.getStartPrice());
 				}
 			}
+			order.setActualPay(order.getDue().add(order.getDiliveryPay()));
+		}else{
+			order.setDiliveryPay(deliveryMode.getPrice());
 			order.setActualPay(order.getDue().add(order.getDiliveryPay()));
 		}
 		order.setConsigneeName(address.getConsigeeName());

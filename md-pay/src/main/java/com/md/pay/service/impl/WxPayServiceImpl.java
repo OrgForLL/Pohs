@@ -71,7 +71,7 @@ public class WxPayServiceImpl implements IwxPayService {
 
 	private static final String STATE = "123";
 	
-	private static final String APPNAME = "为美商城";
+	private static final String APPNAME = "利郎商城";
 
 	
 	@Override
@@ -80,14 +80,14 @@ public class WxPayServiceImpl implements IwxPayService {
 		WeiXin weiXin = weiXinMapper.selectList(null).get(0);
 		Unifiedorder unifiedorder = new Unifiedorder();
 		SceneInfo sceneInfo = new SceneInfo();
-		H5Info h5Info = sceneInfo.getH5_info();
+		SceneInfo.H5Info h5Info = new SceneInfo.H5Info();
 		h5Info.setApp_name(APPNAME);
 		h5Info.setType("Wap");
 		
 		unifiedorder.setAppid(weiXin.getAppid());
 		unifiedorder.setMch_id(weiXin.getMchid());
 		unifiedorder.setNonce_str(UUID.randomUUID().toString().replace("-", ""));
-		unifiedorder.setBody("为美商城");
+		unifiedorder.setBody("利郎商城");
 		unifiedorder.setOut_trade_no(orderSn);
 		unifiedorder.setTotal_fee(String.valueOf(amount.multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_HALF_UP)));
 		unifiedorder.setSpbill_create_ip(ip);

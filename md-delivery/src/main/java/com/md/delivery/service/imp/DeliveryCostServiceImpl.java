@@ -54,11 +54,16 @@ public class DeliveryCostServiceImpl extends ServiceImpl<DeliveryCostMapper, Del
 	}
 
 	@Override
-	public DeliveryCost getCost(Long modeId, Long areaId, Long deliveryArea) {
+	public DeliveryCost getCost(Long modeId, Long areaId, Long shopId, Long deliveryArea) {
 		Wrapper<DeliveryCost> wrapper = new EntityWrapper<>();
 		wrapper.eq("modeId", modeId);
 		wrapper.eq("areaId", areaId);
-		wrapper.eq("deliveryArea", deliveryArea);
+		if(ToolUtil.isNotEmpty(shopId)){
+			wrapper.eq("shopId", shopId);
+		}
+		if(ToolUtil.isNotEmpty(deliveryArea)){
+			wrapper.eq("deliveryArea", deliveryArea);
+		}
 		List<DeliveryCost> selectList = deliveryCostMapper.selectList(wrapper);
 		if (selectList.size() > 0) {
 			return selectList.get(0);
@@ -72,7 +77,7 @@ public class DeliveryCostServiceImpl extends ServiceImpl<DeliveryCostMapper, Del
 			return ;
 		}
 		DeliveryCost cost = this.getCost(deliveryCost.getModeId(), deliveryCost.getAreaId(),
-				deliveryCost.getDeliveryArea());
+				null,deliveryCost.getDeliveryArea());
 		if (ToolUtil.isNotEmpty(cost)) {
 			deliveryCostMapper.insert(deliveryCost);
 		}else{

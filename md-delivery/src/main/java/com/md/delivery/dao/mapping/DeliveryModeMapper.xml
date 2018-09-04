@@ -5,6 +5,7 @@
 		<id column="id" property="id" />
 		<result column="name" property="name" />
 		<result column="createTime" property="createTime" />
+		<result column="price" property="price" />
 		<result column="sequence" property="sequence" />
 		<result column="remark" property="remark" />
 	</resultMap>

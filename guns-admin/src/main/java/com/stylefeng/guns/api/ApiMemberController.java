@@ -44,6 +44,7 @@ import com.stylefeng.guns.core.exception.ApiException;
 import com.stylefeng.guns.core.util.ToolUtil;
 
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import weixin.popular.bean.user.User;

@@ -53,9 +53,10 @@ public interface IDeliveryCostService extends IService<DeliveryCost> {
 	 * 
 	 * @param modeId
 	 * @param areaId
+	 * @param deliveryArea 
 	 * @return
 	 */
-	DeliveryCost getCost(Long modeId, Long areaId, Long deliveryArea);
+	DeliveryCost getCost(Long modeId, Long areaId, Long shopId, Long deliveryArea);
 
 	/**
 	 * 修改通过地区和配送方式

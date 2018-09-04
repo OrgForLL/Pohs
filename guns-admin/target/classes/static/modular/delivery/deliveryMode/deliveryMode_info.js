@@ -39,7 +39,7 @@ DeliveryModeInfoDlg.get = function(key) {
  * 收集数据
  */
 DeliveryModeInfoDlg.collectData = function() {
-    this.set('id').set('name').set('remark').set('sequence');
+    this.set('id').set('name').set('remark').set('sequence').set('price');
 }
 
 /**

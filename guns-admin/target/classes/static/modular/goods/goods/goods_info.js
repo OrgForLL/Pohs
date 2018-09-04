@@ -130,11 +130,18 @@ GoodsInfoDlg.imgLoad = function () {
     var ajax = new $ax(Feng.ctxPath + "/goods/imgLoad", function (data) {
     	if(data[0]!=null){
         	for(var i=0; i<data.length; i++){
-            	$("#goodsImgs").append(GoodsInfoDlg.imgTemplate);
-            	$("#goodsImgs").find("input[name='imgItemId']:last").val(data[i].id);
-            	$("#goodsImgs").find("a[name='imgItem']:last").attr("href",Feng.ctxPath + '/kaptcha/' + data[i].url);
-            	$("#goodsImgs").find("img[name='imgItem']:last").attr("src",Feng.ctxPath + '/kaptcha/' + data[i].url);
-            }
+        		if(data[i].url.substring(0,4) == "http"){
+        			$("#goodsImgs").append(GoodsInfoDlg.imgTemplate);
+                	$("#goodsImgs").find("input[name='imgItemId']:last").val(data[i].id);
+                	$("#goodsImgs").find("a[name='imgItem']:last").attr("href",data[i].url);
+                	$("#goodsImgs").find("img[name='imgItem']:last").attr("src",data[i].url);
+                }else{
+                	$("#goodsImgs").append(GoodsInfoDlg.imgTemplate);
+                	$("#goodsImgs").find("input[name='imgItemId']:last").val(data[i].id);
+                	$("#goodsImgs").find("a[name='imgItem']:last").attr("href",Feng.ctxPath + '/kaptcha/' + data[i].url);
+                	$("#goodsImgs").find("img[name='imgItem']:last").attr("src",Feng.ctxPath + '/kaptcha/' + data[i].url);
+                }
+        	}
         }
     }, function (data) {
         Feng.error("图片加载失败!" + data.responseJSON.message + "!");

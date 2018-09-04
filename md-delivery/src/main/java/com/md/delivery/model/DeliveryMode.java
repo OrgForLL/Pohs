@@ -1,5 +1,6 @@
 package com.md.delivery.model;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -17,11 +18,19 @@ public class DeliveryMode {
 	private String name;
 	//创建时间
 	private Timestamp createTime;
+	//首价
+	private BigDecimal price;
 	//排序
 	private Integer sequence;
 	//备注
 	private String remark;
 	
+	public BigDecimal getPrice() {
+		return price;
+	}
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
 	public Long getId() {
 		return id;
 	}

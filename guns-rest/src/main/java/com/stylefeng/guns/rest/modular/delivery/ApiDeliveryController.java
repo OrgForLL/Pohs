@@ -15,10 +15,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.md.delivery.model.DeliveryCost;
+import com.md.delivery.model.DeliveryMode;
 import com.md.delivery.service.IDeliveryCostService;
 import com.md.delivery.service.IDeliveryModeService;
 import com.md.goods.model.Shop;
 import com.md.goods.service.IShopService;
+import com.md.member.model.Address;
+import com.md.member.service.IAddressService;
+import com.md.settlement.service.IAccountService;
 import com.stylefeng.guns.core.base.controller.BaseController;
 
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +37,11 @@ public class ApiDeliveryController extends BaseController{
 	
 	@Resource
 	IDeliveryCostService deliveryCostService;
+	
+	@Resource
+	IAccountService accountService;
+	@Resource
+	IAddressService addressService;
 	
 	@Resource
 	IShopService shopService;
@@ -50,10 +59,12 @@ public class ApiDeliveryController extends BaseController{
 	public ResponseEntity<?> getFreight(@ApiParam("物流方式id") @RequestParam(value = "modeId", required = true) @RequestBody Long modeId,
 			@ApiParam("门店id") @RequestParam(value = "shopId", required = true) @RequestBody Long shopId,
 			@ApiParam("订单总重量") @RequestParam(value = "weight", required = true) @RequestBody BigDecimal weight,
-			@ApiParam("收货地址区域id") @RequestParam(value = "deliveryArea", required = true) @RequestBody Long deliveryArea) {
+			@ApiParam("收货地址id") @RequestParam(value = "addressId", required = true) @RequestBody Long addressId) {
 		Shop shop = shopService.findById(shopId);
-		DeliveryCost deliveryCost = deliveryCostService.getCost(modeId, shop.getCountyId(), deliveryArea);
-		BigDecimal freight;
+		DeliveryMode deliveryMode = deliveryModeService.selectById(modeId);
+		Address address = addressService.selectById(addressId);
+		DeliveryCost deliveryCost = accountService.getDeliveryCost(deliveryMode, address, shop.getId());
+		BigDecimal freight = new BigDecimal(0);
 		if(deliveryCost != null) {
 			if(deliveryCost.getYkg().compareTo(weight) <= 0) {
 				freight = deliveryCost.getStartPrice();
@@ -68,7 +79,8 @@ public class ApiDeliveryController extends BaseController{
 			}
 			return ResponseEntity.ok(freight);
 		}else {
-			return ResponseEntity.ok(0);
+			freight = deliveryMode.getPrice();
+			return ResponseEntity.ok(freight);
 		}
 	}
 }

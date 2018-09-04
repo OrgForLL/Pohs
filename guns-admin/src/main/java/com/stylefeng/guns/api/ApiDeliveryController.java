@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +16,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.md.delivery.model.DeliveryCost;
+import com.md.delivery.model.DeliveryMode;
 import com.md.delivery.service.IDeliveryCostService;
 import com.md.delivery.service.IDeliveryModeService;
 import com.md.goods.model.Shop;
 import com.md.goods.service.IShopService;
+import com.md.member.model.Address;
+import com.md.member.service.IAddressService;
+import com.md.settlement.service.IAccountService;
 import com.stylefeng.guns.core.base.controller.BaseController;
 
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +40,10 @@ public class ApiDeliveryController extends BaseController{
 	IDeliveryCostService deliveryCostService;
 	
 	@Resource
+	IAccountService accountService;
+	@Resource
+	IAddressService addressService;
+	@Resource
 	IShopService shopService;
 	
 	@ApiOperation(value = "配送方式列表", notes = "配送方式列表")
@@ -50,14 +59,15 @@ public class ApiDeliveryController extends BaseController{
 	@ApiOperation(value = "获取运费", notes = "获取运费")
 	@RequestMapping(value = "/getFreight", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject getFreight(@ApiParam("物流方式id") @RequestParam(value = "modeId", required = true) @RequestBody Long modeId,
+	public ResponseEntity<?> getFreight(@ApiParam("物流方式id") @RequestParam(value = "modeId", required = true) @RequestBody Long modeId,
 			@ApiParam("门店id") @RequestParam(value = "shopId", required = true) @RequestBody Long shopId,
 			@ApiParam("订单总重量") @RequestParam(value = "weight", required = true) @RequestBody BigDecimal weight,
-			@ApiParam("收货地址区域id") @RequestParam(value = "deliveryArea", required = true) @RequestBody Long deliveryArea) {
-		JSONObject jb = new JSONObject();
+			@ApiParam("收货地址id") @RequestParam(value = "addressId", required = true) @RequestBody Long addressId) {
 		Shop shop = shopService.findById(shopId);
-		DeliveryCost deliveryCost = deliveryCostService.getCost(modeId, shop.getCountyId(), deliveryArea);
-		BigDecimal freight;
+		DeliveryMode deliveryMode = deliveryModeService.selectById(modeId);
+		Address address = addressService.selectById(addressId);
+		DeliveryCost deliveryCost = accountService.getDeliveryCost(deliveryMode, address, shop.getId());
+		BigDecimal freight = new BigDecimal(0);
 		if(deliveryCost != null) {
 			if(deliveryCost.getYkg().compareTo(weight) <= 0) {
 				freight = deliveryCost.getStartPrice();
@@ -70,12 +80,10 @@ public class ApiDeliveryController extends BaseController{
 					freight = deliveryCost.getStartPrice().add(new BigDecimal(temp.intValue()).multiply(deliveryCost.getAddedPrice()));
 				}
 			}
-			jb.put("data", freight);
-			return jb;
+			return ResponseEntity.ok(freight);
 		}else {
-			jb.put("data", 0);
-			return jb;
+			freight = deliveryMode.getPrice();
+			return ResponseEntity.ok(freight);
 		}
-		
 	}
 }
