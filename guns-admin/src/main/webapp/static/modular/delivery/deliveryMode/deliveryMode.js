@@ -16,6 +16,7 @@ DeliveryMode.initColumn = function () {
     return [
         {field: 'selectItem', radio: true},
         {title: '名称', field: 'name', align: 'center', valign: 'middle', sortable: true},
+        {title: '价格', field: 'price', align: 'center', valign: 'middle', sortable: true},
         {title: '排序', field: 'sequence', align: 'center', valign: 'middle', sortable: true},
         {title: '创建时间', field: 'createTime', align: 'center', valign: 'middle', sortable: true},
         {title: '操作', field: '', align: 'center', valign: 'middle', sortable: true,formatter : operateFormatter}];
