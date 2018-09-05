@@ -13,6 +13,11 @@ public class GoodObject {
 	 * 商品id
 	 */
 	private Long goodsId;
+	
+	/**
+	 * 商品sn
+	 */
+	private String goodsSn;
 
 	/**
 	 * 商品名称
@@ -120,5 +125,14 @@ public class GoodObject {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
+
+	public String getGoodsSn() {
+		return goodsSn;
+	}
+
+	public void setGoodsSn(String goodsSn) {
+		this.goodsSn = goodsSn;
+	}
+
 
 }

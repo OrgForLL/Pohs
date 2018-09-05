@@ -205,7 +205,7 @@ public class ApiMemberController extends BaseController {
 		}
 		member.setPassword(PasswordFactory.me().initPassowrd(member.getPassword()));
 		member.setOpenId(member.getOpenId());
-		String access_token = weixinService.getAccessToken();
+		String access_token = weixinService.getAccessToken(member.getConfigKey());
 		User user = weixinService.getWxUserInfo(access_token, member.getOpenId());
 		member.setName(user.getNickname());
 		member.setCaptcha(user.getHeadimgurl());
@@ -226,12 +226,13 @@ public class ApiMemberController extends BaseController {
 	@RequestMapping(value = "/saveOpenId", method = { RequestMethod.POST })
 	@ResponseBody
 	public ResponseEntity<?> saveOpenId(@ApiParam("用户Id，必填") @RequestParam(value = "memberId", required = true) @RequestBody long memberId,
-			@ApiParam("openId，必填") @RequestParam(value = "openId", required = true) @RequestBody String openId) {
+			@ApiParam("openId，必填") @RequestParam(value = "openId", required = true) @RequestBody String openId,
+			@ApiParam("configKey，必填") @RequestParam(value = "configKey", required = true) @RequestBody String configKey) {
 		Member member = new Member();
 		if(ToolUtil.isNotEmpty(memberId)) {
 			member.setOpenId(openId);
 			member.setId(memberId);
-			String access_token = weixinService.getAccessToken();
+			String access_token = weixinService.getAccessToken(configKey);
 			User user = weixinService.getWxUserInfo(access_token, openId);
 			member.setName(user.getNickname());
 			member.setCaptcha(user.getHeadimgurl());

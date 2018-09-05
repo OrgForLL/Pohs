@@ -142,6 +142,7 @@ public class ApiCarController extends BaseController {
 							Goods goods = goodsService.findById(tag.getGoodsId());
 							if(ToolUtil.isNotEmpty(goods)) {
 								goodItems.setGoodsName(goods.getName());
+								goodItems.setGoodsSn(goods.getSn());
 							}
 							Product product = productService.findById(item.getProductId());
 							if(ToolUtil.isNotEmpty(product)) {

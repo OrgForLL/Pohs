@@ -2,6 +2,7 @@ package com.md.member.model;
 
 import javax.lang.model.type.PrimitiveType;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -38,6 +39,9 @@ public class Member {
 	 * 身份
 	 */
 	private String type;
+	
+	@TableField(exist = false)
+	private String configKey;
 	public Long getId() {
 		return id;
 	}
@@ -164,6 +168,14 @@ public class Member {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getConfigKey() {
+		return configKey;
+	}
+
+	public void setConfigKey(String configKey) {
+		this.configKey = configKey;
 	}
 	
 }

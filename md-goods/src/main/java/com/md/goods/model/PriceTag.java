@@ -23,7 +23,7 @@ public class PriceTag {
     //商品积分
     private Integer integral;
     //库存预警值
-    private Integer threshold;
+    private Integer threshold = 0;
     //商品状态1:上架   0:下架
     private Integer marketable;
     //门店编号

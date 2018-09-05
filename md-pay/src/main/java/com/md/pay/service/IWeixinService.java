@@ -13,19 +13,19 @@ public interface IWeixinService extends IService<WeiXin>{
 	 * 获取accessToken
 	 * @return
 	 */
-	String getAccessToken ();
+	String getAccessToken (String type);
 	
 	/**
 	 * 获取详情
 	 * @return
 	 */
-	WeiXin getInfo();
+	WeiXin getInfo(String type);
 
 	/**
 	 * 获取授权通用户的openid
 	 * @return
 	 */
-	String getOpenId(String code,String state);
+	String getOpenId(String code,String state,String type);
 	/**
 	 * 获取用户微信信息
 	 * @param access_token
@@ -38,6 +38,6 @@ public interface IWeixinService extends IService<WeiXin>{
      * 获取商户支付api密钥
      * @return
      */
-	String getApiKey();
+	String getApiKey(String type);
     
 }

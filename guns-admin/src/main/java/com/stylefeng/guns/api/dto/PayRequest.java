@@ -6,6 +6,7 @@ public class PayRequest {
 	private Long memberId;
 	private List<Long> orderIdList;
 	private String tradeType;
+	private String payType;
 	public Long getMemberId() {
 		return memberId;
 	}
@@ -28,6 +29,14 @@ public class PayRequest {
 
 	public void setOrderIdList(List<Long> orderIdList) {
 		this.orderIdList = orderIdList;
+	}
+
+	public String getPayType() {
+		return payType;
+	}
+
+	public void setPayType(String payType) {
+		this.payType = payType;
 	}
 
 	

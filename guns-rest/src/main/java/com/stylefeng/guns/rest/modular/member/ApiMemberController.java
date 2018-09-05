@@ -205,7 +205,7 @@ public class ApiMemberController extends BaseController {
 		member.setPhoneNum(memberRequest.getPhone());
 		member.setPassword(PasswordFactory.me().initPassowrd(member.getPassword()));
 		member.setOpenId(memberRequest.getOpenId());
-		String access_token = weixinService.getAccessToken();
+		String access_token = weixinService.getAccessToken(memberRequest.getConfigKey());
 		User user = weixinService.getWxUserInfo(access_token, memberRequest.getOpenId());
 		member.setName(user.getNickname());
 		member.setCaptcha(user.getHeadimgurl());
@@ -240,7 +240,7 @@ public class ApiMemberController extends BaseController {
 		if(ToolUtil.isNotEmpty(memberRequest.getMemberId())) {
 			member.setOpenId(memberRequest.getOpenId());
 			member.setId(memberRequest.getMemberId());
-			String access_token = weixinService.getAccessToken();
+			String access_token = weixinService.getAccessToken(memberRequest.getConfigKey());
 			User user = weixinService.getWxUserInfo(access_token, memberRequest.getOpenId());
 			member.setName(user.getNickname());
 			member.setCaptcha(user.getHeadimgurl());

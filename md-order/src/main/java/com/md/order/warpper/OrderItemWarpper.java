@@ -25,7 +25,7 @@ public class OrderItemWarpper extends BaseControllerWarpper {
         map.put("goodsName", GoodsFactory.me().getNameById((Long)map.get("goodsId")));
         map.put("productName", PriceTagFactory.me().getProductName((Long)map.get("productId")));
         map.put("imageUrl", UploadFactory.me().getUploadFileUrl(PriceTagFactory.me().getProductImage((Long)map.get("productId"))));
-        
+        map.put("goodsSn", GoodsFactory.me().getGoodsSnById((Long)map.get("goodsId")));
     }
 
 }

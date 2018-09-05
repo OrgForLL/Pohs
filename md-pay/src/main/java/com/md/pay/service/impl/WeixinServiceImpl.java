@@ -27,9 +27,9 @@ public class WeixinServiceImpl extends ServiceImpl<WeiXinMapper, WeiXin>  implem
 	WeiXinMapper weiXinMapper;
 	
 	@Override
-	public String getAccessToken() {
+	public String getAccessToken(String type) {
 		Token token = new Token();
-		WeiXin weiXin = weiXinMapper.selectById(1);
+		WeiXin weiXin = weiXinMapper.selectById(type);
 		String access_token =  weiXin.getAccessToken();
 		Long expiresIn = weiXin.getExpiresIn();
 		Long nowDate = new Date().getTime();
@@ -50,21 +50,21 @@ public class WeixinServiceImpl extends ServiceImpl<WeiXinMapper, WeiXin>  implem
 	}
 
 	@Override
-	public WeiXin getInfo() {
-		return weiXinMapper.selectById(1);
+	public WeiXin getInfo(String type) {
+		return weiXinMapper.selectById(type);
 	}
 
 	@Override
-	public String getOpenId(String code, String state) {
-		WeiXin weiXin = weiXinMapper.selectById(1);
+	public String getOpenId(String code, String state,String type) {
+		WeiXin weiXin = weiXinMapper.selectById(type);
 		SnsToken snsToken = SnsAPI.oauth2AccessToken(weiXin.getAppid(), weiXin.getSecret(), code);
 		return snsToken.getOpenid();
 	}
 
 	@Override
-	public String getApiKey() {
+	public String getApiKey(String type) {
 		// TODO 自动生成的方法存根
-		WeiXin weiXin = weiXinMapper.selectById(1);
+		WeiXin weiXin = weiXinMapper.selectById(type);
 		return weiXin.getApikey();
 	}
 	

@@ -6,7 +6,7 @@ public class PayRequest {
 	private Long memberId;
 	private List<Long> orderIdList;
 	private String tradeType;
-	
+	private String configKey;
 	private String href;
 
 	public Long getMemberId() {
@@ -39,6 +39,14 @@ public class PayRequest {
 
 	public void setHref(String href) {
 		this.href = href;
+	}
+
+	public String getConfigKey() {
+		return configKey;
+	}
+
+	public void setConfigKey(String configKey) {
+		this.configKey = configKey;
 	}
 
 	
