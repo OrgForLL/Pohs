@@ -19,4 +19,19 @@
 		<result column="kefuName" property="kefuName" />
 	</resultMap>
 
+	<select id="getSumByStock" resultType="Long">
+			select SUM(inventory) from shop_price_tag 
+			where 
+		shopId = #{shopId} 
+		and 
+		goodsId = #{goodsId} 
+		and 
+		marketable = 1
+	</select>
+	
+	<update id="changeId" parameterType="Long">  
+        UPDATE shop_shop  
+            SET id = #{shopId}
+         WHERE id = #{shopId2};     
+</update>  
 </mapper>
