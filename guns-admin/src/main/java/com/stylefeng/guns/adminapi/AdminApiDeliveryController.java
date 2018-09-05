@@ -116,9 +116,11 @@ public class AdminApiDeliveryController extends BaseController {
 	@RequestMapping(value = "/getDeliveryCostList", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getDeliveryCostList(
-			@ApiParam("门店Id") @RequestParam(value = "shopId", required = true) @RequestBody long shopId) {
+			@ApiParam("门店Id") @RequestParam(value = "shopId", required = false) @RequestBody long shopId) {
 		JSONObject jb = new JSONObject();
 		List<Map<String, Object>> deliveryCosts = deliveryCostService.findCostsByShopId(shopId);
+		jb.put("errcode", 0);
+		jb.put("errmsg", "ok");
 		jb.put("data", super.warpObject(new DeliveryCostWarpper(deliveryCosts)));
 		return jb;
 	}
@@ -126,13 +128,14 @@ public class AdminApiDeliveryController extends BaseController {
 	@ApiOperation(value = "添加门店运费配置信息", notes = "添加门店运费配置信息")
 	@RequestMapping(value = "/addDeliveryCost", method = RequestMethod.POST)
 	@ResponseBody
-	public Object addCost(@ApiParam("门店Id") @RequestParam(value = "shopId", required = true) @RequestBody long shopId,
-			@ApiParam("配送方式Id") @RequestParam(value = "modeId", required = true) @RequestBody long modeId,
-			@ApiParam("地区Id组，例如1，2，3") @RequestParam(value = "areaIds", required = true) @RequestBody String areaIds,
-			@ApiParam("首价") @RequestParam(value = "startPrice", required = true) @RequestBody BigDecimal startPrice,
-			@ApiParam("续价") @RequestParam(value = "addedPrice", required = true) @RequestBody BigDecimal addedPrice,
-			@ApiParam("首重") @RequestParam(value = "ykg", required = true) @RequestBody BigDecimal ykg,
-			@ApiParam("续重") @RequestParam(value = "addedWeight", required = true) @RequestBody BigDecimal addedWeight) {
+	public Object addCost(@ApiParam("门店Id") @RequestParam(value = "shopId", required = false) @RequestBody long shopId,
+			@ApiParam("配送方式Id") @RequestParam(value = "modeId", required = false) @RequestBody long modeId,
+			@ApiParam("地区Id组，例如1，2，3") @RequestParam(value = "areaIds", required = false) @RequestBody String areaIds,
+			@ApiParam("首价") @RequestParam(value = "startPrice", required = false) @RequestBody BigDecimal startPrice,
+			@ApiParam("续价") @RequestParam(value = "addedPrice", required = false) @RequestBody BigDecimal addedPrice,
+			@ApiParam("首重") @RequestParam(value = "ykg", required = false) @RequestBody BigDecimal ykg,
+			@ApiParam("续重") @RequestParam(value = "addedWeight", required = false) @RequestBody BigDecimal addedWeight) {
+		JSONObject jb = new JSONObject();
 		String[] areaIdArray = areaIds.split(",");
 		Shop shop = shopService.selectById(shopId);
 		for (String areaId : areaIdArray) {
@@ -165,6 +168,8 @@ public class AdminApiDeliveryController extends BaseController {
 			
 			deliveryCostService.insert(deliveryCost);
 		}
-		return SUCCESS_TIP;
+		jb.put("errcode", 0);
+		jb.put("errmsg", "ok");
+		return jb;
 	}
 }
