@@ -54,8 +54,8 @@ public class AdminApiDeliveryController extends BaseController {
 	@RequestMapping(value = "/getAreaList", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getAreaList(
-			@ApiParam("parentid") @RequestParam(value = "parentid", required = true) @RequestBody long parentid,
-			@ApiParam("是否返回子孙项，参数允许缺省，缺省值为0，表示是不返回子孙项") @RequestParam(value = "all", required = true) @RequestBody Integer all) {
+			@ApiParam("parentid") @RequestParam(value = "parentid", required = false) @RequestBody long parentid,
+			@ApiParam("是否返回子孙项，参数允许缺省，缺省值为0，表示是不返回子孙项") @RequestParam(value = "all", required = false) @RequestBody Integer all) {
 		JSONObject jb = new JSONObject();
 		if (ToolUtil.isEmpty(all)) {
 			all = 0;
