@@ -288,7 +288,7 @@ public class AccountServiceImpl implements IAccountService {
 		}
 		if(ToolUtil.isNotEmpty(deliveryCost)) {
 			// 计算运费
-			if (order.getWeight().compareTo(deliveryCost.getYkg()) <= 0) {
+			if (order.getWeight().compareTo(deliveryCost.getYkg()) <= 0||ToolUtil.isNotEmpty(deliveryCost.getYkg())||deliveryCost.getYkg().equals(0)||deliveryCost.getYkg().compareTo(new BigDecimal(0)) == 0) {
 				order.setDiliveryPay(deliveryCost.getStartPrice());
 			} else {
 				BigDecimal overstepWeight = order.getWeight().subtract(deliveryCost.getYkg());

@@ -109,6 +109,14 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
 		List<Map<String, Object>> areas = areaMapper.selectMaps(wrapper);
 		return areas;
 	}
+	
+	@Override
+	public List<Map<String, Object>> selectMapsById(Long id) {
+		Wrapper<Area> wrapper = new EntityWrapper<>();
+		wrapper.eq("id", id);
+		List<Map<String, Object>> areas = areaMapper.selectMaps(wrapper);
+		return areas;
+	}
 
 	@Override
 	public Area getByFullName(String fullName) {
@@ -127,6 +135,53 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
 	public List<Area> getProListByShop() {
 
 		return areaMapper.getProListByShop();
+	}
+
+	@Override
+	public List<Map<String, Object>> findAreaList(Long province, Long city, Long county) {
+		List<Map<String, Object>> areaList = new ArrayList<>();
+		// 是否有选择区县
+		if (ToolUtil.isNotEmpty(county)) {
+			Wrapper<Area> wrapper = new EntityWrapper<>();
+			wrapper.eq("id", county);
+			List<Map<String, Object>> areas = areaMapper.selectMaps(wrapper);
+			areaList.add(areas.get(0));
+		} else {
+			// 是否有选择市
+			if (ToolUtil.isNotEmpty(city)) {
+				Wrapper<Area> wrapper = new EntityWrapper<>();
+				wrapper.eq("parent", city);
+				wrapper.orderBy("orders", true);
+				List<Map<String, Object>> areas = areaMapper.selectMaps(wrapper);
+				Map<String, Object> cityMap = selectMapsById(city).get(0);
+				cityMap.put("child", areas);
+				areaList.add(cityMap);
+			} else {
+				// 是否有选择省
+				if (ToolUtil.isNotEmpty(province)) {
+					Map<String, Object> provinceMap = selectMapsById(province).get(0);
+					List<Long> cityIds = new ArrayList<>();
+					Wrapper<Area> wrapper = new EntityWrapper<>();
+					wrapper.eq("parent", province);
+					wrapper.orderBy("orders", true);
+					List<Map<String, Object>> cityAreas = areaMapper.selectMaps(wrapper);	
+					for (Map<String, Object> cityAreaTemp : cityAreas) {
+						Wrapper<Area> wrapper1 = new EntityWrapper<>();
+						wrapper1.eq("parent", Long.valueOf(String.valueOf(cityAreaTemp.get("id"))));
+						wrapper1.orderBy("orders", true);
+						List<Map<String, Object>> countys = areaMapper.selectMaps(wrapper1);
+						cityAreaTemp.put("child", countys);
+					}
+					provinceMap.put("child", cityAreas);
+					areaList.add(provinceMap);
+				}else{
+					Wrapper<Area> wrapper = new EntityWrapper<>();
+					wrapper.orderBy("orders", true);
+					areaList = areaMapper.selectMaps(wrapper);
+				}
+			}
+		}
+		return areaList;
 	}
 
 }

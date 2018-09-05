@@ -47,6 +47,7 @@ import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.ExcelUtil;
+import com.stylefeng.guns.core.util.ToolUtil;
 
 /**
  * 配送方法controller
@@ -246,6 +247,18 @@ public class DeliveryModeController extends BaseController {
 	@RequestMapping(value = "/addCost")
 	@ResponseBody
 	public Object addCost(DeliveryCost deliveryCost) {
+		if(ToolUtil.isEmpty(deliveryCost.getStartPrice())){
+			deliveryCost.setStartPrice(new BigDecimal(0));
+		}
+		if(ToolUtil.isEmpty(deliveryCost.getYkg())){
+			deliveryCost.setYkg(new BigDecimal(0));
+		}
+		if(ToolUtil.isEmpty(deliveryCost.getAddedPrice())){
+			deliveryCost.setAddedPrice(new BigDecimal(0));
+		}
+		if(ToolUtil.isNotEmpty(deliveryCost.getAddedWeight())){
+			deliveryCost.setAddedWeight(new BigDecimal(0));
+		}
 		if(ShiroKit.isAdmin()){
 			deliveryCost.setIsdelivery(true);
 			deliveryCostService.insert(deliveryCost);

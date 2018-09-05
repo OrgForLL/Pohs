@@ -45,6 +45,16 @@ public interface IAreaService extends IService<Area> {
 	 * @return
 	 */
 	List<Long> findCountyIds(Long province, Long city, Long county);
+	
+	/**
+	 * 获取三级联动选中的地区列表
+	 * 
+	 * @param province
+	 * @param city
+	 * @param county
+	 * @return
+	 */
+	List<Map<String, Object>> findAreaList(Long province, Long city, Long county);
 
 	/**
 	 * 获取所有的区
@@ -65,4 +75,6 @@ public interface IAreaService extends IService<Area> {
 	 * @return
 	 */
 	List<Area> getProListByShop();
+	
+	List<Map<String, Object>> selectMapsById(Long id);
 }
