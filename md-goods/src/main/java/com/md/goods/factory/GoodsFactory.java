@@ -69,5 +69,13 @@ public class GoodsFactory {
 	public List<Map<String,Object>> goodsList(String shopIds, Long categoryId, Long brandId,String goodsName){
 		return this.goodsMapper.goodsList(shopIds, categoryId, brandId, goodsName);
 	}
-	 
+	
+	public String getGoodsSnById(Long id){
+		Goods goods = goodsMapper.selectById(id);
+		if(ToolUtil.isNotEmpty(goods)) {
+			return goods.getSn();
+		}
+		return "";
+	}
+	
 }

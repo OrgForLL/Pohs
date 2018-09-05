@@ -29,6 +29,8 @@ public class MemberRequest {
 	//用户openid
 	private String openId;
 	
+	private String configKey;
+	
 	public Long getMemberId() {
 		return memberId;
 	}
@@ -131,6 +133,14 @@ public class MemberRequest {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getConfigKey() {
+		return configKey;
+	}
+
+	public void setConfigKey(String configKey) {
+		this.configKey = configKey;
 	}
 
 }

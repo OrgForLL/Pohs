@@ -45,8 +45,8 @@ public class ApiWeixinController extends BaseController{
 	private static final String REDIRECT_INDEX = "redirect:http://app.wmggcl.com/webshop/#/tempHome";  //商城首页
 	
 	@RequestMapping(value = "/redirectUrl", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
-	public ModelAndView redirectUrl(String code, String state) {
-		String openid = weixinService.getOpenId(code, state);
+	public ModelAndView redirectUrl(String code, String state, String configKey) {
+		String openid = weixinService.getOpenId(code, state,configKey);
 		return new ModelAndView(REDIRECT_INDEX+"?openId="+openid);
 	}
 }

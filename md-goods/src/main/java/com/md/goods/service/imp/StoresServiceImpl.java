@@ -97,4 +97,10 @@ public class StoresServiceImpl extends ServiceImpl<ShopMapper, Shop> implements 
 		return storesMapper.selectMaps(wrapper);
 	}
 
+	@Override
+	public void changeId(Long shopId,Long shopId2) {
+		// TODO Auto-generated method stub
+		storesMapper.changeId(shopId,shopId2);
+	}
+
 }

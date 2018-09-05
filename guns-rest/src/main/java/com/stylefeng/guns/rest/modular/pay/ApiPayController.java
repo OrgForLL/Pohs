@@ -116,7 +116,7 @@ public class ApiPayController extends BaseController {
 			jb.put("code", unifiedorderResult.getReturn_code());
 			jb.put("msg", unifiedorderResult.getReturn_msg());
 			jb.put("data", PayUtil.generateMchPayJsRequestJson(unifiedorderResult.getPrepay_id(),
-					unifiedorderResult.getAppid(), weixinService.getApiKey()));
+					unifiedorderResult.getAppid(), weixinService.getApiKey(payRequest.getConfigKey())));
 		} else {
 			jb.put("code", unifiedorderResult.getReturn_code());
 			jb.put("msg", unifiedorderResult.getReturn_msg());
@@ -238,8 +238,8 @@ public class ApiPayController extends BaseController {
 	@RequestMapping(value = "/getSignature", method = RequestMethod.POST)
 	public ResponseEntity<?> getSignature(HttpServletRequest request, HttpServletResponse servletResponse,
 			@RequestBody PayRequest payRequest) {
-		String access_token = weixinService.getAccessToken();
-		WeiXin weiXin = weixinService.getInfo();
+		String access_token = weixinService.getAccessToken(payRequest.getConfigKey());
+		WeiXin weiXin = weixinService.getInfo(payRequest.getConfigKey());
 		Ticket ticket = TicketAPI.ticketGetticket(access_token);
 		String jsapi_ticket = ticket.getTicket();
 		String noncestr = UUID.randomUUID().toString().replace("-", "");// 随机字符串
