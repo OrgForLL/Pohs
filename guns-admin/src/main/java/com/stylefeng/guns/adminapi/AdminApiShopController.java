@@ -2,6 +2,7 @@ package com.stylefeng.guns.adminapi;
 
 import javax.annotation.Resource;
 
+import org.apache.catalina.startup.Tool;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +61,18 @@ public class AdminApiShopController extends BaseController{
 	@ResponseBody
 	public JSONObject addShop(@RequestBody Shop shop) {
 		JSONObject jb = new JSONObject();
+		if(ToolUtil.isEmpty(shop.getId())) {
+			jb.put("errcode",-1);
+			jb.put("errmsg", "门店id不能为空");
+			return jb;
+		}
+		
+		if(ToolUtil.isNotEmpty(shopService.findById(shop.getId()))){
+			jb.put("errcode",-1);
+			jb.put("errmsg", "已存在该门店");
+			return jb;
+		}
+		
 		Long shopId = shop.getId();
 		Dept dept = new Dept();
     	dept.setFullname(shop.getName());
