@@ -27,6 +27,7 @@ import com.md.coupon.service.IPromotionService;
 import com.md.delivery.model.DeliveryCost;
 import com.md.delivery.model.DeliveryMode;
 import com.md.delivery.service.IDeliveryCostService;
+import com.md.delivery.service.IDeliveryModeService;
 import com.md.goods.model.PriceTag;
 import com.md.goods.model.Product;
 import com.md.goods.model.UploadFile;
@@ -66,7 +67,8 @@ public class AccountServiceImpl implements IAccountService {
 	ICouponService couponService;
 	@Resource
 	IUploadFileService uploadFileService;
-
+	@Resource
+	IDeliveryModeService deliveryModeService;
 	
 	@Override
 	public Order amount(Long shopId, List<ShopItem> shopItems, DeliveryMode deliveryMode, Address address,
@@ -278,7 +280,8 @@ public class AccountServiceImpl implements IAccountService {
 			}
 			order.setActualPay(order.getDue().add(order.getDiliveryPay()));
 		}else{
-			order.setDiliveryPay(deliveryMode.getPrice());
+			DeliveryMode mode = deliveryModeService.getById(deliveryMode.getId());
+			order.setDiliveryPay(mode.getPrice());
 			order.setActualPay(order.getDue().add(order.getDiliveryPay()));
 		}
 		order.setConsigneeName(address.getConsigeeName());

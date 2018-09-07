@@ -19,7 +19,7 @@ public class DeliveryMode {
 	//创建时间
 	private Timestamp createTime;
 	//首价
-	private BigDecimal price;
+	private BigDecimal price = new BigDecimal("0.00");;
 	//排序
 	private Integer sequence;
 	//备注
