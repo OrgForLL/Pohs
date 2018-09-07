@@ -219,7 +219,9 @@ public class DeliveryModeController extends BaseController {
 		model.addAttribute("deliveryCost", deliveryCost);
 		model.addAttribute("areaName", DeliveryCostFactory.me().getAreaName(deliveryCost.getAreaId()));
 		if(ShiroKit.isAdmin()){
-			model.addAttribute("deliveryAreaName", DeliveryCostFactory.me().getAreaName(deliveryCost.getDeliveryArea()));
+			if(ToolUtil.isNotEmpty(deliveryCost.getDeliveryArea())){
+				model.addAttribute("deliveryAreaName", DeliveryCostFactory.me().getAreaName(deliveryCost.getDeliveryArea()));
+			}
 		}
 		return PREFIX + "costEdit.html";
 	}
