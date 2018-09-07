@@ -199,7 +199,7 @@ public class DeliveryModeController extends BaseController {
 		List<Long> deliveryArea = areaService.findCountyIds(deliveryPro, deliveryCity, deliveryCou);
 		if(ShiroKit.isAdmin()){
 			// 获取所有的查询地区的Ids
-			List<Map<String, Object>> costs = deliveryCostService.findCosts(modeId, areaIds, deliveryArea, isdelivery,null);
+			List<Map<String, Object>> costs = deliveryCostService.findCosts(modeId, areaIds, deliveryArea, isdelivery,Long.valueOf("0"));
 			return super.warpObject(new DeliveryCostWarpper(costs));
 		}
 		Long shopId = shopService.getShopIdByDeptId(ShiroKit.getUser().getDeptId());
@@ -261,6 +261,7 @@ public class DeliveryModeController extends BaseController {
 		}
 		if(ShiroKit.isAdmin()){
 			deliveryCost.setIsdelivery(true);
+			deliveryCost.setShopId(Long.valueOf("0"));
 			deliveryCostService.insert(deliveryCost);
 		}else{
 			Long shopId = shopService.getShopIdByDeptId(ShiroKit.getUser().getDeptId());

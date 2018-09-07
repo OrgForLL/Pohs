@@ -96,24 +96,24 @@ DeliveryCostInfoDlg.collectDeliveryArea = function() {
  */
 DeliveryCostInfoDlg.addSubmit = function () {
 	var flag = this.collectArea();
-	var flag1 = this.collectDeliveryArea();
+	//var flag1 = this.collectDeliveryArea();
 	if(flag){
-		if(flag1){
+		//if(flag1){
 			this.clearData();
 			this.collectData();
 			var ajax = new $ax(Feng.ctxPath + "/deliveryMode/addCost", function (data) {
-				Feng.success("修改成功!");
+				Feng.success("添加成功!");
 				window.parent.DeliveryCost.table.refresh();
 				DeliveryCostInfoDlg.close();
 			}, function (data) {
-				Feng.error("修改失败!" + data.responseJSON.message + "!");
+				Feng.error("添加失败!" + data.responseJSON.message + "!");
 			});
 			ajax.set(this.deliveryCostInfoData);
 			ajax.start();
-		}
-		else{
-			Feng.error("请选择派送地区！");
-		}
+		//}
+		//else{
+			//Feng.error("请选择派送地区！");
+		//}
 	}else{
 		Feng.error("请选择配送地区！");
 	}
@@ -128,11 +128,11 @@ DeliveryCostInfoDlg.addSubmitShop = function () {
 		this.collectData();
 		
 		var ajax = new $ax(Feng.ctxPath + "/deliveryMode/addCost", function (data) {
-			Feng.success("修改成功!");
+			Feng.success("添加成功!");
 			window.parent.DeliveryCost.table.refresh();
 			DeliveryCostInfoDlg.close();
 		}, function (data) {
-			Feng.error("修改失败!" + data.responseJSON.message + "!");
+			Feng.error("添加失败!" + data.responseJSON.message + "!");
 		});
 		ajax.set(this.deliveryCostInfoData);
 		ajax.start();
@@ -145,7 +145,7 @@ DeliveryCostInfoDlg.addSubmitShop = function () {
  */
 DeliveryCostInfoDlg.editSubmit = function () {
 	this.collectArea();
-	this.collectDeliveryArea();
+	//this.collectDeliveryArea();
 	this.clearData();
 	this.collectData();
     var ajax = new $ax(Feng.ctxPath + "/deliveryMode/editCost", function (data) {

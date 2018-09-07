@@ -29,7 +29,6 @@ import com.md.delivery.model.DeliveryMode;
 import com.md.delivery.service.IDeliveryCostService;
 import com.md.goods.model.PriceTag;
 import com.md.goods.model.Product;
-import com.md.goods.model.Shop;
 import com.md.goods.model.UploadFile;
 import com.md.goods.service.IPriceTagService;
 import com.md.goods.service.IProductService;
@@ -225,7 +224,6 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public DeliveryCost getDeliveryCost(DeliveryMode deliveryMode, Address address, Long shopId) {
-		Shop shop = shopService.selectById(shopId);
 		DeliveryCost shopCountyCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCounty(), shopId,null);
 		if(ToolUtil.isNotEmpty(shopCountyCost)){
 			return shopCountyCost;
@@ -238,41 +236,17 @@ public class AccountServiceImpl implements IAccountService {
 		if(ToolUtil.isNotEmpty(shopProvinceCost)){
 			return shopProvinceCost;
 		}
-		DeliveryCost adminCountyToCountyCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCounty(), null, shop.getCountyId());
-		if(ToolUtil.isNotEmpty(adminCountyToCountyCost)){
-			return adminCountyToCountyCost;
+		DeliveryCost adminCountyCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCounty(), Long.valueOf("0"),null);
+		if(ToolUtil.isNotEmpty(adminCountyCost)){
+			return adminCountyCost;
 		}
-		DeliveryCost adminCityToCountyCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCounty(), null, shop.getCityId());
-		if(ToolUtil.isNotEmpty(adminCityToCountyCost)){
-			return adminCityToCountyCost;
+		DeliveryCost adminCityCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCity(), Long.valueOf("0"),null);
+		if(ToolUtil.isNotEmpty(adminCityCost)){
+			return adminCityCost;
 		}
-		DeliveryCost adminProvinceToCountyCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCounty(), null, shop.getProvinceId());
-		if(ToolUtil.isNotEmpty(adminProvinceToCountyCost)){
-			return adminProvinceToCountyCost;
-		}
-		DeliveryCost adminCountyToCityCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCity(), null, shop.getCountyId());
-		if(ToolUtil.isNotEmpty(adminCountyToCityCost)){
-			return adminCountyToCityCost;
-		}
-		DeliveryCost adminCityToCityCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCity(), null, shop.getCityId());
-		if(ToolUtil.isNotEmpty(adminCityToCityCost)){
-			return adminCityToCityCost;
-		}
-		DeliveryCost adminProvinceToCityCost = deliveryCostService.getCost(deliveryMode.getId(), address.getCity(), null, shop.getProvinceId());
-		if(ToolUtil.isNotEmpty(adminProvinceToCityCost)){
-			return adminProvinceToCityCost;
-		}
-		DeliveryCost adminCountyToProvinceCost = deliveryCostService.getCost(deliveryMode.getId(), address.getProvince(), null, shop.getCountyId());
-		if(ToolUtil.isNotEmpty(adminCountyToProvinceCost)){
-			return adminCountyToProvinceCost;
-		}
-		DeliveryCost adminCityToProvinceCost = deliveryCostService.getCost(deliveryMode.getId(), address.getProvince(), null, shop.getCityId());
-		if(ToolUtil.isNotEmpty(adminCityToProvinceCost)){
-			return adminCityToProvinceCost;
-		}
-		DeliveryCost adminProvinceToProvinceCost = deliveryCostService.getCost(deliveryMode.getId(), address.getProvince(), null, shop.getProvinceId());
-		if(ToolUtil.isNotEmpty(adminProvinceToProvinceCost)){
-			return adminProvinceToProvinceCost;
+		DeliveryCost adminProvinceCost = deliveryCostService.getCost(deliveryMode.getId(), address.getProvince(), Long.valueOf("0"),null);
+		if(ToolUtil.isNotEmpty(adminProvinceCost)){
+			return adminProvinceCost;
 		}
 		return null;
 	}
