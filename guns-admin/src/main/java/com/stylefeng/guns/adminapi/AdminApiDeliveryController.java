@@ -79,18 +79,14 @@ public class AdminApiDeliveryController extends BaseController {
 				if (all == 0) {
 					jb.put("errcode", 0);
 					jb.put("errmsg", "ok");
-					jb.put("data", areaService.selectMapsById(parentid));
-				} else {
-					jb.put("errcode", 0);
-					jb.put("errmsg", "ok");
-					jb.put("data", areaService.findAreaList(null, null, parentid));
+					jb.put("data", "[]");
 				}
 			}
 			if (area.getGrade() == 1) {
 				if (all == 0) {
 					jb.put("errcode", 0);
 					jb.put("errmsg", "ok");
-					jb.put("data", areaService.selectMapsById(parentid));
+					jb.put("data", areaService.getCounty(parentid));
 				} else {
 					jb.put("errcode", 0);
 					jb.put("errmsg", "ok");
@@ -101,7 +97,7 @@ public class AdminApiDeliveryController extends BaseController {
 				if (all == 0) {
 					jb.put("errcode", 0);
 					jb.put("errmsg", "ok");
-					jb.put("data", areaService.selectMapsById(parentid));
+					jb.put("data", areaService.getCity(parentid));
 				} else {
 					jb.put("errcode", 0);
 					jb.put("errmsg", "ok");
