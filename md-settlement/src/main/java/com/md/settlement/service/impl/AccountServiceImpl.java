@@ -135,13 +135,14 @@ public class AccountServiceImpl implements IAccountService {
 	@Override
 	public Map<Long, PriceTag> findPriceTag(List<ShopItem> shopItems) {
 		Map<Long, PriceTag> priceTags = new HashMap<>();
-		shopItems.stream().forEach(shopItem -> {
+		for(ShopItem shopItem : shopItems) {
 			PriceTag priceTag = new PriceTag();
 			priceTag.setShopId(shopItem.getShopId());
 			priceTag.setProductId(shopItem.getProductId());
-			priceTag = priceTagService.findOne(priceTag);
-			priceTags.put(shopItem.getProductId(), priceTag);
-		});
+			priceTag.setThreshold(null);
+			PriceTag priceTag2 = priceTagService.findOne(priceTag);
+			priceTags.put(shopItem.getProductId(), priceTag2);
+		}
 		return priceTags;
 	}
 
