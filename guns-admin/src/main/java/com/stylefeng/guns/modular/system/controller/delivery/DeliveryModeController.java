@@ -224,7 +224,7 @@ public class DeliveryModeController extends BaseController {
 				Shop shop = shopService.selectById(deliveryCost.getShopId());
 				model.addAttribute("shop", shop.getName());
 			}else{
-				model.addAttribute("shop", "");
+				model.addAttribute("shop", "全国");
 			}
 			return PREFIX + "costEdit.html";
 		}
@@ -268,8 +268,9 @@ public class DeliveryModeController extends BaseController {
 		}
 		if(ShiroKit.isAdmin()){
 			deliveryCost.setIsdelivery(true);
-			if(ToolUtil.isEmpty(deliveryCost.getShopId())){
+			if(ToolUtil.isEmpty(deliveryCost.getShopId()) || deliveryCost.getShopId() == 0){
 				deliveryCost.setShopId(Long.valueOf("0"));
+				deliveryCost.setDeliveryArea(Long.valueOf("0"));
 			}else{
 				Shop shop = shopService.selectById(deliveryCost.getShopId());
 				deliveryCost.setDeliveryArea(shop.getCountyId());
