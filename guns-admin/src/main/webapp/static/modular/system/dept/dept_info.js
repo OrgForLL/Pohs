@@ -124,11 +124,9 @@ DeptInfoDlg.addSubmit = function() {
 
     this.clearData();
     this.collectData();
-
     if (!this.validate()) {
         return;
     }
-
     //提交信息
     var ajax = new $ax(Feng.ctxPath + "/dept/add", function(data){
         Feng.success("添加成功!");

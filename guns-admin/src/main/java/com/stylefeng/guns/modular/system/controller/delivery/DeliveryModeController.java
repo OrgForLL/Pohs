@@ -292,6 +292,13 @@ public class DeliveryModeController extends BaseController {
 	@RequestMapping(value = "/editCost")
 	@ResponseBody
 	public Object editCost(DeliveryCost deliveryCost) {
+		if(deliveryCost.getShopId() != 0){
+			Shop shop = shopService.selectById(deliveryCost.getShopId());
+			deliveryCost.setDeliveryArea(shop.getCountyId());
+		}else{
+			deliveryCost.setShopId(Long.valueOf("0"));
+			deliveryCost.setDeliveryArea(Long.valueOf("0"));
+		}
 		deliveryCostService.update(deliveryCost);
 		return SUCCESS_TIP;
 	}

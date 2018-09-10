@@ -227,6 +227,10 @@ var shopBsSuggest = $("#shop").bsSuggest({
         }
 
         len = json.length;
+        data.value.push({
+        	"id":0,
+            "name": "全国"
+        });
 
         for (i = 0; i < len; i++) {
             data.value.push({

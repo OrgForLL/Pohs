@@ -23,7 +23,11 @@ public class DeliveryCostWarpper extends BaseControllerWarpper {
 	public void warpTheMap(Map<String, Object> map) {
 		map.put("areaName", DeliveryCostFactory.me().getAreaName((Long) map.get("areaId")));
 		if(ToolUtil.isNotEmpty((Long) map.get("deliveryArea"))){
-			map.put("deliveryAreaName", DeliveryCostFactory.me().getAreaName((Long) map.get("deliveryArea")));
+			if((Long) map.get("deliveryArea") != 0){
+				map.put("deliveryAreaName", DeliveryCostFactory.me().getAreaName((Long) map.get("deliveryArea")));
+			}else{
+				map.put("deliveryAreaName", "全国");
+			}
 		}else{
 			map.put("deliveryAreaName", "全国");
 		}
