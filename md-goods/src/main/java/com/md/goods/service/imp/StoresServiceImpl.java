@@ -103,4 +103,13 @@ public class StoresServiceImpl extends ServiceImpl<ShopMapper, Shop> implements 
 		storesMapper.changeId(shopId,shopId2);
 	}
 
+	@Override
+	public List<Shop> selectByShopName(String name) {
+		// TODO 自动生成的方法存根
+		Wrapper<Shop> wrapper = new EntityWrapper<>();
+		wrapper.like("name", name);
+		List<Shop> storesList = storesMapper.selectList(wrapper);
+		return storesList;
+	}
+
 }

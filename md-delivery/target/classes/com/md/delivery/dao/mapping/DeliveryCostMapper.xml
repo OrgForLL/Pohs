@@ -24,9 +24,6 @@
 		<if test="shopId != null and shopId != ''">
 			AND shopId=#{shopId}
 		</if>
-		<if test="shopId == null">
-			AND shopId is null
-		</if>
 		<if test="isdelivery != null and isdelivery != ''">
 			AND isdelivery=#{isdelivery}
 		</if>

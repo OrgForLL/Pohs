@@ -119,6 +119,7 @@ DeliveryCost.search = function () {
 $(function () {
 	$("#province").on("change",DeliveryCost.provinceChange);
 	$("#deliveryPro").on("change",DeliveryCost.deliveryProChange);
+	$("#shopId").on("change",DeliveryCost.shopChange);
     var defaultColunms = DeliveryCost.initColumn();
     var table = new BSTable(DeliveryCost.id, "/deliveryMode/costs/"+$("#id").val(), defaultColunms);
     table.setPaginationType("client");
@@ -151,6 +152,21 @@ DeliveryCost.provinceChange=function(){
     });
     ajax.set("province",$("#province").val());
     ajax.start();
+}
+
+DeliveryCost.shopChange=function(){
+	console.log("1111");
+	//初始化市
+	var ajax = new $ax(Feng.ctxPath + "/stores/list", function (data) {
+		var content="<option value=''>请选择门店</option>";
+		for(var i=0;i<data.length;i++){
+			content+="<option value='"+data[i].id+"'>"+data[i].name+"</option>"
+		}
+		$("#shopId").html(content);
+	}, function (data) {
+	});
+	ajax.set("condition",null);
+	ajax.start();
 }
 
 DeliveryCost.cityChange=function(){

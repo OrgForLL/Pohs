@@ -199,7 +199,7 @@ public class DeliveryModeController extends BaseController {
 		List<Long> deliveryArea = areaService.findCountyIds(deliveryPro, deliveryCity, deliveryCou);
 		if(ShiroKit.isAdmin()){
 			// 获取所有的查询地区的Ids
-			List<Map<String, Object>> costs = deliveryCostService.findCosts(modeId, areaIds, deliveryArea, isdelivery,Long.valueOf("0"));
+			List<Map<String, Object>> costs = deliveryCostService.findCosts(modeId, areaIds, deliveryArea, isdelivery,null);
 			return super.warpObject(new DeliveryCostWarpper(costs));
 		}
 		Long shopId = shopService.getShopIdByDeptId(ShiroKit.getUser().getDeptId());
@@ -218,12 +218,17 @@ public class DeliveryModeController extends BaseController {
 		deliveryCost.setModifyTime(new Timestamp(new Date().getTime()));
 		model.addAttribute("deliveryCost", deliveryCost);
 		model.addAttribute("areaName", DeliveryCostFactory.me().getAreaName(deliveryCost.getAreaId()));
+		
 		if(ShiroKit.isAdmin()){
-			if(ToolUtil.isNotEmpty(deliveryCost.getDeliveryArea())){
-				model.addAttribute("deliveryAreaName", DeliveryCostFactory.me().getAreaName(deliveryCost.getDeliveryArea()));
+			if(deliveryCost.getShopId() != 0){
+				Shop shop = shopService.selectById(deliveryCost.getShopId());
+				model.addAttribute("shop", shop.getName());
+			}else{
+				model.addAttribute("shop", "");
 			}
+			return PREFIX + "costEdit.html";
 		}
-		return PREFIX + "costEdit.html";
+		return PREFIX + "costEdit_shop.html";
 	}
 	/**
 	 * 跳转到添加配送费配置页面
@@ -263,7 +268,12 @@ public class DeliveryModeController extends BaseController {
 		}
 		if(ShiroKit.isAdmin()){
 			deliveryCost.setIsdelivery(true);
-			deliveryCost.setShopId(Long.valueOf("0"));
+			if(ToolUtil.isEmpty(deliveryCost.getShopId())){
+				deliveryCost.setShopId(Long.valueOf("0"));
+			}else{
+				Shop shop = shopService.selectById(deliveryCost.getShopId());
+				deliveryCost.setDeliveryArea(shop.getCountyId());
+			}
 			deliveryCostService.insert(deliveryCost);
 		}else{
 			Long shopId = shopService.getShopIdByDeptId(ShiroKit.getUser().getDeptId());

@@ -3,9 +3,10 @@
 	<div class="ibox-content">
 		<div class="form-horizontal">
 			<div class="row">
-				<input type="hidden" id="areaId" value="">
-				<input type="hidden" id="deliveryArea" value="">
-				<input type="hidden" id="modeId" value="${modeId}">
+				<input type="hidden" id="areaId" value=""> <input
+					type="hidden" id="deliveryArea" value=""> <input
+					type="hidden" id="modeId" value="${modeId}"> <input
+					type="hidden" id="shopId">
 
 				<!-- <div class="form-group">
 					<label class="col-sm-2 control-label">派货地区</label>
@@ -34,6 +35,25 @@
 						</select>
 					</div>
 				</div> -->
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">门店</label>
+					<div class="col-sm-8">
+						<div class="input-group" style="width: 400px;">
+							<input type="text" class="form-control" id="shop">
+							<div class="input-group-btn">
+								<button type="button" class="btn btn-white dropdown-toggle"
+									data-toggle="dropdown">
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu dropdown-menu-right" role="menu">
+								</ul>
+							</div>
+							<!-- /btn-group -->
+						</div>
+					</div>
+				</div>
+
 				<div class="form-group">
 					<label class="col-sm-2 control-label">配送地区</label>
 					<div class="col-sm-10">
@@ -103,6 +123,10 @@
 	</div>
 </div>
 <script
+	src="${ctxPath}/static/js/plugins/suggest/bootstrap-suggest.min.js"></script>
+<script
 	src="${ctxPath}/static/modular/delivery/deliveryMode/deliveryCost_info.js"></script>
-	<script src="${ctxPath}/static/modular/delivery/deliveryMode/deliveryCost.js"></script>
+<script
+	src="${ctxPath}/static/modular/delivery/deliveryMode/deliveryCost.js"></script>
+
 @}

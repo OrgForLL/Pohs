@@ -43,7 +43,7 @@ DeliveryCostInfoDlg.get = function(key) {
  * 收集数据
  */
 DeliveryCostInfoDlg.collectData = function() {
-    this.set('id').set('ykg').set('startPrice').set('addedWeight').set('addedPrice').set('areaId').set('modeId').set('deliveryArea');
+    this.set('id').set('ykg').set('startPrice').set('addedWeight').set('addedPrice').set('areaId').set('modeId').set('deliveryArea').set('shopId');
 }
 
 /**
@@ -201,4 +201,45 @@ DeliveryCostInfoDlg.import=function(){
     };
     $("#form1").ajaxSubmit(options);
 }
+
+//product测试
+var shopBsSuggest = $("#shop").bsSuggest({
+    indexId: 0, //data.value 的第几个数据，作为input输入框的内容
+    indexKey: 1, //data.value 的第几个数据，作为input输入框的内容
+    allowNoKeyword: false, //是否允许无关键字时请求数据
+    multiWord: true, //以分隔符号分割的多关键字支持
+    separator: ",", //多关键字支持时的分隔符，默认为空格
+    getDataMethod: "url", //获取数据的方式，总是从 URL 获取
+    effectiveFields: ["id", "name"],
+    effectiveFieldsAlias: {
+        id: "门店Id",
+        name: ",门店名称"
+    },
+    showHeader: true,
+    url:Feng.ctxPath + '/stores/shopList/',
+    processData: function (json) { // url 获取数据时，对数据的处理，作为 getData 的回调函数
+        var i, len, data = {
+            value: []
+        };
+
+        if (!json || json.length == 0) {
+            return false;
+        }
+
+        len = json.length;
+
+        for (i = 0; i < len; i++) {
+            data.value.push({
+            	"id":json[i].id,
+                "name": json[i].name
+            });
+        }
+        return data;
+    }
+
+}).on('onSetSelectValue', function (e, keyword) {
+    $("#shopId").val(keyword.id);
+    console.log(keyword);
+    console.log($("#shopId").val());
+});
 

@@ -111,6 +111,14 @@ public class ShopController extends BaseController {
         return storesService.find(stores);
     }
     /**
+     * 获取所有门店列表
+     */
+    @RequestMapping(value = "/shopList/{name}")
+    @ResponseBody
+    public Object shopList(@PathVariable String name) {
+    	return storesService.selectByShopName(name);
+    }
+    /**
      * 修改门店
      */
     @RequestMapping(value = "/edit")

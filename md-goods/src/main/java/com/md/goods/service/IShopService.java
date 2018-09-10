@@ -61,4 +61,6 @@ public interface IShopService extends IService<Shop> {
 	List<Map<String, Object>> findByCityId(Shop shop);
 
 	void changeId(Long shopId,Long shopId2);
+
+	List<Shop> selectByShopName(String name);
 }
