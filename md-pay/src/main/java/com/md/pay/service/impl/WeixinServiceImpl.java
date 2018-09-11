@@ -31,14 +31,16 @@ public class WeixinServiceImpl extends ServiceImpl<WeiXinMapper, WeiXin>  implem
 		Token token = new Token();
 		WeiXin weiXin = weiXinMapper.selectById(type);
 		String access_token =  weiXin.getAccessToken();
-		Long expiresIn = weiXin.getExpiresIn();
-		Long nowDate = new Date().getTime();
-		if (ToolUtil.isEmpty(access_token) || expiresIn <= nowDate) {
-			token = TokenAPI.token(weiXin.getAppid(),weiXin.getSecret());
-			weiXin.setAccessToken(token.getAccess_token());
-			weiXin.setExpiresIn(new Date().getTime() + token.getExpires_in()*1000);
-			weiXinMapper.updateById(weiXin);
-			return token.getAccess_token();
+		if(weiXin.isIsautoload()) {
+			Long expiresIn = weiXin.getExpiresIn();
+			Long nowDate = new Date().getTime();
+			if (ToolUtil.isEmpty(access_token) || expiresIn <= nowDate) {
+				token = TokenAPI.token(weiXin.getAppid(),weiXin.getSecret());
+				weiXin.setAccessToken(token.getAccess_token());
+				weiXin.setExpiresIn(new Date().getTime() + token.getExpires_in()*1000);
+				weiXinMapper.updateById(weiXin);
+				return token.getAccess_token();
+			}
 		}
 		return weiXin.getAccessToken();
 	}

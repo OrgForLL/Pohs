@@ -21,6 +21,8 @@ public class WeiXin {
 	private String mchid;
 	
 	private String apikey;
+	
+	private boolean isautoload;
 
 	public Integer getId() {
 		return id;
@@ -76,5 +78,13 @@ public class WeiXin {
 
 	public void setApikey(String apikey) {
 		this.apikey = apikey;
+	}
+
+	public boolean isIsautoload() {
+		return isautoload;
+	}
+
+	public void setIsautoload(boolean isautoload) {
+		this.isautoload = isautoload;
 	}
 }

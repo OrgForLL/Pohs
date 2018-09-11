@@ -194,12 +194,17 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		Wrapper<Goods> wrapper = new EntityWrapper<>();
 		Integer begin = (index - 1) * Page.PAGESIZE.getCode();
 		if (category.getStatus() != CategoryStatus.DISABLE.getCode()) {
-			if (category.getLevel() == 1) {
+			/*if (category.getLevel() == 1) {
 				wrapper.where(
 						"id IN (SELECT scr.goodsId FROM shop_category_relation AS scr LEFT JOIN shop_category AS sc ON scr.categoryId = sc.id LEFT JOIN shop_price_tag AS spt ON spt.goodsId = scr.goodsId WHERE sc.pid = "
 								+ category.getId() + " AND spt.marketable = 1" + " AND spt.shopId = " + shopId + ")");
 
 			} else if (category.getLevel() == 2) {
+				wrapper.where(
+						"id IN (SELECT scr.goodsId FROM shop_category_relation AS scr LEFT JOIN shop_category AS sc ON scr.categoryId = sc.id LEFT JOIN shop_price_tag AS spt ON spt.goodsId = scr.goodsId WHERE sc.id = "
+								+ category.getId() + " AND spt.marketable = 1" + " AND spt.shopId = " + shopId + ")");
+			}*/
+			if (category.getLevel() == 3) {
 				wrapper.where(
 						"id IN (SELECT scr.goodsId FROM shop_category_relation AS scr LEFT JOIN shop_category AS sc ON scr.categoryId = sc.id LEFT JOIN shop_price_tag AS spt ON spt.goodsId = scr.goodsId WHERE sc.id = "
 								+ category.getId() + " AND spt.marketable = 1" + " AND spt.shopId = " + shopId + ")");
