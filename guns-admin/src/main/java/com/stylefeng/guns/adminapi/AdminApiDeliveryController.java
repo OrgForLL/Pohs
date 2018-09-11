@@ -140,7 +140,12 @@ public class AdminApiDeliveryController extends BaseController {
 			deliveryCost.setModeId(modeId);
 			deliveryCost.setIsdelivery(true);
 			deliveryCost.setShopId(shopId);
-			deliveryCost.setDeliveryArea(shop.getCountyId());
+			if(ToolUtil.isNotEmpty(shop)) {
+				deliveryCost.setDeliveryArea(shop.getCountyId());
+			}else {
+				deliveryCost.setDeliveryArea(0l);
+			}
+			
 			if(ToolUtil.isNotEmpty(startPrice)){
 				deliveryCost.setStartPrice(startPrice);
 			}else{

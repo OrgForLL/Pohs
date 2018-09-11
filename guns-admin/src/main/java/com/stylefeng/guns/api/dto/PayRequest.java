@@ -6,7 +6,7 @@ public class PayRequest {
 	private Long memberId;
 	private List<Long> orderIdList;
 	private String tradeType;
-	private String payType;
+	private String configKey;
 	public Long getMemberId() {
 		return memberId;
 	}
@@ -31,12 +31,12 @@ public class PayRequest {
 		this.orderIdList = orderIdList;
 	}
 
-	public String getPayType() {
-		return payType;
+	public String getConfigKey() {
+		return configKey;
 	}
 
-	public void setPayType(String payType) {
-		this.payType = payType;
+	public void setConfigKey(String configKey) {
+		this.configKey = configKey;
 	}
 
 	

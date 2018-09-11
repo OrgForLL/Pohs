@@ -77,6 +77,7 @@ public class PriceTagServiceImpl extends ServiceImpl<PriceTagMapper, PriceTag> i
 
 	@Override
 	public PriceTag findOne(PriceTag priceTag) {
+		priceTag.setThreshold(null);
 		return priceTagMapper.selectOne(priceTag);
 	}
 

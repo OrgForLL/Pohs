@@ -51,33 +51,13 @@ public class WxPayServiceImpl implements IwxPayService {
 	
 	
 	// 微信商户号：*****
-	private static final String MCHID = "1498707612";
-	// 微信支付回调地址
-	private static final String NOTIFYURL = "http://app.wmggcl.com/admin/api/pay/webwxPayNotify";
-	// 微信退款回调地址
-	private static final String REFUNDNOTIFYURL = "http://app.wmggcl.com/admin/api/pay/webwxRefundNotify";
-	// 微信APIKEY
-	private static final String APIKEY = "qianyouhangkongwuliupingtai20188";
-
-	private static final String APPID = "wxddbe7c1af32f75f0";
-
-	private static final String SECRET = "07e299a95da4cb3acdebc995316284fe";
-	
-	private static final String GRANT_TYPE = "client_credential";
-
-	private static final String REDIRECT_URI = "http://www.qy-hk.com/api/weixin/redirecturl";
-	
-	private static final String REDIRECT_URI2 = "http://www.qy-hk.com/api/weixin/redirecturl2";
-
-	private static final String STATE = "123";
-	
 	private static final String APPNAME = "利郎商城";
 
 	
 	@Override
-	public UnifiedorderResult wxPayUnifiedorder(BigDecimal amount,String orderSn,String ip ,String openid, String notifyUrl,String tradeType) {
+	public UnifiedorderResult wxPayUnifiedorder(BigDecimal amount,String orderSn,String ip ,String openid, String notifyUrl,String tradeType,String configKey) {
 		// TODO 自动生成的方法存根
-		WeiXin weiXin = weiXinMapper.selectList(null).get(0);
+		WeiXin weiXin = weiXinMapper.selectById(configKey);
 		Unifiedorder unifiedorder = new Unifiedorder();
 		SceneInfo sceneInfo = new SceneInfo();
 		SceneInfo.H5Info h5Info = new SceneInfo.H5Info();

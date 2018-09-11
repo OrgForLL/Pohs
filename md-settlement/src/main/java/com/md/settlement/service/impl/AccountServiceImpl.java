@@ -141,7 +141,6 @@ public class AccountServiceImpl implements IAccountService {
 			PriceTag priceTag = new PriceTag();
 			priceTag.setShopId(shopItem.getShopId());
 			priceTag.setProductId(shopItem.getProductId());
-			priceTag.setThreshold(null);
 			PriceTag priceTag2 = priceTagService.findOne(priceTag);
 			priceTags.put(shopItem.getProductId(), priceTag2);
 		}

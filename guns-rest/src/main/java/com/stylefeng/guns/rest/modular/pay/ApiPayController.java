@@ -111,7 +111,7 @@ public class ApiPayController extends BaseController {
 		Member member = MemberServiceImpl.selectById(payRequest.getMemberId());
 		String memberIp = request.getRemoteAddr();
 		UnifiedorderResult unifiedorderResult = wxPayServiceImpl.wxPayUnifiedorder(amount, orderSn, memberIp,
-				member.getOpenId(),restProperties.getNotifyUrl(),payRequest.getTradeType());
+				member.getOpenId(),restProperties.getNotifyUrl(),payRequest.getTradeType(),payRequest.getConfigKey());
 		if (("SUCCESS").equals(unifiedorderResult.getReturn_code())) {
 			jb.put("code", unifiedorderResult.getReturn_code());
 			jb.put("msg", unifiedorderResult.getReturn_msg());
