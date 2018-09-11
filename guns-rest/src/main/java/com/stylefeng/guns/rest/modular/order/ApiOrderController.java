@@ -276,7 +276,7 @@ public class ApiOrderController extends BaseController{
 	@RequestMapping(value = "/submitOrder", method = RequestMethod.POST)
 	public ResponseEntity<?> submitOrder(@RequestBody OrderRequest orderRequest) throws Exception {
 		List<Long> idList = new ArrayList<>();
-		String sn =new Date().getTime()+ String.valueOf((int)((Math.random()* 9 + 1) * 100000));	
+//		String sn =new Date().getTime()+ String.valueOf((int)((Math.random()* 9 + 1) * 100000));	
 		for(Order order : orderRequest.getOrderList()) {
 			Cart cart = cartService.findById(order.getMemberId());
 			if(orderRequest.isCart()) {
@@ -284,7 +284,7 @@ public class ApiOrderController extends BaseController{
 				cartService.updateById(cart);
 				orderRequest.setCart(false);
 			}
-			order.setSn(sn);
+//			order.setSn(sn);
 			orderService.add(order);
 			idList.add(order.getId());
 			for(OrderItem item:order.getOrderItems()) {

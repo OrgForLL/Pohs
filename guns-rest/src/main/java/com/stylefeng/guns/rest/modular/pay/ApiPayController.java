@@ -97,14 +97,17 @@ public class ApiPayController extends BaseController {
 	public ResponseEntity<?> wxpay(@RequestBody PayRequest payRequest, HttpServletRequest request) {
 		JSONObject jb = new JSONObject();
 		List<Order> orderList = new ArrayList<>();
+		String orderSn =new Date().getTime()+ String.valueOf((int)((Math.random()* 9 + 1) * 100000));	
 		List<Long> orderidList = payRequest.getOrderIdList();
 		if (ToolUtil.isEmpty(orderidList)) {
 			return ResponseEntity.ok(new ApiException(BizExceptionEnum.ORDER_NULL));
 		}
 		BigDecimal amount = new BigDecimal(0);
-		String orderSn = orderServiceImpl.selectById(orderidList.get(0)).getSn();
+		//String orderSn = orderServiceImpl.selectById(orderidList.get(0)).getSn();
 		for (Long orderid : orderidList) {
 			Order order = orderServiceImpl.selectById(orderid);
+			order.setSn(orderSn);
+			orderServiceImpl.update(order);
 			orderList.add(order);
 			amount = amount.add(order.getActualPay());
 		}
