@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,6 +97,56 @@ public class ApiCarController extends BaseController {
 					return jb;
 				}else {
 					jb.put("data", "失败");
+				}
+			}
+		}else {
+			jb.put("data", "加入购物车成功");
+			return jb;
+		}
+		jb.put("data", "加入购物车成功");
+		return jb;
+	}
+	
+	@ApiOperation(value = "批量加入购物车", notes = "批量加入购物车")
+	@RequestMapping(value = "/addCartMore", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject addCartMore(
+			@ApiParam("门店id(1,2,3)") @RequestParam(value = "shopIds", required = true) @RequestBody String shopIds,
+			@ApiParam("产品id(1,2,3)") @RequestParam(value = "products", required = true) @RequestBody String products,
+			@ApiParam("用户id") @RequestParam(value = "memberId", required = true) @RequestBody long memberId,
+			@ApiParam("数量(1,2,3)") @RequestParam(value = "quantitys", required = true) @RequestBody String quantitys) {
+		JSONObject jb = new JSONObject();
+		Cart cart = cartService.addSave(memberId); // 初始化购物车
+		String[] productArray = products.split(",");
+		String[] shopArray = shopIds.split(",");
+		String[] quantityArray = quantitys.split(",");
+		if(productArray.length > 0) {
+			for(Integer i = 0;i<productArray.length;i++) {
+				PriceTag tag = priceTagService.findByShopAndProduct(Long.valueOf(productArray[i]), Long.valueOf(shopArray[i]));
+				if(ToolUtil.isNotEmpty(tag)) {
+					CartItem cartItem = cartItemService.findByTagId(tag.getId(), cart.getId());
+					if(cartItem != null) {
+						cartItem.setQuantity(cartItem.getQuantity() + Integer.valueOf(quantityArray[i]));
+						cartItemService.updateById(cartItem); // 新增购物车项
+					}else {
+						CartItem cartItem2 = new CartItem();
+						cartItem2.setCartId(cart.getId());
+						cartItem2.setProductId(Long.valueOf(productArray[i]));
+						cartItem2.setPriceTagId(tag.getId());
+						cartItem2.setQuantity(Integer.valueOf(quantityArray[i]));
+						cartItem2.setShopId(Long.valueOf(shopArray[i]));
+						cartItem2.setStatus(CartStatus.YES.getCode());
+						cartItemService.add(cartItem2); // 新增购物车项
+						if(ToolUtil.isEmpty(cart.getQuantity())) {
+							cart.setQuantity(1);
+						}else {
+							cart.setQuantity(cart.getQuantity() + 1);
+						}
+						cartService.updateById(cart); // 加入购物车
+					}
+				}else {
+					jb.put("data", "不存在当前商品");
+					return jb;
 				}
 			}
 		}else {

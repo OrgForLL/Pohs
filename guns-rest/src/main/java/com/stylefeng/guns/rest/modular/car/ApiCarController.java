@@ -65,22 +65,56 @@ public class ApiCarController extends BaseController {
 	@RequestMapping(value = "/addCart", method = RequestMethod.POST)
 	public ResponseEntity<?> addCart( @RequestBody CartRequest cartRequest) {
 		Cart cart = cartService.addSave(cartRequest.getMemberId()); // 初始化购物车
+		PriceTag tag = priceTagService.findByShopAndProduct(cartRequest.getProductId(), cartRequest.getShopId());
+		if(ToolUtil.isNotEmpty(tag)) {
+			CartItem cartItem = cartItemService.findByTagId(tag.getId(), cart.getId());
+			if(cartItem != null) {
+				cartItem.setQuantity(cartItem.getQuantity() + cartRequest.getQuantity());
+				cartItemService.updateById(cartItem); // 新增购物车项
+			}else {
+				CartItem cartItem2 = new CartItem();
+				cartItem2.setCartId(cart.getId());
+				cartItem2.setProductId(cartRequest.getProductId());
+				cartItem2.setPriceTagId(tag.getId());
+				cartItem2.setQuantity(cartRequest.getQuantity());
+				cartItem2.setShopId(cartRequest.getShopId());
+				cartItem2.setStatus(CartStatus.YES.getCode());
+				cartItemService.add(cartItem2); // 新增购物车项
+				if(ToolUtil.isEmpty(cart.getQuantity())) {
+					cart.setQuantity(1);
+				}else {
+					cart.setQuantity(cart.getQuantity() + 1);
+				}
+				cartService.updateById(cart); // 加入购物车
+			}
+		}else {
+			return ResponseEntity.ok("不存在当前商品");
+		}
+		return ResponseEntity.ok("加入购物车成功");
+	}
+
+	@ApiOperation(value = "批量加入购物车", notes = "批量加入购物车")
+	@RequestMapping(value = "/addCartMore", method = RequestMethod.POST)
+	public ResponseEntity<?> addCartMore( @RequestBody CartRequest cartRequest) {
+		Cart cart = cartService.addSave(cartRequest.getMemberId()); // 初始化购物车
 		String[] productArray = cartRequest.getProducts().split(",");
+		String[] shopArray = cartRequest.getShopIds().split(",");
+		String[] quantityArray = cartRequest.getQuantitys().split(",");
 		if(productArray.length > 0) {
-			for(String productId:productArray) {
-				PriceTag tag = priceTagService.findByShopAndProduct(Long.valueOf(productId), cartRequest.getShopId());
+			for(Integer i = 0;i<productArray.length;i++) {
+				PriceTag tag = priceTagService.findByShopAndProduct(Long.valueOf(productArray[i]), Long.valueOf(shopArray[i]));
 				if(ToolUtil.isNotEmpty(tag)) {
 					CartItem cartItem = cartItemService.findByTagId(tag.getId(), cart.getId());
 					if(cartItem != null) {
-						cartItem.setQuantity(cartItem.getQuantity() + cartRequest.getQuantity());
+						cartItem.setQuantity(cartItem.getQuantity() + Integer.valueOf(quantityArray[i]));
 						cartItemService.updateById(cartItem); // 新增购物车项
 					}else {
 						CartItem cartItem2 = new CartItem();
 						cartItem2.setCartId(cart.getId());
-						cartItem2.setProductId(Long.valueOf(productId));
+						cartItem2.setProductId(Long.valueOf(productArray[i]));
 						cartItem2.setPriceTagId(tag.getId());
-						cartItem2.setQuantity(cartRequest.getQuantity());
-						cartItem2.setShopId(cartRequest.getShopId());
+						cartItem2.setQuantity(Integer.valueOf(quantityArray[i]));
+						cartItem2.setShopId(Long.valueOf(shopArray[i]));
 						cartItem2.setStatus(CartStatus.YES.getCode());
 						cartItemService.add(cartItem2); // 新增购物车项
 						if(ToolUtil.isEmpty(cart.getQuantity())) {
@@ -99,7 +133,7 @@ public class ApiCarController extends BaseController {
 		}
 		return ResponseEntity.ok("加入购物车成功");
 	}
-
+	
 	@ApiOperation(value = "修改购物车规格", notes = "修改购物车规格")
 	@RequestMapping(value = "/modifyCart", method = RequestMethod.POST)
 	public ResponseEntity<?> modifyCart(

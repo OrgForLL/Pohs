@@ -19,6 +19,10 @@ public class CartRequest {
 	
 	private String products;
 	
+	private String quantitys;
+	
+	private String shopIds;
+	
 	private Long shopId;
 	
 	private String itemIds;
@@ -87,6 +91,22 @@ public class CartRequest {
 
 	public void setProducts(String products) {
 		this.products = products;
+	}
+
+	public String getQuantitys() {
+		return quantitys;
+	}
+
+	public void setQuantitys(String quantitys) {
+		this.quantitys = quantitys;
+	}
+
+	public String getShopIds() {
+		return shopIds;
+	}
+
+	public void setShopIds(String shopIds) {
+		this.shopIds = shopIds;
 	}
 
 }
