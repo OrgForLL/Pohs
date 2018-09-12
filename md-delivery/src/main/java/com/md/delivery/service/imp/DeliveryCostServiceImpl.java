@@ -94,4 +94,14 @@ public class DeliveryCostServiceImpl extends ServiceImpl<DeliveryCostMapper, Del
 		return selectList;
 	}
 
+	@Override
+	public List<DeliveryCost> getListByCondition(DeliveryCost deliveryCost) {
+		Wrapper<DeliveryCost> wrapper = new EntityWrapper<>();
+		wrapper.eq("shopId", deliveryCost.getShopId());
+		wrapper.eq("deliveryArea", deliveryCost.getDeliveryArea());
+		wrapper.eq("areaId", deliveryCost.getAreaId());
+		wrapper.eq("modeId", deliveryCost.getModeId());
+		return deliveryCostMapper.selectList(wrapper);
+	}
+
 }

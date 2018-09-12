@@ -20,15 +20,11 @@ import com.md.delivery.service.IAreaService;
 import com.md.delivery.service.IDeliveryCostService;
 import com.md.delivery.service.imp.DeliveryCostServiceImpl;
 import com.md.delivery.warpper.DeliveryCostWarpper;
-import com.md.goods.model.PriceTag;
 import com.md.goods.model.Shop;
-import com.md.goods.service.IPriceTagService;
 import com.md.goods.service.IShopService;
 import com.stylefeng.guns.core.base.controller.BaseController;
-import com.stylefeng.guns.core.shiro.ShiroKit;
 import com.stylefeng.guns.core.util.ToolUtil;
 
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -165,8 +161,16 @@ public class AdminApiDeliveryController extends BaseController {
 			}else{
 				deliveryCost.setAddedWeight(new BigDecimal(0));
 			}
-			
-			deliveryCostService.insert(deliveryCost);
+			List<DeliveryCost> list = deliveryCostService.getListByCondition(deliveryCost);
+			if(list.size() > 0) {
+				DeliveryCost deliveryCost2 = list.get(0);
+				Long id = deliveryCost2.getId();
+				deliveryCost2 = deliveryCost;
+				deliveryCost2.setId(id);
+				deliveryCostService.update(deliveryCost2);
+			}else {
+				deliveryCostService.insert(deliveryCost);
+			}
 		}
 		jb.put("errcode", 0);
 		jb.put("errmsg", "ok");

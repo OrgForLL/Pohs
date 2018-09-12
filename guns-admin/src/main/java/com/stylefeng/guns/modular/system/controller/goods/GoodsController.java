@@ -393,9 +393,9 @@ public class GoodsController extends BaseController {
 	@ResponseBody
 	public Object edit(Goods goods, String specs, String categoryIds, String tagIds) {
 		// 判断商品的名称是否存在
-		if (goodsService.existGoods(goods.getName(), goods.getId())) {
-			throw new GunsException(BizExceptionEnum.NAME_SAME);
-		}
+//		if (goodsService.existGoods(goods.getName(), goods.getId())) {
+//			throw new GunsException(BizExceptionEnum.NAME_SAME);
+//		}
 
 		// 将原先的规格商品的图片状态设为未使用
 		Product queryObj = new Product();
@@ -541,9 +541,9 @@ public class GoodsController extends BaseController {
 	@ResponseBody
 	public Object add(Goods goods, String specs, String categoryIds, String tagIds) {
 		// 判断商品的名称是否存在
-		if (goodsService.existGoods(goods.getName(), null)) {
-			throw new GunsException(BizExceptionEnum.NAME_SAME);
-		}
+//		if (goodsService.existGoods(goods.getName(), null)) {
+//			throw new GunsException(BizExceptionEnum.NAME_SAME);
+//		}
 
 		// 添加商品
 		goods.setParamItems(HtmlUtils.htmlUnescape(goods.getParamItems()));

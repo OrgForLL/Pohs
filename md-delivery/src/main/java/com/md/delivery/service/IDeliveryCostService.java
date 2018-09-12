@@ -72,4 +72,6 @@ public interface IDeliveryCostService extends IService<DeliveryCost> {
 	 */
 	List<Map<String, Object>> findCostsByShopId(Long shopId);
 
+	List<DeliveryCost> getListByCondition(DeliveryCost deliveryCost);
+
 }
