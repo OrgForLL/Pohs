@@ -52,4 +52,19 @@ public class EvaluationServiceImpl extends ServiceImpl<EvaluationMapper, Evaluat
 		RowBounds rowBounds = new RowBounds(begin,Page.PAGESIZE.getCode());
 		return evaluationMapper.selectPage(rowBounds, wrapper);
 	}
+
+	@Override
+	public List<Map<String, Object>> findListByPage2(Long goodsId, Long shopId, Integer index) {
+		Wrapper<Evaluation> wrapper = new EntityWrapper<>();
+		if (ToolUtil.isNotEmpty(goodsId)) {
+			wrapper.eq("goodsId", goodsId);
+		}
+		if (ToolUtil.isNotEmpty(shopId)) {
+			wrapper.eq("shopId", shopId);
+		}
+		wrapper.orderBy("createTime",false);
+		Integer begin = (index - 1) * Page.PAGESIZE.getCode();
+		RowBounds rowBounds = new RowBounds(begin,Page.PAGESIZE.getCode());
+		return evaluationMapper.selectMapsPage(rowBounds, wrapper);
+	}
 }

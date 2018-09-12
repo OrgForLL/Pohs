@@ -11,6 +11,7 @@ guns:
   file-upload-path: /home/file/shop/upload
   message-path: http://webt.lilang.com/base-msgservice/Create
   message2-path: http://webt.lilang.com:9001/tl_zmd/MSGSendBase.ashx?msgtype=gd&sysid=0&userssid=1&userid=0&username=LilanzEShopReg&phone={0}&msg={1}  #短信接口地址
+  message-open: true #是否开启订单短信(true/false)
   notify-url: http://mf.ecommu.cn:8082/admin/api/pay/webwxPayNotify  # 微信异步回调接口
   project-web-path: http://localhost:8080
   muti-datasource-open: false #是否开启多数据源(true/false)

@@ -17,6 +17,8 @@ public class CartRequest {
 	
 	private Long productId;
 	
+	private String products;
+	
 	private Long shopId;
 	
 	private String itemIds;
@@ -77,6 +79,14 @@ public class CartRequest {
 
 	public void setCartId(Long cartId) {
 		this.cartId = cartId;
+	}
+
+	public String getProducts() {
+		return products;
+	}
+
+	public void setProducts(String products) {
+		this.products = products;
 	}
 
 }

@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.md.cart.model.Cart;
-import com.md.cart.model.CartItem;
 import com.md.goods.model.PriceTag;
 import com.md.goods.model.Product;
 import com.md.goods.model.Shop;
@@ -29,7 +26,6 @@ import com.md.goods.service.IGoodsService;
 import com.md.goods.service.IPriceTagService;
 import com.md.goods.service.IProductService;
 import com.md.goods.service.IShopService;
-import com.md.goods.service.imp.GoodsServiceImpl;
 import com.md.member.model.Member;
 import com.md.member.service.IMemberService;
 import com.md.order.constant.OrderStatus;
@@ -211,7 +207,9 @@ public class AdminApiOrderController extends BaseController {
 	    	shipping.setType(0);
 	    	shipping.setOrderId(Long.valueOf(orderId));
 	        shippingService.add(shipping);
-	        HttpPostUrl.sendPost(MessageFormat.format(gunsProperties.getMessage2Path() ,member.getPhoneNum(), "尊贵的利郎商城"+member.getName()+"，您的订单"+order.getSn()+"已经开始派送，物流单号："+shipping.getLogisticsNum()+"。"), null);
+	        if(gunsProperties.getMessageOpen()) {
+	        	HttpPostUrl.sendPost(MessageFormat.format(gunsProperties.getMessage2Path() ,member.getPhoneNum(), "尊贵的利郎商城"+member.getName()+"，您的订单"+order.getSn()+"已经开始派送，物流单号："+shipping.getLogisticsNum()+"。"), null);
+	        }
 		}
 		order.setStatus(status);
 		orderService.update(order);

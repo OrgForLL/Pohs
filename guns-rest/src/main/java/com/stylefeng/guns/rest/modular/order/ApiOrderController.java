@@ -41,6 +41,7 @@ import com.md.order.service.IOrderItemService;
 import com.md.order.service.IOrderService;
 import com.md.order.service.IRefundApplyService;
 import com.md.order.service.IShippingService;
+import com.md.order.warpper.EvaluationWarpper;
 import com.md.order.warpper.OrderItemWarpper;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.util.DateUtil;
@@ -61,13 +62,6 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/order")
 public class ApiOrderController extends BaseController{
 
-	public static final String user = "1851588926@qq.com";
-	public static final String pwd="463111";
-	public static final String account= "900003";
-	public static final String appKey = "2588c2dc-d622-4e8f-9852-69d3a56fa3cd";
-	public static final String appSecret="asq2q2";
-	
-	
 	@Resource
 	IEvaluationService evaluationService;
 	
@@ -142,8 +136,8 @@ public class ApiOrderController extends BaseController{
 	@ApiOperation(value = "获取评价列表", notes = "获取评价列表")
 	@RequestMapping(value = "/getEvaluationList", method = RequestMethod.POST)
 	public ResponseEntity<?> getEvaluationList(@RequestBody OrderRequest orderRequest) {
-		List<Evaluation> list = evaluationService.findListByPage(orderRequest.getGoodsId(),orderRequest.getShopId(),orderRequest.getIndex());
-		return ResponseEntity.ok(list);
+		List<Map<String, Object>> list = evaluationService.findListByPage2(orderRequest.getGoodsId(),orderRequest.getShopId(),orderRequest.getIndex());
+		return ResponseEntity.ok(super.warpObject(new EvaluationWarpper(list)));
 	}
 	
 	@ApiOperation(value = "获取订单列表", notes = "获取订单列表")

@@ -22,6 +22,7 @@ public class EvaluationWarpper extends BaseControllerWarpper {
     @Override
     public void warpTheMap(Map<String, Object> map) {
     	map.put("memberName", MemberFactory.me().getMemberName((Long)map.get("memberId")));
+    	map.put("memberHead", MemberFactory.me().getMemberHead((Long)map.get("memberId")));
     	map.put("levelName", EvaluationLevel.valueOf((Integer)map.get("level")));
     }
 

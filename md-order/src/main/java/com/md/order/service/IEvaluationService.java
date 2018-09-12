@@ -23,4 +23,13 @@ public interface IEvaluationService extends IService<Evaluation> {
 	 * @return
 	 */
 	List<Evaluation> findListByPage(Long goodsId,Long shopId,Integer index);
+	
+	/**
+	 * 获取分页评价列表
+	 * @param goodsId
+	 * @param shopId
+	 * @param index
+	 * @return
+	 */
+	List<Map<String, Object>> findListByPage2(Long goodsId,Long shopId,Integer index);
 }

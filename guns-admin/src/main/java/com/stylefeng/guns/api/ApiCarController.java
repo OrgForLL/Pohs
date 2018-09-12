@@ -31,6 +31,7 @@ import com.md.goods.service.IProductService;
 import com.md.goods.service.IShopService;
 import com.md.goods.service.IUploadFileService;
 import com.stylefeng.guns.core.base.controller.BaseController;
+import com.stylefeng.guns.core.util.ToolUtil;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -65,27 +66,41 @@ public class ApiCarController extends BaseController {
 	@ResponseBody
 	public JSONObject addCart(
 			@ApiParam("门店id") @RequestParam(value = "shopId", required = true) @RequestBody long shopId,
-			@ApiParam("产品id") @RequestParam(value = "productId", required = true) @RequestBody long productId,
+			@ApiParam("产品id(1,2,3)") @RequestParam(value = "products", required = true) @RequestBody String products,
 			@ApiParam("用户id") @RequestParam(value = "memberId", required = true) @RequestBody long memberId,
 			@ApiParam("数量") @RequestParam(value = "quantity", required = true) @RequestBody Integer quantity) {
 		JSONObject jb = new JSONObject();
 		Cart cart = cartService.addSave(memberId); // 初始化购物车
-		PriceTag tag = priceTagService.findByShopAndProduct(productId, shopId);
-		CartItem cartItem = cartItemService.findByTagId(tag.getId(), cart.getId());
-		if(cartItem != null) {
-			cartItem.setQuantity(cartItem.getQuantity() + 1);
-			cartItemService.updateById(cartItem); // 新增购物车项
+		String[] productArray = products.split(",");
+		if(productArray.length > 0) {
+			for(String productId:productArray) {
+				PriceTag tag = priceTagService.findByShopAndProduct(Long.valueOf(productId), shopId);
+				if(ToolUtil.isNotEmpty(tag)) {
+					CartItem cartItem = cartItemService.findByTagId(tag.getId(), cart.getId());
+					if(cartItem != null) {
+						cartItem.setQuantity(cartItem.getQuantity() + 1);
+						cartItemService.updateById(cartItem); // 新增购物车项
+					}else {
+						CartItem cartItem2 = new CartItem();
+						cartItem2.setCartId(cart.getId());
+						cartItem2.setProductId(Long.valueOf(productId));
+						cartItem2.setPriceTagId(tag.getId());
+						cartItem2.setQuantity(quantity);
+						cartItem2.setShopId(shopId);
+						cartItem2.setStatus(CartStatus.YES.getCode());
+						cartItemService.add(cartItem2); // 新增购物车项
+						cart.setQuantity(cart.getQuantity() + 1);
+						cartService.updateById(cart); // 加入购物车
+					}
+					jb.put("data", "加入购物车成功");
+					return jb;
+				}else {
+					jb.put("data", "失败");
+				}
+			}
 		}else {
-			CartItem cartItem2 = new CartItem();
-			cartItem2.setCartId(cart.getId());
-			cartItem2.setProductId(productId);
-			cartItem2.setPriceTagId(tag.getId());
-			cartItem2.setQuantity(quantity);
-			cartItem2.setShopId(shopId);
-			cartItem2.setStatus(CartStatus.YES.getCode());
-			cartItemService.add(cartItem2); // 新增购物车项
-			cart.setQuantity(cart.getQuantity() + 1);
-			cartService.updateById(cart); // 加入购物车
+			jb.put("data", "加入购物车成功");
+			return jb;
 		}
 		jb.put("data", "加入购物车成功");
 		return jb;
@@ -145,24 +160,28 @@ public class ApiCarController extends BaseController {
 						for (CartItem item : itemResult) {
 							GoodObject goodItems = new GoodObject();
 							PriceTag tag = priceTagService.findByShopAndProduct(item.getProductId(), item.getShopId());
-							goodItems.setCartItemId(item.getId());
-							goodItems.setPrice(tag.getPrice());
-							goodItems.setGoodsId(tag.getGoodsId());
-							Goods goods = goodsService.findById(tag.getGoodsId());
-							if(goods != null) {
-								goodItems.setGoodsName(goods.getName());
+							if(ToolUtil.isNotEmpty(tag)) {
+								if(ToolUtil.isNotEmpty(tag.getPrice())) {
+									goodItems.setPrice(tag.getPrice());
+								}
+								goodItems.setGoodsId(tag.getGoodsId());
+								Goods goods = goodsService.findById(tag.getGoodsId());
+								if(goods != null) {
+									goodItems.setGoodsName(goods.getName());
+								}
 							}
+							goodItems.setCartItemId(item.getId());
 							Product product = productService.findById(item.getProductId());
 							if(product != null) {
 								goodItems.setSkuName(product.getName());
+								UploadFile upload =  uploadFileService.getById(product.getImage());
+								if(upload != null) {
+									goodItems.setImageUrl(upload.getUrl());
+								}
 							}
 							goodItems.setProductId(item.getProductId());
 							goodItems.setQuantity(item.getQuantity());
 							goodItems.setStatus(item.getStatus());
-							UploadFile upload =  uploadFileService.getById(product.getImage());
-							if(upload != null) {
-								goodItems.setImageUrl(upload.getUrl());
-							}
 							goodList.add(goodItems);
 						}
 					}

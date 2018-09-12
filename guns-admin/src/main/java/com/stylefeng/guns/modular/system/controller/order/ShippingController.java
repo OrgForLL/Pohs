@@ -1,6 +1,7 @@
 package com.stylefeng.guns.modular.system.controller.order;
 
 import java.sql.Timestamp;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,6 +22,8 @@ import org.springframework.web.util.HtmlUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.md.goods.service.IProductService;
 import com.md.goods.service.IShopService;
+import com.md.member.model.Member;
+import com.md.member.service.IMemberService;
 import com.md.notice.service.IShopNoticeService;
 import com.md.order.constant.InventoryType;
 import com.md.order.constant.OrderStatus;
@@ -70,7 +73,8 @@ public class ShippingController extends BaseController {
 	IShopService shopService;
 	@Resource
 	IShopNoticeService shopNoticeService;
-
+	@Resource
+	IMemberService memberService;
 	@Autowired
 	GunsProperties gunsProperties;
     private String PREFIX = "/order/shipping/";
@@ -152,6 +156,7 @@ public class ShippingController extends BaseController {
         }
         if(shipQuantity==quantity){
             Order order = orderService.selectById(shipping.getOrderId());
+            Member member = memberService.findById(order.getMemberId());
             order.setStatus(OrderStatus.WAIT_GAINS.getCode());
             orderService.updateById(order);
             shopNoticeService.addOnOrderSend("您的订单"+order.getSn()+"已发货。", order.getMemberId());
@@ -159,6 +164,9 @@ public class ShippingController extends BaseController {
     		String data = "{\"MsgTypeID\":3100,\"CreateID\":3100,\"MsgJson\":{\"orderId\":"+order.getId()+",\"status\":"+order.getStatus()+"},\"RequestID\":\"\"}";
     		mapParam.put("data", data);
     		HttpPostUrl.sendPost(gunsProperties.getMessagePath(), mapParam);
+    		if(gunsProperties.getMessageOpen()) {
+ 	        	HttpPostUrl.sendPost(MessageFormat.format(gunsProperties.getMessage2Path() ,member.getPhoneNum(), "尊贵的利郎商城"+member.getName()+"，您的订单"+order.getSn()+"已经开始派送，物流单号："+shipping.getLogisticsNum()+"。"), null);
+ 	        }
         }
        
         return SUCCESS;

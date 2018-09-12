@@ -73,6 +73,17 @@ public class MemberFactory {
         }
         return null;
     }
+    
+    /**
+     * 根据会员的编号获取会员的头像
+     * @return
+     */
+    public String getMemberHead(Long id){
+        if(ToolUtil.isNotEmpty(id)){
+            return memberMapper.selectById(id).getCaptcha();
+        }
+        return null;
+    }
 
     /**
      * 根据会员编号查找会员手机号

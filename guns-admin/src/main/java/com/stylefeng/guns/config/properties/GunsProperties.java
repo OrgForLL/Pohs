@@ -30,6 +30,8 @@ public class GunsProperties {
     
     private String message2Path;  //外部短息接口
     
+    private Boolean messageOpen = false;
+    
     private String norifyUrl;  //微信支付异步回调地址
 
     private Boolean haveCreatePath = false;
@@ -135,5 +137,13 @@ public class GunsProperties {
 
 	public void setNorifyUrl(String norifyUrl) {
 		this.norifyUrl = norifyUrl;
+	}
+
+	public Boolean getMessageOpen() {
+		return messageOpen;
+	}
+
+	public void setMessageOpen(Boolean messageOpen) {
+		this.messageOpen = messageOpen;
 	}
 }

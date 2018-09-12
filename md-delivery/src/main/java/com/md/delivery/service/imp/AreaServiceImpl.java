@@ -171,12 +171,12 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
 						Wrapper<Area> wrapper1 = new EntityWrapper<>();
 						wrapper1.eq("parent", Long.valueOf(String.valueOf(provinceAreaTemp.get("id"))));
 						wrapper1.orderBy("orders", true);
-						List<Map<String, Object>> cityAreas = areaMapper.selectMaps(wrapper);	
+						List<Map<String, Object>> cityAreas = areaMapper.selectMaps(wrapper1);	
 						for (Map<String, Object> cityAreaTemp : cityAreas) {
 							Wrapper<Area> wrapper2 = new EntityWrapper<>();
 							wrapper2.eq("parent", Long.valueOf(String.valueOf(cityAreaTemp.get("id"))));
 							wrapper2.orderBy("orders", true);
-							List<Map<String, Object>> countys = areaMapper.selectMaps(wrapper1);
+							List<Map<String, Object>> countys = areaMapper.selectMaps(wrapper2);
 							cityAreaTemp.put("child", countys);
 						}
 						provinceAreaTemp.put("child", cityAreas);
