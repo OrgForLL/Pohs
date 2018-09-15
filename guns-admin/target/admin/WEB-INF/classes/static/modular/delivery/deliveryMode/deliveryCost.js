@@ -17,7 +17,7 @@ DeliveryCost.initColumn = function () {
         {field: 'selectItem', radio: true},
         {title: '派货地区', field: 'deliveryAreaName', align: 'center', valign: 'middle', sortable: true},
         {title: '配送地区', field: 'areaName', align: 'center', valign: 'middle', sortable: true},
-        {title: '是否配送', field: 'isdelivery', align: 'center', valign: 'middle', sortable: true},
+//        {title: '是否配送', field: 'isdelivery', align: 'center', valign: 'middle', sortable: true},
         {title: '首重', field: 'ykg', align: 'center', valign: 'middle', sortable: true},
         {title: '首价', field: 'startPrice', align: 'center', valign: 'middle', sortable: true},
         {title: '续重', field: 'addedWeight', align: 'center', valign: 'middle', sortable: true},
@@ -43,6 +43,24 @@ DeliveryCost.check = function () {
 
 
 /**
+ * 点击添加
+ */
+DeliveryCost.openAdd = function () {
+	
+		var index = layer.open({
+			type: 2,
+			title: '添加配送费配置',
+			area: ['800px', '800px'], //宽高
+			fix: false, //不固定
+			maxmin: true,
+			content: Feng.ctxPath + '/deliveryMode/addCostView/'+$("#id").val()
+		});
+		//layer.full(index);
+		this.layerIndex = index;
+	
+};
+
+/**
  * 点击修改
  */
 DeliveryCost.openDetail = function () {
@@ -50,13 +68,33 @@ DeliveryCost.openDetail = function () {
         var index = layer.open({
             type: 2,
             title: '修改配送方式',
-            area: ['800px', '450px'], //宽高
+            area: ['800px', '800px'], //宽高
             fix: false, //不固定
             maxmin: true,
             content: Feng.ctxPath + '/deliveryMode/toCostEdit/' + this.seItem.id
         });
         //layer.full(index);
         this.layerIndex = index;
+    }
+};
+
+/**
+ * 点击删除
+ */
+DeliveryCost.delete = function () {
+	if (this.check()) {
+		var deliveryCostId = this.seItem.id;
+        var operation = function(){
+     	    var ajax = new $ax(Feng.ctxPath + "/deliveryMode/deleteCost", function (data) {
+     	        Feng.success("删除成功!");
+     	        DeliveryCost.table.refresh();
+     	    }, function (data) {
+     	        Feng.error("删除失败!" + data.responseJSON.message + "!");
+     	    });
+     	    ajax.set("deliveryCostId", deliveryCostId);
+     	    ajax.start();
+        };
+        Feng.confirm("是否删除该配置?", operation);
     }
 };
 
@@ -81,8 +119,9 @@ DeliveryCost.search = function () {
 $(function () {
 	$("#province").on("change",DeliveryCost.provinceChange);
 	$("#deliveryPro").on("change",DeliveryCost.deliveryProChange);
+	$("#shopId").on("change",DeliveryCost.shopChange);
     var defaultColunms = DeliveryCost.initColumn();
-    var table = new BSTable(DeliveryCost.id, "/deliveryMode/costs", defaultColunms);
+    var table = new BSTable(DeliveryCost.id, "/deliveryMode/costs/"+$("#id").val(), defaultColunms);
     table.setPaginationType("client");
     table.init();
     DeliveryCost.table = table;
@@ -113,6 +152,21 @@ DeliveryCost.provinceChange=function(){
     });
     ajax.set("province",$("#province").val());
     ajax.start();
+}
+
+DeliveryCost.shopChange=function(){
+	console.log("1111");
+	//初始化市
+	var ajax = new $ax(Feng.ctxPath + "/stores/list", function (data) {
+		var content="<option value=''>请选择门店</option>";
+		for(var i=0;i<data.length;i++){
+			content+="<option value='"+data[i].id+"'>"+data[i].name+"</option>"
+		}
+		$("#shopId").html(content);
+	}, function (data) {
+	});
+	ajax.set("condition",null);
+	ajax.start();
 }
 
 DeliveryCost.cityChange=function(){

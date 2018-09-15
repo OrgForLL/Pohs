@@ -3,8 +3,25 @@
  */
 var DeliveryModeInfoDlg = {
     adsPositionInfoData : {},
+    validateFields: {
+        price: {
+            validators: {
+                notEmpty: {
+                    message: '价格不能为空'
+                }
+            }
+        }
+    }
 };
 
+/**
+ * 验证数据是否为空
+ */
+DeliveryModeInfoDlg.validate = function () {
+    $('#deliveryModeInfoForm').data("bootstrapValidator").resetForm();
+    $('#deliveryModeInfoForm').bootstrapValidator('validate');
+    return $("#deliveryModeInfoForm").data('bootstrapValidator').isValid();
+}
 
 /**
  * 清除数据
@@ -48,6 +65,9 @@ DeliveryModeInfoDlg.collectData = function() {
 DeliveryModeInfoDlg.addSubmit = function () {
 	this.clearData();
 	this.collectData();
+    if (!this.validate()) {
+        return;
+    }
     var ajax = new $ax(Feng.ctxPath + "/deliveryMode/add", function (data) {
         Feng.success("添加成功!");
         window.parent.DeliveryMode.table.refresh();
@@ -65,6 +85,9 @@ DeliveryModeInfoDlg.addSubmit = function () {
 DeliveryModeInfoDlg.editSubmit = function () {
 	this.clearData();
 	this.collectData();
+    if (!this.validate()) {
+        return;
+    }
     var ajax = new $ax(Feng.ctxPath + "/deliveryMode/edit", function (data) {
         Feng.success("修改成功!");
         window.parent.DeliveryMode.table.refresh();
@@ -85,4 +108,7 @@ DeliveryModeInfoDlg.close = function () {
 	parent.layer.close(window.parent.DeliveryMode.layerIndex);
 }
 
+$(function() {
+    Feng.initValidator("deliveryModeInfoForm", DeliveryModeInfoDlg.validateFields);
+});
 

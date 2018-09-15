@@ -34,9 +34,6 @@
         <dependent-module archiveName="md-delivery-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-delivery/md-delivery">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="weixin-popular-2.8.14.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/weixin-popular/weixin-popular">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="md-notice-1.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/md-notice/md-notice">
             <dependency-type>uses</dependency-type>
         </dependent-module>

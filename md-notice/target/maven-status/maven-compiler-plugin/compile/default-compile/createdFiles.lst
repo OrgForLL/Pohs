@@ -1,0 +1,4 @@
+com\md\notice\model\ShopNotice.class
+com\md\notice\service\impl\ShopNoticeServiceImpl.class
+com\md\notice\service\IShopNoticeService.class
+com\md\notice\dao\ShopNoticeMapper.class

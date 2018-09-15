@@ -43,7 +43,7 @@ DeliveryCostInfoDlg.get = function(key) {
  * 收集数据
  */
 DeliveryCostInfoDlg.collectData = function() {
-    this.set('id').set('ykg').set('startPrice').set('addedWeight').set('addedPrice').set('areaId').set('modeId').set('deliveryArea');
+    this.set('id').set('ykg').set('startPrice').set('addedWeight').set('addedPrice').set('areaId').set('modeId').set('deliveryArea').set('shopId');
 }
 
 /**
@@ -96,24 +96,24 @@ DeliveryCostInfoDlg.collectDeliveryArea = function() {
  */
 DeliveryCostInfoDlg.addSubmit = function () {
 	var flag = this.collectArea();
-	var flag1 = this.collectDeliveryArea();
+	//var flag1 = this.collectDeliveryArea();
 	if(flag){
-		if(flag1){
+		//if(flag1){
 			this.clearData();
 			this.collectData();
 			var ajax = new $ax(Feng.ctxPath + "/deliveryMode/addCost", function (data) {
-				Feng.success("修改成功!");
+				Feng.success("添加成功!");
 				window.parent.DeliveryCost.table.refresh();
 				DeliveryCostInfoDlg.close();
 			}, function (data) {
-				Feng.error("修改失败!" + data.responseJSON.message + "!");
+				Feng.error("添加失败!" + data.responseJSON.message + "!");
 			});
 			ajax.set(this.deliveryCostInfoData);
 			ajax.start();
-		}
-		else{
-			Feng.error("请选择派送地区！");
-		}
+		//}
+		//else{
+			//Feng.error("请选择派送地区！");
+		//}
 	}else{
 		Feng.error("请选择配送地区！");
 	}
@@ -128,11 +128,11 @@ DeliveryCostInfoDlg.addSubmitShop = function () {
 		this.collectData();
 		
 		var ajax = new $ax(Feng.ctxPath + "/deliveryMode/addCost", function (data) {
-			Feng.success("修改成功!");
+			Feng.success("添加成功!");
 			window.parent.DeliveryCost.table.refresh();
 			DeliveryCostInfoDlg.close();
 		}, function (data) {
-			Feng.error("修改失败!" + data.responseJSON.message + "!");
+			Feng.error("添加失败!" + data.responseJSON.message + "!");
 		});
 		ajax.set(this.deliveryCostInfoData);
 		ajax.start();
@@ -145,7 +145,7 @@ DeliveryCostInfoDlg.addSubmitShop = function () {
  */
 DeliveryCostInfoDlg.editSubmit = function () {
 	this.collectArea();
-	this.collectDeliveryArea();
+	//this.collectDeliveryArea();
 	this.clearData();
 	this.collectData();
     var ajax = new $ax(Feng.ctxPath + "/deliveryMode/editCost", function (data) {
@@ -201,4 +201,49 @@ DeliveryCostInfoDlg.import=function(){
     };
     $("#form1").ajaxSubmit(options);
 }
+
+//product测试
+var shopBsSuggest = $("#shop").bsSuggest({
+    indexId: 0, //data.value 的第几个数据，作为input输入框的内容
+    indexKey: 1, //data.value 的第几个数据，作为input输入框的内容
+    allowNoKeyword: false, //是否允许无关键字时请求数据
+    multiWord: true, //以分隔符号分割的多关键字支持
+    separator: ",", //多关键字支持时的分隔符，默认为空格
+    getDataMethod: "url", //获取数据的方式，总是从 URL 获取
+    effectiveFields: ["id", "name"],
+    effectiveFieldsAlias: {
+        id: "门店Id",
+        name: ",门店名称"
+    },
+    showHeader: true,
+    url:Feng.ctxPath + '/stores/shopList/',
+    processData: function (json) { // url 获取数据时，对数据的处理，作为 getData 的回调函数
+        var i, len, data = {
+            value: []
+        };
+
+        if (!json || json.length == 0) {
+            return false;
+        }
+
+        len = json.length;
+        data.value.push({
+        	"id":0,
+            "name": "全国"
+        });
+
+        for (i = 0; i < len; i++) {
+            data.value.push({
+            	"id":json[i].id,
+                "name": json[i].name
+            });
+        }
+        return data;
+    }
+
+}).on('onSetSelectValue', function (e, keyword) {
+    $("#shopId").val(keyword.id);
+    console.log(keyword);
+    console.log($("#shopId").val());
+});
 

@@ -46,7 +46,6 @@ com\stylefeng\guns\rest\modular\notice\ApiNoticeController.class
 com\stylefeng\guns\rest\config\MybatisPlusConfig.class
 com\stylefeng\guns\rest\modular\auth\util\JwtTokenUtil.class
 com\stylefeng\guns\rest\modular\pay\dto\RefundApplyRequest.class
-com\stylefeng\guns\rest\modular\pay\ApiPayController.class
 com\stylefeng\guns\rest\modular\auth\validator\impl\DbValidator.class
 com\stylefeng\guns\rest\modular\auth\controller\AuthController.class
 com\stylefeng\guns\rest\modular\order\dto\SaleOrderDetails.class
@@ -61,7 +60,6 @@ com\stylefeng\guns\rest\modular\auth\controller\dto\AuthResponse.class
 com\stylefeng\guns\rest\common\SimpleObject.class
 com\stylefeng\guns\rest\modular\settle\dto\ShopCoupon.class
 com\stylefeng\guns\rest\config\SwaggerConfig.class
-com\stylefeng\guns\rest\modular\car\ApiCarController.class
 com\stylefeng\guns\rest\modular\order\dto\OrderRequest.class
 com\stylefeng\guns\rest\modular\content\ApiContentController.class
 com\stylefeng\guns\rest\modular\coupon\dto\CouponRequest.class

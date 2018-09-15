@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.stylefeng.guns.GunsRestApplicationTests" time="0.033" tests="1" errors="0" skipped="0" failures="0">
+<testsuite name="com.stylefeng.guns.GunsRestApplicationTests" time="0.021" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="D:\java\jdk\jdk1.8.0_151\jre\bin"/>
@@ -26,7 +26,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 7"/>
-    <property name="classworlds.conf" value="D:\owen\lirang\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf6751482827666890825.tmp"/>
+    <property name="classworlds.conf" value="D:\owen\lirang\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf4072012796890743700.tmp"/>
     <property name="sun.jnu.encoding" value="GBK"/>
     <property name="java.library.path" value="D:\java\jdk\jdk1.8.0_151\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;D:/java/jre/bin/server;D:/java/jre/bin;D:/java/jre/lib/amd64;C:\Program Files\VanDyke Software\Clients\;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;D:\java\jdk\jdk1.8.0_151\bin;D:\java\jdk\jdk1.8.0_151\jre\bin;C:\Program Files\TortoiseSVN\bin;D:\node\;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Users\Administrator\AppData\Local\Android\Sdk\tools;C:\Users\Administrator\AppData\Local\Android\Sdk\platform-tools;D:\mongodb\bin;D:\zend\ZendServer\share\ZendFramework\bin;D:\zend\ZendServer\bin;D:\zend\MySQL55\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;D:\git\bin;C:\Users\Administrator\AppData\Roaming\npm;D:\VSCode\bin;C:\Users\Administrator\AppData\Local\Android\Sdk\tools;C:\Users\Administrator\AppData\Local\Android\Sdk\platform-tools;C:\Users\Administrator\Desktop;;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -60,5 +60,5 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="contextLoads" classname="com.stylefeng.guns.GunsRestApplicationTests" time="0.033"/>
+  <testcase name="contextLoads" classname="com.stylefeng.guns.GunsRestApplicationTests" time="0.021"/>
 </testsuite>

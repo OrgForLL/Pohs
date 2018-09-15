@@ -31,7 +31,7 @@ ShippingInfoDlg.toHtml = function (data) {
         var _input=$("<input/>").attr("type","text").addClass("form-control").attr("name","shipQuantity")
             .attr("value",data[i].shipQuantity==null?0:data[i].shipQuantity);
         _td4.append(_div2.append(_input));
-        var _td5 =$("<td></td>").text(data[i].amount);
+        var _td5 =$("<td id=\"testamount\"></td>").text(data[i].amount);
         var _td6 =$("<td></td>").css("display","none").text(data[i].productId);
         var _td7 =$("<td></td>").css("display","none").text(data[i].goodsId);
         _trbody.append(_td1);
@@ -71,27 +71,49 @@ ShippingInfoDlg.collectItem = function(){
     });
 }
 
+ShippingInfoDlg.checkShipBtn = function() {
+	var shipBtn = $("input[name='shipQuantity']")
+    var reg = /^[0-9]*$/;
+    if(reg.test(shipBtn.val())){
+        if(shipBtn.val()>shipBtn.parent().parent().prev().text()){
+        	Feng.alert("发货数量不能大于购买数量！",null);
+        	return false;
+        }
+        if(shipBtn.val() == "" ||shipBtn.val() == null ||shipBtn.val() == 0){
+        	Feng.alert("发货数量不能为空！",null);
+        	return false;
+        }
+    }else{
+        Feng.alert("发货数量只能为数字！",null);
+        return false;
+    }
+    return true;
+}
+
+
 /**
  * 提交发货单
  */
 ShippingInfoDlg.addSubmit = function() {
-    this.collectItem();
-    //提交信息
-    var ajax = new $ax(Feng.ctxPath + "/shipping/add", function(data){
-        Feng.success("发货成功!");
-        window.parent.Shipping.table.refresh();
-        ShippingInfoDlg.close();
-    },function(data){
-        Feng.error("发货失败!" + data.responseJSON.message + "!");
-    });
-    ajax.set("userName",$("#userName").text());
-    ajax.set("orderId",$("#orderId").val());
-    ajax.set("ShippingId",$("#ShippingId").val());
-    ajax.set("logisticsFirm",$("#logisticsFirm").val());
-    ajax.set("logisticsNum",$("#logisticsNum").val());
-    ajax.set("sn",$("#ShippingSn").val());
-    ajax.set("items",JSON.stringify(this.shippingItems));
-    ajax.start();
+    if(this.checkShipBtn()){
+	    this.collectItem();
+	    //提交信息
+	    var ajax = new $ax(Feng.ctxPath + "/shipping/add", function(data){
+	        Feng.success("发货成功!");
+	        window.parent.Shipping.table.refresh();
+	        ShippingInfoDlg.close();
+	    },function(data){
+	        Feng.error("发货失败!" + data.responseJSON.message + "!");
+	    });
+	    ajax.set("userName",$("#userName").text());
+	    ajax.set("orderId",$("#orderId").val());
+	    ajax.set("ShippingId",$("#ShippingId").val());
+	    ajax.set("logisticsFirm",$("#logisticsFirm").val());
+	    ajax.set("logisticsNum",$("#logisticsNum").val());
+	    ajax.set("sn",$("#ShippingSn").val());
+	    ajax.set("items",JSON.stringify(this.shippingItems));
+	    ajax.start();
+    }
 }
 
 /**
@@ -107,9 +129,15 @@ $(function() {
         var reg = /^[0-9]*$/;
         if(reg.test($(this).val())){
             if($(this).val()>$(this).parent().parent().prev().text()){
-            Feng.alert("发货数量不能大于购买数量！",null);}
+            	Feng.alert("发货数量不能大于购买数量！",null);
+            }
+            if($(this).val() == "" ||$(this).val() == null ||$(this).val() == 0){
+            	Feng.alert("发货数量不能为空！",null);
+            }
         }else{
             Feng.alert("发货数量只能为数字！",null);
         }
+        
+        $("#testamount").text($(this).val()*ShippingInfoDlg.orderItems[0].unitPrice);
     })
 });

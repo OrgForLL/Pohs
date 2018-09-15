@@ -77,6 +77,21 @@
       "defaultValue": false
     },
     {
+      "name": "guns.message-path",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties"
+    },
+    {
+      "name": "guns.message2-path",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties"
+    },
+    {
+      "name": "guns.norify-url",
+      "type": "java.lang.String",
+      "sourceType": "com.stylefeng.guns.config.properties.GunsProperties"
+    },
+    {
       "name": "guns.project-web-path",
       "type": "java.lang.String",
       "sourceType": "com.stylefeng.guns.config.properties.GunsProperties"

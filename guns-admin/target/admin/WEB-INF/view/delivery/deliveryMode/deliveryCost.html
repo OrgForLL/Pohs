@@ -10,7 +10,7 @@
                     <div class="col-sm-12">
                     	<div class="row">
                     		<input type="hidden" id="id" value="${deliveryMode.id}">
-                            <div class="form-group col-sm-12 ">
+                            <!-- <div class="form-group col-sm-12 ">
 							   <div class="col-sm-3">
 							   		<#SelectCon id="deliveryPro" name="派货地区" >
 		                                <option value="">请选择省</option>
@@ -33,7 +33,7 @@
 	                                    <option value="false">否</option>
 	                                </#SelectCon>
 		                       </div>
-							</div>
+							</div> -->
 							<div class="form-group col-sm-12 ">
 							   <div class="col-sm-3">
 							   		<#SelectCon id="province" name="配送地区"  onChange="DeliveryCost.provinceChange()">
@@ -56,9 +56,11 @@
 							</div>
                         </div>
                         <div class="hidden-xs" id="DeliveryCostTableToolbar" role="group">
+                            <#button name="添加" icon="fa-edit" clickFun="DeliveryCost.openAdd()"/>
                             <#button name="修改" icon="fa-edit" clickFun="DeliveryCost.openDetail()"/>
-                            <#button name="下载配送费导入模板" icon="fa-plus" clickFun="DeliveryCost.downloadTemplate()"/>
-                            <#button name="导入配送费" icon="fa-plus" clickFun="DeliveryCost.openImport()"/>
+                            <#button name="删除" icon="fa-remove" clickFun="DeliveryCost.delete()"/>
+<!--                             <#button name="下载配送费导入模板" icon="fa-plus" clickFun="DeliveryCost.downloadTemplate()"/>
+                            <#button name="导入配送费" icon="fa-plus" clickFun="DeliveryCost.openImport()"/> -->
                         </div>
                         <#table id="DeliveryCostTable"/>
                     </div>

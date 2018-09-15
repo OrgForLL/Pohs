@@ -51,6 +51,21 @@
     },
     {
       "sourceType": "com.stylefeng.guns.rest.config.properties.RestProperties",
+      "name": "rest.message-path",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.RestProperties",
+      "name": "rest.message2-path",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.RestProperties",
+      "name": "rest.notify-url",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.RestProperties",
       "defaultValue": true,
       "name": "rest.sign-open",
       "type": "java.lang.Boolean"

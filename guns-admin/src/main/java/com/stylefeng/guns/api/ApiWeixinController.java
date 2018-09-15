@@ -42,7 +42,7 @@ public class ApiWeixinController extends BaseController{
 	 
 	@Resource
 	IwxPayService wxPayServiceImpl;
-	private static final String REDIRECT_INDEX = "redirect:http://app.wmggcl.com/webshop/#/tempHome";  //商城首页
+	private static final String REDIRECT_INDEX = "redirect:http://www.baidu.com";  //商城首页
 	
 	@RequestMapping(value = "/redirectUrl", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	public ModelAndView redirectUrl(String code, String state, String configKey) {
